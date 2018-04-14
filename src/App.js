@@ -1,23 +1,15 @@
-import React from "react";
-import RaisedButton from "material-ui/RaisedButton";
-import FontIcon from "material-ui/FontIcon";
-import IconButton from "material-ui/IconButton";
+import React, { Component } from "react";
 
-const style = {
-  margin: 12
-};
+import LandingPage from "./components/LandingPage/LandingPage";
 
-const RaisedButtonExampleSimple = () => (
-  <div>
-    <IconButton tooltip="Font Icon">
-      <FontIcon className="muidocs-icon-action-home" style={style} />
-    </IconButton>
-    <RaisedButton label="Primary" primary={true} style={style} />
-    <RaisedButton label="Secondary" secondary={true} style={style} />
-    <RaisedButton label="Disabled" disabled={true} style={style} />
-    <br />
-    <br />
-  </div>
-);
+class App extends Component {
+  render() {
+    return (
+      <div>
+        <LandingPage />
+      </div>
+    );
+  }
+}
 
-export default RaisedButtonExampleSimple;
+export default App;

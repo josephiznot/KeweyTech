@@ -1,0 +1,35 @@
+.intro-q-container {
+  border: 1px black solid;
+  height: calc(100vh - 64px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 75px;
+}
+.intro-question {
+  background: #3c8dbc;
+  width: 255px;
+  height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 30px;
+  color: white;
+  font-size: 22px;
+  font-family: Roboto, sans-serif;
+  letter-spacing: 1.5px;
+}
+.intro-question p {
+  position: relative;
+  left: 7%;
+  font-weight: 300;
+}
+.message-wing {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  position: relative;
+  top: 14%;
+  left: 10%;
+  box-shadow: 10px -10px 0px -4px #3c8dbc inset;
+}
