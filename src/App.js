@@ -17,7 +17,6 @@ const RaisedButtonExampleSimple = () => (
     <RaisedButton label="Disabled" disabled={true} style={style} />
     <br />
     <br />
-    <RaisedButton label="Full width" fullWidth={true} />
   </div>
 );
 
