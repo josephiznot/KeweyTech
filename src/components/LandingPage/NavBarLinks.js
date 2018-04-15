@@ -6,7 +6,9 @@ function NavBarLinks(props) {
   var { menuItem1, menuItem2 } = props.HamburgerReducer;
   return (
     <div className="navbar-links-wrapper">
-      <h2>{menuItem1}</h2>
+      <a href="http://localhost:3001/auth">
+        <h2>{menuItem1}</h2>
+      </a>
       <h2> {menuItem2}</h2>
     </div>
   );
