@@ -7,6 +7,7 @@ import { handleRequestClose } from "./../../../redux/HamburgerReducer";
 
 function DropDown(props) {
   var { menuItem1, menuItem2 } = props.HamburgerReducer;
+
   return (
     <Popover
       open={props.HamburgerReducer.open}
@@ -22,8 +23,12 @@ function DropDown(props) {
           width: "100vw"
         }}
       >
-        <MenuItem style={{ paddingRight: "30px" }} primaryText={menuItem1} />
-        <MenuItem style={{ paddingRight: "30px" }} primaryText={menuItem2} />
+        <a href="http://localhost:3001/auth">
+          <MenuItem style={{ paddingRight: "30px" }} primaryText={menuItem1} />
+        </a>
+        <a href="/logout">
+          <MenuItem style={{ paddingRight: "30px" }} primaryText={menuItem2} />
+        </a>
       </Menu>
     </Popover>
   );

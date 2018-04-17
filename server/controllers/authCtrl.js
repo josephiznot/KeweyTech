@@ -14,6 +14,12 @@ const strat = new Auth0Strategy(
     return done(null, profile);
   }
 );
+function logout() {
+  req.session.destroy(() => {
+    res.redirect("http://localhost:3000/#/");
+  });
+}
 module.exports = {
-  strat
+  strat,
+  logout
 };

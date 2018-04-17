@@ -1,7 +1,7 @@
 const initialState = {
   open: false,
-  menuItem1: "LOGIN",
-  menuItem2: "SIGNUP"
+  menuItem1: "LOGIN/SIGNUP",
+  menuItem2: "SIGN OUT"
 };
 
 const HAMBURGER_OPEN = "HAMBURGER_CLICK";

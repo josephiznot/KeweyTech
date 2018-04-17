@@ -9,6 +9,9 @@
   font-size: 18px;
   font-family: Roboto, sans-serif;
 }
+a {
+  text-decoration: none;
+}
 
 @media (min-width: 768px) {
   .hamburger-wrapper {

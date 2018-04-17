@@ -11,5 +11,8 @@ CREATE TABLE users(
 )
 CREATE TABLE geolocations(
     latitude VARCHAR(300),
-    longitude VARCHAR(300)
+    longitude VARCHAR(300),
+    accuracy INTEGER,
+    time_stamp
+    user_id INTEGER
 )

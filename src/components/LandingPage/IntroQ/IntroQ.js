@@ -6,7 +6,7 @@ const IntroQ = () => {
   return (
     <div className="intro-q-container">
       <div className="intro-question">
-        <p>What is Birdseye?</p>
+        <p>What is Kewey?</p>
         <div className="message-wing" />
       </div>
     </div>

@@ -1,5 +1,13 @@
-import React from "react";
+import React, { Component } from "react";
 
-export default function About() {
-  return <div>About component</div>;
+class About extends Component {
+  componentWillMount() {
+    if (this.props.geolocationsReducer.isInBounds) {
+      this.props.history.push("/alert");
+    }
+  }
+  render() {
+    return <div>About component</div>;
+  }
 }
+export default About;

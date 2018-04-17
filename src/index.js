@@ -9,13 +9,11 @@ import routes from "./routes";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 //Each page is rendering a different navbar
+
 ReactDOM.render(
   <Provider store={store}>
     <MuiThemeProvider>
-      <HashRouter>
-        {/* <App /> */}
-        {routes}
-      </HashRouter>
+      <HashRouter>{routes}</HashRouter>
     </MuiThemeProvider>
   </Provider>,
   document.getElementById("root")
