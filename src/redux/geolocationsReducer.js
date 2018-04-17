@@ -39,7 +39,7 @@ export function updateCurrentLocation() {
   };
 }
 export function isInBounds(lat, lng) {
-  console.log(lat, lng);
+  console.log(initialState);
   return {
     type: IS_IN_BOUNDS,
     payload: axios.get(
@@ -49,8 +49,8 @@ export function isInBounds(lat, lng) {
       {
         headers: {
           Authorization: `${process.env.REACT_APP_FENCER_API_KEY}`,
-          "Lat-Pos": initialState.currLat,
-          "Lng-Pos": initialState.currLng
+          "Lat-Pos": lat,
+          "Lng-Pos": lng
         }
       }
     )

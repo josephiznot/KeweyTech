@@ -26,7 +26,7 @@ function DropDown(props) {
         <a href="http://localhost:3001/auth">
           <MenuItem style={{ paddingRight: "30px" }} primaryText={menuItem1} />
         </a>
-        <a href="/logout">
+        <a href="http://localhost:3001/logout">
           <MenuItem style={{ paddingRight: "30px" }} primaryText={menuItem2} />
         </a>
       </Menu>

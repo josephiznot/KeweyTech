@@ -5,7 +5,7 @@ import RaisedButton from "material-ui/RaisedButton";
 
 class Alert extends Component {
   componentDidMount() {
-    axios.get(`https://swapi.co/api/people/1`).then(res => {
+    axios.get(`/send`).then(res => {
       console.log(res.data);
     });
   }

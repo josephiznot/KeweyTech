@@ -3,6 +3,7 @@ import axios from "axios";
 import { connect } from "react-redux";
 import AppBar from "material-ui/AppBar";
 import Avatar from "material-ui/Avatar";
+import ListItem from "material-ui/List/ListItem";
 import HamburgerMenu from "./../LandingPage/HamburgerMenu/HamburgerMenu";
 import NavBarLinks from "./../LandingPage/NavBarLinks";
 import {
@@ -11,6 +12,7 @@ import {
   updateCurrentLocation,
   isInBounds
 } from "./../../redux/geolocationsReducer";
+import { getUser } from "./../../redux/userReducer";
 import RaisedButton from "material-ui/RaisedButton";
 import { getIterator } from "core-js";
 
@@ -21,68 +23,79 @@ class Geolocations extends Component {
       lat: "",
       lng: "",
       accuracy: "",
-      trackFlag: false
+      trackFlag: false,
+      isEnabled: false
     };
     this.enableTracking = this.enableTracking.bind(this);
   }
-
+  //this is going to start a setInterval in order to continually be tracking the user.
   enableTracking() {
-    var { trackFlag } = this.state;
+    //the flag allows the user to enable/disable the setInterval
+    var { trackFlag, isEnabled } = this.state;
     this.setState({
-      trackFlag: !trackFlag
+      trackFlag: !trackFlag,
+      isEnabled: !isEnabled
     });
     var start = setInterval(() => {
-      // console.log("tracking enabled");
-      // this.props.updateCurrentLocation();
-      this.props.isInBounds();
-      // // console.log("tracking enabled");
+      //updates current location in the reducer
+      this.props.updateCurrentLocation();
+      /*
+      takes the updated state and passes in the coordinates as props.
+      You will receive a 400 err when server is restarted because
+      the props have not been updated yet. 
+      */
+      this.props.isInBounds(
+        this.props.geolocationsReducer.currLat,
+        this.props.geolocationsReducer.currLng
+      );
+      //once the disable button is hit, the functions will fire once more, and stop.
       if (!this.state.trackFlag) {
         clearInterval(start);
       }
-    }, 10000);
+    }, 15000);
   }
 
   componentDidUpdate() {
-    if (!this.props.isInBounds) {
+    //gets updated state
+    if (!this.props.geolocationsReducer.isInBounds) {
       this.props.history.push("/alert");
     }
-    // this.props.updateCurrentLocation();
   }
   componentDidMount() {
-    this.setState({ lng: this.props.lng, lat: this.props.lat });
+    this.props.getUser();
   }
   render() {
-    // var { currLat, currLng, isInBounds } = this.props.geolocationsReducer;
-    console.log(this.props);
+    console.log(this.props.geolocationsReducer);
     return (
       <div>
         <AppBar
-          iconElementLeft={<Avatar />}
+          iconElementLeft={
+            <ListItem
+              leftAvatar={
+                <Avatar src={this.props.userReducer.user.profile_pic} />
+              }
+            >
+              {this.props.userReducer.user.display_name}
+            </ListItem>
+          }
           iconElementRight={<HamburgerMenu />}
           title={<NavBarLinks />}
           style={{ background: "#3c8dbc" }}
           zDepth={1}
         />
         <RaisedButton
-          label="Enable Tracking"
-          onClick={() => this.enableTracking()}
-        />
-        <RaisedButton
-          label="Disable Tracking"
+          label={this.state.isEnabled ? "Disable Tracking" : "Enable Tracking"}
           onClick={() => this.enableTracking()}
         />
       </div>
     );
   }
 }
-const mapStateToProps = state => {
-  return {
-    ...state.geolocationsReducer
-  };
-};
+const mapStateToProps = state => state;
 export default connect(mapStateToProps, {
   getGeolocations,
   getDependent,
   updateCurrentLocation,
-  isInBounds
+  isInBounds,
+  getUser
 })(Geolocations);

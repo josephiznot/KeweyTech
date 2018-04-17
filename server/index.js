@@ -4,13 +4,17 @@ const cors = require("cors");
 const express = require("express");
 const app = express();
 const session = require("express-session");
-const PORT = process.env.PORT || 3001;
+const PORT = 3001;
 const { json } = require("body-parser");
 const passport = require("passport");
-const { strat, logout } = require(`${__dirname}/controllers/authCtrl`);
+const { strat, logout, getUser } = require(`${__dirname}/controllers/authCtrl`);
 const geolocationsCtrl = require("./controllers/geolocationsCtrl");
 const userCtrl = require("./controllers/userCtrl");
 // const authCtrl = require("./controllers/authCtrl");
+const client = require("twilio")(
+  process.env.TWILIO_SID,
+  process.env.TWILIO_TOKEN
+);
 
 massive(process.env.CONNECTION_STRING)
   .then(db => {
@@ -22,9 +26,9 @@ app.use(cors());
 
 app.use(
   session({
+    secret: process.env.SESSION_SECRET,
     saveUninitialized: false,
     resave: false,
-    secret: process.env.SESSION_SECRET,
     cookie: {
       maxAge: 60000 //1 min
     }
@@ -75,6 +79,8 @@ app.get(
     failureRedirect: "http://localhost:3000/#/login"
   })
 );
+app.get("/logout", logout);
+app.get("/api/me", getUser);
 
 //---------------------GEOLOCATION REQUESTS------------------------
 
@@ -85,7 +91,22 @@ app.post("/api/addlocation", geolocationsCtrl.addLocation);
 app.post("/api/addcurrentlocation", geolocationsCtrl.addCurrentLocation);
 
 app.get("/api/profilepic", userCtrl.getProfilePic);
-app.get("/logout", logout);
+
+app.get("/api/getuser", getUser);
+
+//-----------------TWILIO TEXT ALERT----------------------
+// app.get("/api/textalert", geolocationsCtrl.textAlert);
+
+app.get("/send", () =>
+  client.messages
+    .create({
+      to: process.env.PERSONAL_CELL,
+      from: process.env.TWILIO_PHONE_NUMBER,
+      body: "This is Joe Anderson"
+    })
+    .then(() => console.log(client.httpClient.lastResponse.statusCode))
+    .catch(err => console.log(err))
+);
 
 app.listen(PORT, () => {
   console.log(`I am listening on port ${PORT}`);

@@ -14,12 +14,22 @@ const strat = new Auth0Strategy(
     return done(null, profile);
   }
 );
-function logout() {
+const getUser = (req, res) => {
+  if (!req.user) {
+    res.status(401).send({ message: "Not Authorized" });
+  } else {
+    res.status(200).send(req.user);
+  }
+};
+function logout(req, res) {
+  // console.log(req);
   req.session.destroy(() => {
-    res.redirect("http://localhost:3000/#/");
+    res.redirect("http://localhost:3000/");
   });
 }
+
 module.exports = {
   strat,
-  logout
+  logout,
+  getUser
 };
