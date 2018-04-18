@@ -15,6 +15,7 @@ const client = require("twilio")(
   process.env.TWILIO_SID,
   process.env.TWILIO_TOKEN
 );
+const fencerCtrl = require("./controllers/fencerCtrl");
 
 massive(process.env.CONNECTION_STRING)
   .then(db => {
@@ -72,6 +73,7 @@ passport.deserializeUser((user, done) => {
 });
 
 //----------------------AUTH REQUEST------------------------------
+
 app.get(
   "/auth",
   passport.authenticate("auth0", {
@@ -97,7 +99,7 @@ app.get("/api/getuser", getUser);
 //-----------------TWILIO TEXT ALERT----------------------
 // app.get("/api/textalert", geolocationsCtrl.textAlert);
 
-app.get("/send", () =>
+app.get("/api/textalert", () =>
   client.messages
     .create({
       to: process.env.PERSONAL_CELL,
@@ -107,6 +109,10 @@ app.get("/send", () =>
     .then(() => console.log(client.httpClient.lastResponse.statusCode))
     .catch(err => console.log(err))
 );
+
+//------------------FENCER REQUESTS--------------
+
+app.get("/geofence/:id", fencerCtrl.getPoints);
 
 app.listen(PORT, () => {
   console.log(`I am listening on port ${PORT}`);

@@ -1,0 +1,12 @@
+.geolocations-container {
+  width: 100vw;
+  height: 100vh;
+}
+.geolocations-body-container {
+  width: 100vw;
+  height: calc(100vh - 64px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}

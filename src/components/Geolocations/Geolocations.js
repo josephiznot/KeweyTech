@@ -15,6 +15,8 @@ import {
 import { getUser } from "./../../redux/userReducer";
 import RaisedButton from "material-ui/RaisedButton";
 import { getIterator } from "core-js";
+import GoogleMaps from "./../GoogleMaps/GoogleMaps";
+import "./Geolocations.css";
 
 class Geolocations extends Component {
   constructor() {
@@ -67,7 +69,7 @@ class Geolocations extends Component {
   render() {
     console.log(this.props.geolocationsReducer);
     return (
-      <div>
+      <div className="geolocations-container">
         <AppBar
           iconElementLeft={
             <ListItem
@@ -83,10 +85,15 @@ class Geolocations extends Component {
           style={{ background: "#3c8dbc" }}
           zDepth={1}
         />
-        <RaisedButton
-          label={this.state.isEnabled ? "Disable Tracking" : "Enable Tracking"}
-          onClick={() => this.enableTracking()}
-        />
+        <div className="geolocations-body-container">
+          <RaisedButton
+            label={
+              this.state.isEnabled ? "Disable Tracking" : "Enable Tracking"
+            }
+            onClick={() => this.enableTracking()}
+          />
+          <GoogleMaps />
+        </div>
       </div>
     );
   }

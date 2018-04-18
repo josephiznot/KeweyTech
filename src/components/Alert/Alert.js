@@ -4,8 +4,9 @@ import axios from "axios";
 import RaisedButton from "material-ui/RaisedButton";
 
 class Alert extends Component {
+  //----------This is going to make the TWILIO get request-----------------
   componentDidMount() {
-    axios.get(`/send`).then(res => {
+    axios.get(`/api/textalert`).then(res => {
       console.log(res.data);
     });
   }

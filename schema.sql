@@ -16,3 +16,17 @@ CREATE TABLE geolocations(
     time_stamp
     user_id INTEGER
 )
+
+CREATE TABLE geofences(
+    fence_id SERIAL PRIMARY KEY,
+    access_key VARCHAR(100),
+    fence_name VARCHAR(100),
+    is_active VARCHAR(1)
+    )
+
+-- IF TIME PERSISTS--
+-- CREATE TABLE points(
+--     latitude VARCHAR(100),
+--     longitude VARCHAR(100),
+--     fence_id JOIN WITH geofences fence_id
+-- )
