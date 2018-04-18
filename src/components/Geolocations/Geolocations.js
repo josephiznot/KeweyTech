@@ -67,26 +67,28 @@ class Geolocations extends Component {
     this.props.getUser();
   }
   render() {
-    console.log(this.props.geolocationsReducer);
     return (
-      <div className="geolocations-container">
-        <AppBar
-          iconElementLeft={
-            <ListItem
-              leftAvatar={
-                <Avatar src={this.props.userReducer.user.profile_pic} />
-              }
-            >
-              {this.props.userReducer.user.display_name}
-            </ListItem>
-          }
-          iconElementRight={<HamburgerMenu />}
-          title={<NavBarLinks />}
-          style={{ background: "#3c8dbc" }}
-          zDepth={1}
-        />
+      <div>
+        <nav className="geolocations-nav">
+          <AppBar
+            iconElementLeft={
+              <ListItem
+                leftAvatar={
+                  <Avatar src={this.props.userReducer.user.profile_pic} />
+                }
+              >
+                {this.props.userReducer.user.display_name}
+              </ListItem>
+            }
+            iconElementRight={<HamburgerMenu />}
+            title={<NavBarLinks />}
+            style={{ background: "#3c8dbc" }}
+            zDepth={1}
+          />
+        </nav>
         <div className="geolocations-body-container">
           <RaisedButton
+            className="tracking-button"
             label={
               this.state.isEnabled ? "Disable Tracking" : "Enable Tracking"
             }
@@ -95,6 +97,7 @@ class Geolocations extends Component {
           <GoogleMaps />
         </div>
       </div>
+      // </div>
     );
   }
 }

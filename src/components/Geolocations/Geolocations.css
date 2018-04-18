@@ -1,12 +1,19 @@
-.geolocations-container {
-  width: 100vw;
-  height: 100vh;
+nav.geolocations-nav {
+  position: fixed;
+  width: 100%;
+  z-index: 10000;
+  /* top: 0; */
+  /* left: 0; */
 }
 .geolocations-body-container {
+  padding-top: 64px;
   width: 100vw;
-  height: calc(100vh - 64px);
+  /* height: calc(100vh - 64px); */
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
+}
+.tracking-button {
+  margin-top: 25px;
 }

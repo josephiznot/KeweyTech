@@ -10,7 +10,7 @@ const passport = require("passport");
 const { strat, logout, getUser } = require(`${__dirname}/controllers/authCtrl`);
 const geolocationsCtrl = require("./controllers/geolocationsCtrl");
 const userCtrl = require("./controllers/userCtrl");
-// const authCtrl = require("./controllers/authCtrl");
+const authCtrl = require("./controllers/authCtrl");
 const client = require("twilio")(
   process.env.TWILIO_SID,
   process.env.TWILIO_TOKEN
@@ -46,7 +46,6 @@ passport.serializeUser((user, done) => {
     .getUserByAuthid(user.id)
     .then(response => {
       if (!response[0]) {
-        console.log(response);
         app
           .get("db")
           .addUserByAuthid([
@@ -62,7 +61,6 @@ passport.serializeUser((user, done) => {
           })
           .catch(err => console.log(err));
       } else {
-        console.log(response);
         return done(null, response[0]);
       }
     })
@@ -109,10 +107,9 @@ app.get("/api/textalert", () =>
     .then(() => console.log(client.httpClient.lastResponse.statusCode))
     .catch(err => console.log(err))
 );
+//----------------------FENCER END POINTS----------------
 
-//------------------FENCER REQUESTS--------------
-
-app.get("/geofence/:id", fencerCtrl.getPoints);
+// app.put("/api/points", fencerCtrl.getPoints);
 
 app.listen(PORT, () => {
   console.log(`I am listening on port ${PORT}`);
