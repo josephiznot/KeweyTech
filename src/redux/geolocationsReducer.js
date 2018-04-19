@@ -1,3 +1,7 @@
+/*
+IS_IN_BOUNDS NEED TO CHECK THE FENCE THAT IS TOGGLED TRUE.
+*/
+
 import axios from "axios";
 
 var initialState = {
@@ -34,11 +38,11 @@ export function updateCurrentLocation() {
     payload: axios.post(
       `https://www.googleapis.com/geolocation/v1/geolocate?key=${
         process.env.REACT_APP_GEOLOCATION_API_KEY
-      }`,
-      {
-        considerIp: "true",
-        wifiAccessPoints: [{ macAddress: "98:01:a7:b4:be:e9" }]
-      }
+      }`
+      // {
+      //   considerIp: "true",
+      //   wifiAccessPoints: [{ macAddress: "98:01:a7:b4:be:e9" }]
+      // }
     )
   };
 }
@@ -48,7 +52,7 @@ export function isInBounds(lat, lng) {
     type: IS_IN_BOUNDS,
     payload: axios.get(
       `https://api.fencer.io/v1.0/position/inside/${
-        process.env.REACT_APP_DEV_KEY //CHANGED IT FROM REACT_APP_FENCER_API_KEY...WAS SAME THING...
+        process.env.REACT_APP_DEV_KEY //!!!!!NEED TO MAKE IT ONLY FENCE THAT IS TOGGLED!!!!!!!//////
       }`,
       {
         headers: {

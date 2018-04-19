@@ -14,6 +14,7 @@ export function getPoints(key) {
     payload: axios.get(`https://api.fencer.io/v1.0/geofence/${key}`, {
       headers: { Authorization: `${process.env.REACT_APP_FENCER_API_KEY}` }
     })
+    // undercover_payload: axios.post("/api/db")
   };
 }
 export function getPosition(lat, lng) {
@@ -46,16 +47,34 @@ export default function fencerReducer(state = initialState, action) {
             lat: action.payload.data.data.center.lat,
             lng: action.payload.data.data.center.lng
           },
-          alias: action.payload.data.data.alias
+          alias: action.payload.data.data.alias,
+          isToggled: false
         })
       };
     case `${GET_POSITION}_FULFILLED`:
+      console.log(state.maps);
       return action.payload.data.error
         ? { ...state, message: "USER NOT IN BOUNDS" }
         : {
             ...state,
-            locationId: action.payload.data
+            locationId: action.payload.data.data[0].id
           };
+
+    /*----------------------------i tried this, but got bugged. will check it out in AM--------------
+    case `${GET_POSITION}_FULFILLED`:
+      console.log(state.maps);
+      return action.payload.data.error
+        ? { ...state, message: "USER NOT IN BOUNDS" }
+        : (state = state.maps.map((e, i) => {
+            return e.alias === action.payload.data.data.alias
+              ? {
+                  ...state.maps,
+                  locationId: action.payload.data.data[0].id
+                }
+              : null;
+          }));
+       -------------------------------------------------------------------------------------- */
+
     case RID_ERROR:
       return {
         ...state,

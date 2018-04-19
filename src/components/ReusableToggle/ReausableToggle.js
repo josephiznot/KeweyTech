@@ -6,34 +6,39 @@ class ReusableToggle extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      toggle: false
+      defaultToggled: false
     };
-    // this.handleToggle = this.handleToggle.bind(this);
+    this.handleToggle = this.handleToggle.bind(this);
   }
 
-  //   handleToggle() {
-  //     this.props.getPosition(
-  //       this.props.geolocationsReducer.currLat,
-  //       this.props.geolocationsReducer.currLng
-  //     );
-  //   }
-
+  handleToggle() {
+    this.props.getPosition(
+      this.props.geolocationsReducer.currLat,
+      this.props.geolocationsReducer.currLng
+    );
+  }
+  componentDidMount() {
+    if (this.props.fencerReducer.message) {
+      this.setState({ toggle: false });
+    }
+  }
   render() {
-    // if (this.props.fencerReducer.message) {
-    //   this.setState({ toggle: false });
-    // }
+    console.log(this.props.fencerReducer.maps);
     let { E, i } = this.props;
+
     return (
       <div className="map-and-button" key={i}>
         <E
           containerElement={<div className="map-container" />}
           mapElement={<div className="map-element" />}
         />
+
         <Toggle
           label="TRACKING ENABLED"
-          toggled={true}
+          defaultToggled={false}
+          //   disabled={true}
           labelPosition="right"
-          //   onToggle={() => this.handleToggle()}
+          onToggle={() => this.handleToggle()}
         />
       </div>
     );

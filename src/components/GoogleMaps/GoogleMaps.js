@@ -36,11 +36,7 @@ class GoogleMaps extends Component {
   //     );
   //   }
   render() {
-    console.log("initially empty: ", this.props.fencerReducer.locationId);
-    console.log(
-      this.props.geolocationsReducer.currLat,
-      this.props.geolocationsReducer.currLng
-    );
+    console.log(this.props.fencerReducer);
     const mapped = this.props.fencerReducer.maps
       .map((e, i, a) => {
         return withGoogleMap(() => (
