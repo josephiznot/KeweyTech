@@ -1,13 +1,19 @@
+/* -------------------ABOUT CONTAINER--------------------------------- */
+.about-container {
+  color: #333;
+  font-size: 18px;
+}
+
 /* -------------------DESCRIPTION--------------------------------- */
 .about-description-container {
   width: 100%;
-  height: 420px;
+  height: 390px;
   padding-top: 68px;
-  border: 1px black solid;
+  /* border: 1px black solid; */
 }
 .about-slanted-container {
   width: 100%;
-  height: 230px;
+  height: 250px;
   background: #3c8dbc;
   position: relative;
 }
@@ -28,7 +34,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px red solid;
+  /* border: 1px red solid; */
 }
 .about-description-body {
   width: 300px;
@@ -38,8 +44,7 @@
   justify-content: space-around;
   align-items: center;
   padding: 0 5px;
-  border: 1px black solid;
-  font-size: 18px;
+  /* border: 1px black solid; */
   text-align: center;
   color: white;
   font-weight: 100;
@@ -51,7 +56,29 @@
 }
 
 /*---------------------------STATS-----------------------------------------*/
-
+.stats-container {
+  width: 100vw;
+  /* height: 3000px; */
+  /* border: 1px red dashed; */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+.stat-section {
+  width: calc(100% - 24px); /*100% of container*/
+  /* height: 350px; */
+  border-bottom: 3px#333 solid;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  line-height: 26px;
+}
+.stat-title {
+  font-size: 23px;
+}
 /* ---------------------------BOTTOM------------------------ */
 .about-bottom-container {
   width: 100%;
@@ -59,7 +86,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px black solid;
+  /* border: 1px black solid; */
+  background: #3c8dbc;
 }
 
 .about-download-container {

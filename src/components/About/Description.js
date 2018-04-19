@@ -16,15 +16,21 @@ function Description() {
             <RaisedButton
               label={"Install Now - FREE"}
               icon={<Download />}
-              style={{ borderRadius: 7 }}
+              style={{
+                borderRadius: 7
+              }}
               buttonStyle={{
                 height: 70,
                 width: 260,
                 background: "#333",
                 opacity: 0.89,
-                borderRadius: 7
+                borderRadius: 7,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center"
               }}
               labelStyle={{ color: "white", fontSize: 21 }}
+              href="http://localhost:3001/auth" //not sure why the div changes size when you add a href prop
             />
           </div>
         </div>

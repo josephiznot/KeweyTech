@@ -5,7 +5,7 @@ const Bottom = () => {
     <div className="about-bottom-container">
       <div className="about-download-container">
         <h1>Try it for yourself</h1>
-        <RaisedButton label="DOWNLOAD" />
+        <RaisedButton href="http://localhost:3001/auth" label="DOWNLOAD" />
       </div>
     </div>
   );
