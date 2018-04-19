@@ -1,7 +1,11 @@
 const initialState = {
   open: false,
   menuItem1: "LOGIN/SIGNUP",
-  menuItem2: "SIGN OUT"
+  menuItem2: "SIGN OUT",
+  menuItem3: "SETTINGS",
+  menuItem4: "KEWEY FENCE",
+  menuItem5: "ABOUT",
+  menuItem6: "HISTORY"
 };
 
 const HAMBURGER_OPEN = "HAMBURGER_CLICK";

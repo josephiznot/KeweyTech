@@ -8,13 +8,6 @@ import Toggle from "material-ui/Toggle";
 import CircularProgress from "material-ui/CircularProgress";
 import ReusableToggle from "../ReusableToggle/ReausableToggle";
 class GoogleMaps extends Component {
-  constructor() {
-    super();
-    // this.state = {
-    //   toggle: false
-    // };
-    // this.handleToggle = this.handleToggle.bind(this);
-  }
   componentDidMount() {
     this.props.getPoints(process.env.REACT_APP_DEV_KEY);
     this.props.getPoints(process.env.REACT_APP_BELL_KEY);
@@ -27,16 +20,8 @@ class GoogleMaps extends Component {
       this.props.ridError();
     }
   }
-  //   handleToggle(val) {
-  //     let { toggle } = this.state;
-  //     this.setState({ toggle: !toggle });
-  //     this.props.getPosition(
-  //       this.props.geolocationsReducer.currLat,
-  //       this.props.geolocationsReducer.currLng
-  //     );
-  //   }
   render() {
-    console.log(this.props.fencerReducer);
+    console.log(this.props.fencerReducer.maps);
     const mapped = this.props.fencerReducer.maps
       .map((e, i, a) => {
         return withGoogleMap(() => (

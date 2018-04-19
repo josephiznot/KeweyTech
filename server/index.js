@@ -15,7 +15,19 @@ const client = require("twilio")(
   process.env.TWILIO_SID,
   process.env.TWILIO_TOKEN
 );
-const fencerCtrl = require("./controllers/fencerCtrl");
+const {
+  addHit,
+  deleteHistory,
+  getHistory,
+  editResolution
+} = require("./controllers/obCtrl");
+const {
+  getGeofence,
+  getGeofences,
+  updateCenter,
+  updateName,
+  toggleActive
+} = require("./controllers/geofencesCtrl");
 
 massive(process.env.CONNECTION_STRING)
   .then(db => {
@@ -107,10 +119,21 @@ app.get("/api/textalert", () =>
     .then(() => console.log(client.httpClient.lastResponse.statusCode))
     .catch(err => console.log(err))
 );
-//----------------------FENCER END POINTS----------------
+//----------------------out_of_bounds CONTROLLER----------------
 
-// app.put("/api/points", fencerCtrl.getPoints);
+app.post("/api/out_of_bounds_hit", addHit);
+app.get("/api/history", getHistory);
+app.put("/api/resolution/", editResolution);
+app.delete("/api/ridhistory/:id", deleteHistory);
 
+//-------------------------geofences CONTROLLER--------------------
+
+app.get("/api/geofence/:id", getGeofence);
+app.get("/api/geofences", getGeofences);
+app.put("/api/updatecenter/:id", updateCenter);
+app.put("/api/updatename/:id", updateName);
+app.put("/api/toggleactive/:id", toggleActive);
+//---------------------------------------------------------------
 app.listen(PORT, () => {
   console.log(`I am listening on port ${PORT}`);
 });

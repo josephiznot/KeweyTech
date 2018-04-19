@@ -1,7 +1,7 @@
 import axios from "axios";
 var initialState = {
   maps: [],
-  locationId: ""
+  currentLocationId: ""
 };
 
 const GET_POINTS = "GET_POINTS";
@@ -14,7 +14,6 @@ export function getPoints(key) {
     payload: axios.get(`https://api.fencer.io/v1.0/geofence/${key}`, {
       headers: { Authorization: `${process.env.REACT_APP_FENCER_API_KEY}` }
     })
-    // undercover_payload: axios.post("/api/db")
   };
 }
 export function getPosition(lat, lng) {
@@ -56,7 +55,7 @@ export default function fencerReducer(state = initialState, action) {
         ? { ...state, message: "USER NOT IN BOUNDS" }
         : {
             ...state,
-            locationId: action.payload.data.data[0].id
+            currentLocationId: action.payload.data.data[0].id
           };
 
     // /----------------------------i tried this, but got bugged. will check it out in AM--------------

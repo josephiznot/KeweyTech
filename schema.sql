@@ -9,24 +9,22 @@ CREATE TABLE users(
     is_admin VARCHAR(1),
     display_name VARCHAR(100)
 )
-CREATE TABLE geolocations(
+CREATE TABLE out_of_bounds(
+    o_b_id SERIAL PRIMARY KEY,
     latitude VARCHAR(300),
     longitude VARCHAR(300),
     accuracy INTEGER,
-    time_stamp
-    user_id INTEGER
+    user_id INTEGER REFERENCES users (user_id),
+    fence_id INTEGER REFERENCES geofences (fence_id),
+    resolution VARCHAR(100)
 )
 
 CREATE TABLE geofences(
     fence_id SERIAL PRIMARY KEY,
-    access_key VARCHAR(100),
-    fence_name VARCHAR(100),
+    center_lat VARCHAR(100),
+    center_lng VARCHAR(100),
+    fence_key VARCHAR(100),
+    fence_alias VARCHAR(100),
     is_active VARCHAR(1)
     )
 
--- IF TIME PERSISTS--
--- CREATE TABLE points(
---     latitude VARCHAR(100),
---     longitude VARCHAR(100),
---     fence_id JOIN WITH geofences fence_id
--- )

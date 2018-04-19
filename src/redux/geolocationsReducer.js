@@ -39,10 +39,6 @@ export function updateCurrentLocation() {
       `https://www.googleapis.com/geolocation/v1/geolocate?key=${
         process.env.REACT_APP_GEOLOCATION_API_KEY
       }`
-      // {
-      //   considerIp: "true",
-      //   wifiAccessPoints: [{ macAddress: "98:01:a7:b4:be:e9" }]
-      // }
     )
   };
 }

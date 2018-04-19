@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { handleRequestClose } from "./../../../redux/HamburgerReducer";
 
 function DropDown(props) {
-  var { menuItem1, menuItem2 } = props.HamburgerReducer;
+  var { menuItem1, menuItem2, menuItem5 } = props.HamburgerReducer;
 
   return (
     <Popover

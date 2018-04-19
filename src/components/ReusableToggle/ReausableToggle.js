@@ -10,20 +10,16 @@ class ReusableToggle extends Component {
     };
     this.handleToggle = this.handleToggle.bind(this);
   }
-
+  //Checks to see if user is in any of them.
+  //Ough to put it in componentDidMount()
   handleToggle() {
     this.props.getPosition(
       this.props.geolocationsReducer.currLat,
       this.props.geolocationsReducer.currLng
     );
   }
-  componentDidMount() {
-    if (this.props.fencerReducer.message) {
-      this.setState({ toggle: false });
-    }
-  }
   render() {
-    console.log(this.props.fencerReducer.maps);
+    // console.log(this.props.fencerReducer.locationId);
     let { E, i } = this.props;
 
     return (

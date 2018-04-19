@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import axios from "axios";
 import { connect } from "react-redux";
 import AppBar from "material-ui/AppBar";
 import Avatar from "material-ui/Avatar";
@@ -14,7 +13,6 @@ import {
 } from "./../../redux/geolocationsReducer";
 import { getUser } from "./../../redux/userReducer";
 import RaisedButton from "material-ui/RaisedButton";
-import { getIterator } from "core-js";
 import GoogleMaps from "./../GoogleMaps/GoogleMaps";
 import "./Geolocations.css";
 
@@ -22,9 +20,6 @@ class Geolocations extends Component {
   constructor() {
     super();
     this.state = {
-      lat: "",
-      lng: "",
-      accuracy: "",
       trackFlag: false,
       isEnabled: false
     };

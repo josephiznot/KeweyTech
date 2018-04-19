@@ -1,6 +1,7 @@
 import React from "react";
 
 import "./IntroQ.css";
+import TouchApp from "material-ui/svg-icons/action/touch-app";
 
 const IntroQ = () => {
   return (
@@ -9,6 +10,7 @@ const IntroQ = () => {
         <p>What is Kewey?</p>
         <div className="message-wing" />
       </div>
+      {/* <TouchApp /> */}
     </div>
   );
 };
