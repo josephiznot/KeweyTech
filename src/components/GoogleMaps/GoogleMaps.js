@@ -7,6 +7,7 @@ import { updateCurrentLocation } from "./../../redux/geolocationsReducer";
 import Toggle from "material-ui/Toggle";
 import CircularProgress from "material-ui/CircularProgress";
 import ReusableToggle from "../ReusableToggle/ReausableToggle";
+import swal from "sweetalert";
 class GoogleMaps extends Component {
   componentDidMount() {
     this.props.getPoints(process.env.REACT_APP_DEV_KEY);
@@ -16,7 +17,7 @@ class GoogleMaps extends Component {
   }
   componentDidUpdate() {
     if (this.props.fencerReducer.message) {
-      alert(this.props.fencerReducer.message);
+      swal(this.props.fencerReducer.message);
       this.props.ridError();
     }
   }
