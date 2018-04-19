@@ -52,7 +52,6 @@ export default function fencerReducer(state = initialState, action) {
         })
       };
     case `${GET_POSITION}_FULFILLED`:
-      console.log(state.maps);
       return action.payload.data.error
         ? { ...state, message: "USER NOT IN BOUNDS" }
         : {
@@ -60,20 +59,19 @@ export default function fencerReducer(state = initialState, action) {
             locationId: action.payload.data.data[0].id
           };
 
-    /*----------------------------i tried this, but got bugged. will check it out in AM--------------
-    case `${GET_POSITION}_FULFILLED`:
-      console.log(state.maps);
-      return action.payload.data.error
-        ? { ...state, message: "USER NOT IN BOUNDS" }
-        : (state = state.maps.map((e, i) => {
-            return e.alias === action.payload.data.data.alias
-              ? {
-                  ...state.maps,
-                  locationId: action.payload.data.data[0].id
-                }
-              : null;
-          }));
-       -------------------------------------------------------------------------------------- */
+    // /----------------------------i tried this, but got bugged. will check it out in AM--------------
+    // case `${GET_POSITION}_FULFILLED`:
+    //   return action.payload.data.error
+    //     ? { ...state, message: "USER NOT IN BOUNDS" }
+    //     : (state = state.maps.map((e, i) => {
+    //         return e.alias === action.payload.data.data.alias
+    //           ? {
+    //               ...state.maps,
+    //               locationId: action.payload.data.data[0].id
+    //             }
+    //           : null;
+    //       }));
+    //  -------------------------------------------------------------------------------------- */
 
     case RID_ERROR:
       return {
