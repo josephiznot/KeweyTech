@@ -4,10 +4,17 @@ var initialState = {
   currentLocationId: ""
 };
 
+const GET_GEOFENCES = "GET_GEOFENCES";
 const GET_POINTS = "GET_POINTS";
 const GET_POSITION = "GET_POSITION";
 const RID_ERROR = "RID_ERROR";
-
+export function getGeofences() {
+  console.log("hit");
+  return {
+    type: GET_GEOFENCES,
+    payload: axios.get("/api/geofences")
+  };
+}
 export function getPoints(key) {
   return {
     type: GET_POINTS,
@@ -34,9 +41,19 @@ export function ridError() {
     payload: ""
   };
 }
+//////////////////////////////////////////////////////////////
+//------------------REDUCER------------------
+//////////////////////////////////////////////////////////////
 export default function fencerReducer(state = initialState, action) {
   var { maps } = state;
   switch (action.type) {
+    case `${GET_GEOFENCES}_FULFILLED`:
+      console.log(action.payload);
+      console.log("hit");
+      return {
+        ...state,
+        maps: maps.concat(action.payload.data)
+      };
     case `${GET_POINTS}_FULFILLED`:
       return {
         ...state,
@@ -60,16 +77,17 @@ export default function fencerReducer(state = initialState, action) {
 
     // /----------------------------i tried this, but got bugged. will check it out in AM--------------
     // case `${GET_POSITION}_FULFILLED`:
+    //   console.log(state.maps);
     //   return action.payload.data.error
     //     ? { ...state, message: "USER NOT IN BOUNDS" }
-    //     : (state = state.maps.map((e, i) => {
+    //     : state.maps.map((e, i) => {
     //         return e.alias === action.payload.data.data.alias
     //           ? {
-    //               ...state.maps,
+    //               ...state,
     //               locationId: action.payload.data.data[0].id
     //             }
-    //           : null;
-    //       }));
+    //           : state;
+    //       });
     //  -------------------------------------------------------------------------------------- */
 
     case RID_ERROR:

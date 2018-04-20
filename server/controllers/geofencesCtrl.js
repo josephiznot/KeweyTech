@@ -1,4 +1,5 @@
 const getGeofences = (req, res) => {
+  console.log("hit too");
   req.app
     .get("db")
     .get_geofences()

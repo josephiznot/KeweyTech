@@ -13,6 +13,8 @@ class ReusableToggle extends Component {
   //Checks to see if user is in any of them.
   //Ough to put it in componentDidMount()
   handleToggle() {
+    // if (this.props.fencerReducer.maps) {
+    //returns the fence the user is in, if any
     this.props.getPosition(
       this.props.geolocationsReducer.currLat,
       this.props.geolocationsReducer.currLng
@@ -20,7 +22,7 @@ class ReusableToggle extends Component {
   }
   render() {
     // console.log(this.props.fencerReducer.locationId);
-    let { E, i } = this.props;
+    let { E, i, isToggled } = this.props;
 
     return (
       <div className="map-and-button" key={i}>
@@ -32,7 +34,7 @@ class ReusableToggle extends Component {
         <Toggle
           label="TRACKING ENABLED"
           defaultToggled={false}
-          //   disabled={true}
+          // disabled={isToggled}
           labelPosition="right"
           onToggle={() => this.handleToggle()}
         />

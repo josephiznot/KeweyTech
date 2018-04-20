@@ -21,8 +21,8 @@ CREATE TABLE out_of_bounds(
 
 CREATE TABLE geofences(
     fence_id SERIAL PRIMARY KEY,
-    center_lat VARCHAR(100),
-    center_lng VARCHAR(100),
+    fence_center JSON,
+    fence_points JSON,
     fence_key VARCHAR(100),
     fence_alias VARCHAR(100),
     is_active VARCHAR(1)
