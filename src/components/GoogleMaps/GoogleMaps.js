@@ -18,23 +18,33 @@ class GoogleMaps extends Component {
   constructor() {
     super();
     this.state = {
-      center: []
+      geofences: []
     };
   }
   componentDidMount() {
-    this.props.getGeofences();
-    // this.props.updateCurrentLocation();
-    //---------
+    this.props.updateCurrentLocation().then(res => {
+      //^^^^^^^^^^RETURNS CURRENT LOCATION^^^^^^^^^^^^^^^^
+      this.props
+        .getPosition(
+          this.props.geolocationsReducer.currLat,
+          this.props.geolocationsReducer.currLng
+        )
+        //^^^^^^^^^^RETURNS THE FENCE KEY THAT THE USER IS IN^^^^^^^^^^^^^^
+        .then(response => {
+          axios
+            .put(`/api/toggleactive/${response.value.data.data[0].id}`, {
+              num: true
+            })
+            //^^^^^^^^^^^^^^^^ALLOWS USER TO TOGGLE ONLY THE FENCE THEY ARE IN^^^^^^^^^^^^^
+            .then(response => {
+              this.setState({ geofences: response.data });
+            });
+        });
+    });
   }
-  // componentDidUpdate() {
-  //   if (this.props.fencerReducer.message) {
-  //     swal(this.props.fencerReducer.message);
-  //     this.props.ridError();
-  //   }
-  // }
+
   render() {
-    console.log(this.props.fencerReducer.maps);
-    const mapped = this.props.fencerReducer.maps
+    const mapped = this.state.geofences
       .map((e, i, a) => {
         return withGoogleMap(() => (
           <div>
@@ -65,7 +75,7 @@ class GoogleMaps extends Component {
       });
     return (
       <div>
-        {this.props.fencerReducer.maps[0] ? (
+        {this.state.geofences[0] ? (
           mapped
         ) : (
           <div className="geolocations-loading">

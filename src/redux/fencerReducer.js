@@ -48,8 +48,6 @@ export default function fencerReducer(state = initialState, action) {
   var { maps } = state;
   switch (action.type) {
     case `${GET_GEOFENCES}_FULFILLED`:
-      console.log(action.payload);
-      console.log("hit");
       return {
         ...state,
         maps: maps.concat(action.payload.data)
@@ -74,21 +72,6 @@ export default function fencerReducer(state = initialState, action) {
             ...state,
             currentLocationId: action.payload.data.data[0].id
           };
-
-    // /----------------------------i tried this, but got bugged. will check it out in AM--------------
-    // case `${GET_POSITION}_FULFILLED`:
-    //   console.log(state.maps);
-    //   return action.payload.data.error
-    //     ? { ...state, message: "USER NOT IN BOUNDS" }
-    //     : state.maps.map((e, i) => {
-    //         return e.alias === action.payload.data.data.alias
-    //           ? {
-    //               ...state,
-    //               locationId: action.payload.data.data[0].id
-    //             }
-    //           : state;
-    //       });
-    //  -------------------------------------------------------------------------------------- */
 
     case RID_ERROR:
       return {

@@ -46,7 +46,8 @@ const toggleActive = (req, res) => {
     .toggle_active([num, id])
     .then(response => {
       getGeofences(req, res);
-    });
+    })
+    .catch(console.log);
 };
 
 module.exports = {

@@ -1,2 +1,2 @@
 SELECT *
-FROM geofences
+FROM geofences;
