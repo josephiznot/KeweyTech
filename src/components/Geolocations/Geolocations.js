@@ -15,6 +15,7 @@ import { getUser } from "./../../redux/userReducer";
 import RaisedButton from "material-ui/RaisedButton";
 import GoogleMaps from "./../GoogleMaps/GoogleMaps";
 import "./Geolocations.css";
+import swal from "sweetalert";
 
 class Geolocations extends Component {
   constructor() {
@@ -29,6 +30,9 @@ class Geolocations extends Component {
   enableTracking() {
     //the flag allows the user to enable/disable the setInterval
     var { trackFlag, isEnabled } = this.state;
+    isEnabled
+      ? swal("Good job!", "Tracking Disabled", "success")
+      : swal("Good job!", "Tracking Enabled", "success");
     this.setState({
       trackFlag: !trackFlag,
       isEnabled: !isEnabled
@@ -43,13 +47,14 @@ class Geolocations extends Component {
       */
       this.props.isInBounds(
         this.props.geolocationsReducer.currLat,
-        this.props.geolocationsReducer.currLng
+        this.props.geolocationsReducer.currLng,
+        this.props.geolocationsReducer.toggledKey
       );
       //once the disable button is hit, the functions will fire once more, and stop.
       if (!this.state.trackFlag) {
         clearInterval(start);
       }
-    }, 15000);
+    }, 5000);
   }
 
   componentDidUpdate() {
@@ -62,6 +67,14 @@ class Geolocations extends Component {
     this.props.getUser();
   }
   render() {
+    console.log(
+      "Lat:",
+      this.props.geolocationsReducer.currLat,
+      "Lng:",
+      this.props.geolocationsReducer.currLng,
+      "Key:",
+      this.props.geolocationsReducer.toggledKey
+    );
     return (
       <div>
         <nav className="geolocations-nav">

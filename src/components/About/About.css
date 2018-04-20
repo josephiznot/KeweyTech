@@ -92,7 +92,7 @@
 
 .about-download-container {
   width: 280px;
-  height: 100px;
+  height: 200px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -100,4 +100,7 @@
 }
 .about-download-container h1 {
   font-size: 36px;
+}
+.app-download {
+  width: 300px;
 }

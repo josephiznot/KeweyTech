@@ -4,9 +4,10 @@ import Menu from "material-ui/Menu";
 import MenuItem from "material-ui/MenuItem";
 import { connect } from "react-redux";
 import { handleRequestClose } from "./../../../redux/HamburgerReducer";
+import { Link } from "react-router-dom";
 
 function DropDown(props) {
-  var { menuItem1, menuItem2, menuItem5 } = props.HamburgerReducer;
+  var { login, signOut, settings, history } = props.HamburgerReducer;
 
   return (
     <Popover
@@ -24,11 +25,17 @@ function DropDown(props) {
         }}
       >
         <a href="http://localhost:3001/auth">
-          <MenuItem style={{ paddingRight: "30px" }} primaryText={menuItem1} />
+          <MenuItem style={{ paddingRight: "30px" }} primaryText={login} />
         </a>
         <a href="http://localhost:3001/logout">
-          <MenuItem style={{ paddingRight: "30px" }} primaryText={menuItem2} />
+          <MenuItem style={{ paddingRight: "30px" }} primaryText={signOut} />
         </a>
+        <Link to="/settings">
+          <MenuItem style={{ paddingRight: "30px" }} primaryText={settings} />
+        </Link>
+        <Link to="/history">
+          <MenuItem style={{ paddingRight: "30px" }} primaryText={history} />
+        </Link>
       </Menu>
     </Popover>
   );

@@ -10,7 +10,7 @@ var initialState = {
   currLat: "",
   currLng: "",
   currLocation: "",
-
+  toggledKey: "",
   isInBounds: true
 };
 
@@ -18,6 +18,7 @@ const GET_GEOLOCATIONS = "GET_GEOLOCATIONS";
 const FIND_DEPENDENT = "FIND_DEPENDENT";
 const UPDATE_CURRENT_LOCATION = "UPDATE_LOCATION";
 const IS_IN_BOUNDS = "IS_IN_BOUNDS";
+const UPDATE_TOGGLED_KEY = "UPDATE_TOGGLED_KEY";
 
 export function getDependent() {
   return {
@@ -42,8 +43,9 @@ export function updateCurrentLocation() {
     )
   };
 }
-export function isInBounds(lat, lng) {
+export function isInBounds(lat, lng, key) {
   //make axios request for one that is toggled
+  console.log("here is the key:", key);
   return {
     type: IS_IN_BOUNDS,
     payload: axios.get(
@@ -53,22 +55,34 @@ export function isInBounds(lat, lng) {
       {
         headers: {
           Authorization: `${process.env.REACT_APP_FENCER_API_KEY}`,
-          "Lat-Pos": Number(lat),
-          "Lng-Pos": Number(lng)
+          "Lat-Pos": lat,
+          "Lng-Pos": lng
         }
       }
     )
   };
 }
 
+export function updateToggledKey(key) {
+  console.log("hit function in reducer");
+  return {
+    type: UPDATE_TOGGLED_KEY,
+    payload: key
+  };
+}
+
+///////////////////////////////////////////////////////////////////
+/////////////////////////REDUCER//////////////////////////////////
+///////////////////////////////////////////////////////////////////
+
 export default function geolocationsReducer(state = initialState, action) {
-  var { currLat, currLng, currLocation } = state;
   switch (action.type) {
     case `${GET_GEOLOCATIONS}_FULFILLED`:
       return { ...state, geolocations: action.payload.data };
     case `${FIND_DEPENDENT}_FULFILLED`:
       return { ...state, dependentLocation: action.payload.data };
     case `${UPDATE_CURRENT_LOCATION}_FULFILLED`:
+      console.log(initialState);
       return {
         ...state,
         currLocation: action.payload.data.location,
@@ -77,6 +91,9 @@ export default function geolocationsReducer(state = initialState, action) {
       };
     case `${IS_IN_BOUNDS}_FULFILLED`:
       return { ...state, isInBounds: action.payload.data.data.inside };
+    case `${UPDATE_TOGGLED_KEY}`:
+      console.log(action.payload, "hit reducer");
+      return { ...state, toggledKey: action.payload };
     default:
       return state;
   }

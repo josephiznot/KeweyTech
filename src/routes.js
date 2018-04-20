@@ -4,6 +4,8 @@ import LandingPage from "./components/LandingPage/LandingPage";
 import About from "./components/About/About";
 import Geolocations from "./components/Geolocations/Geolocations";
 import Alert from "./components/Alert/Alert";
+import Settings from "./components/Settings/Settings";
+import Historys from "./components/History/History";
 
 export default (
   <Switch>
@@ -11,6 +13,8 @@ export default (
     <Route path="/About" component={About} />
     <Route path="/geolocations" component={Geolocations} />
     <Route path="/alert" component={Alert} />
+    <Route path="/settings" component={Settings} />
+    <Route path="/history" component={Historys} />
     <Route
       path="*"
       render={() => {

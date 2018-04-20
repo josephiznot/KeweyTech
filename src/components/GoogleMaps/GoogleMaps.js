@@ -8,18 +8,22 @@ import {
   ridError,
   getGeofences
 } from "./../../redux/fencerReducer";
-import { updateCurrentLocation } from "./../../redux/geolocationsReducer";
+import {
+  updateCurrentLocation,
+  updateToggledKey
+} from "./../../redux/geolocationsReducer";
 import Toggle from "material-ui/Toggle";
 import CircularProgress from "material-ui/CircularProgress";
-import ReusableToggle from "../ReusableToggle/ReausableToggle";
-import swal from "sweetalert";
 import axios from "axios";
+import swal from "sweetalert";
 class GoogleMaps extends Component {
   constructor() {
     super();
     this.state = {
-      geofences: []
+      geofences: [],
+      toggled: false
     };
+    this.handleToggle = this.handleToggle.bind(this);
   }
   componentDidMount() {
     this.props.updateCurrentLocation().then(res => {
@@ -42,8 +46,14 @@ class GoogleMaps extends Component {
         });
     });
   }
+  handleToggle(key) {
+    var { toggled } = this.state;
+    this.props.updateToggledKey(key);
+    this.setState({ toggled: !toggled });
+  }
 
   render() {
+    console.log("Initially empty:", this.props.geolocationsReducer.toggledKey);
     const mapped = this.state.geofences
       .map((e, i, a) => {
         return withGoogleMap(() => (
@@ -54,11 +64,11 @@ class GoogleMaps extends Component {
             </div>
             <h1 className="google-map-header">{e.alias}</h1>
             <Toggle
-              id="1"
               label="TRACKING ENABLED"
               disabled={!e.is_active_2}
+              toggled={e.is_active_2 && this.state.toggled ? true : false}
               labelPosition="right"
-              // onToggle={() => this.handleToggle()}
+              onToggle={() => this.handleToggle(e.fence_key)}
             />
           </div>
         ));
@@ -93,5 +103,6 @@ export default connect(mapStateToProps, {
   getPosition,
   updateCurrentLocation,
   ridError,
-  getGeofences
+  getGeofences,
+  updateToggledKey
 })(GoogleMaps);

@@ -1,7 +1,7 @@
 import React from "react";
 
 import "./IntroQ.css";
-import TouchApp from "material-ui/svg-icons/action/touch-app";
+// import TouchApp from "material-ui/svg-icons/action/touch-app";
 
 const IntroQ = () => {
   return (
