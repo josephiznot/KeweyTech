@@ -28,6 +28,7 @@ class GoogleMaps extends Component {
   componentDidMount() {
     this.props.updateCurrentLocation().then(res => {
       //^^^^^^^^^^RETURNS CURRENT LOCATION^^^^^^^^^^^^^^^^
+      console.log(res);
       this.props
         .getPosition(
           this.props.geolocationsReducer.currLat,
@@ -35,14 +36,27 @@ class GoogleMaps extends Component {
         )
         //^^^^^^^^^^RETURNS THE FENCE KEY THAT THE USER IS IN^^^^^^^^^^^^^^
         .then(response => {
-          axios
-            .put(`/api/toggleactive/${response.value.data.data[0].id}`, {
-              num: true
-            })
-            //^^^^^^^^^^^^^^^^ALLOWS USER TO TOGGLE ONLY THE FENCE THEY ARE IN^^^^^^^^^^^^^
-            .then(response => {
-              this.setState({ geofences: response.data });
-            });
+          console.log(response);
+          if (response.value.data.data) {
+            //^^^^^^^^^^^^^^^^WILL EXECUTE IF USER IS IN A FENCE^^^^^^^^^^^^^^^
+            axios
+              .put(`/api/toggleactive/${response.value.data.data[0].id}`, {
+                num: true
+              })
+
+              //^^^^^^^^^^^^^^^^ALLOWS USER TO TOGGLE ONLY THE FENCE THEY ARE IN^^^^^^^^^^^^^
+              .then(response => {
+                this.setState({ geofences: response.data });
+              });
+          } else {
+            axios
+              .put("api/resettoggles", { isActive: false })
+              .then(response => {
+                this.setState({ geofences: response.data });
+              });
+          }
+          //^^^^^^^^^^^^^^IF USER IS NOT IN ANY FENCE, IT'LL JUST RETREIVE THE FENCES^^^^^^^^^^^^^^
+          //!!!!!!!!!!!!!!!!!!!!!NEEDS TO RESET IS_ACTIVE_2 IN DB!!!!!!!!!!!!!!!!!!!
         });
     });
   }

@@ -26,7 +26,8 @@ const {
   getGeofences,
   updateCenter,
   updateName,
-  toggleActive
+  toggleActive,
+  resetToggles
 } = require("./controllers/geofencesCtrl");
 
 massive(process.env.CONNECTION_STRING)
@@ -133,6 +134,7 @@ app.get("/api/geofences", getGeofences);
 app.put("/api/updatecenter/:id", updateCenter);
 app.put("/api/updatename/:id", updateName);
 app.put("/api/toggleactive/:id", toggleActive);
+app.put("/api/resettoggles", resetToggles);
 //---------------------------------------------------------------
 app.listen(PORT, () => {
   console.log(`I am listening on port ${PORT}`);

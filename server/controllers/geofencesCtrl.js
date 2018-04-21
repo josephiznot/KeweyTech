@@ -49,11 +49,22 @@ const toggleActive = (req, res) => {
     })
     .catch(console.log);
 };
+const resetToggles = (req, res) => {
+  var { isActive } = req.body;
+  req.app
+    .get("db")
+    .reset_toggles(isActive)
+    .then(response => {
+      getGeofences(req, res);
+    })
+    .catch(console.log);
+};
 
 module.exports = {
   getGeofence,
   getGeofences,
   updateCenter,
   updateName,
-  toggleActive
+  toggleActive,
+  resetToggles
 };
