@@ -28,33 +28,38 @@ class Geolocations extends Component {
   }
   //this is going to start a setInterval in order to continually be tracking the user.
   enableTracking() {
-    //the flag allows the user to enable/disable the setInterval
-    var { trackFlag, isEnabled } = this.state;
-    isEnabled
-      ? swal("Good job!", "Tracking Disabled", "success")
-      : swal("Good job!", "Tracking Enabled", "success");
-    this.setState({
-      trackFlag: !trackFlag,
-      isEnabled: !isEnabled
-    });
-    var start = setInterval(() => {
-      //updates current location in the reducer
-      this.props.updateCurrentLocation();
-      /*
+    //ENABLE TRACKING ONLY IF THE USER IS WITHIN A GEOFENCE
+    if (!this.props.geolocationsReducer.toggledKey) {
+      swal("USER NOT IN KEWEY FENCE");
+    } else {
+      //the flag allows the user to enable/disable the setInterval
+      var { trackFlag, isEnabled } = this.state;
+      isEnabled
+        ? swal("Good job!", "Tracking Disabled", "success")
+        : swal("Good job!", "Tracking Enabled", "success");
+      this.setState({
+        trackFlag: !trackFlag,
+        isEnabled: !isEnabled
+      });
+      var start = setInterval(() => {
+        //updates current location in the reducer
+        this.props.updateCurrentLocation();
+        /*
       takes the updated state and passes in the coordinates as props.
       You will receive a 400 err when server is restarted because
       the props have not been updated yet. 
       */
-      this.props.isInBounds(
-        this.props.geolocationsReducer.currLat,
-        this.props.geolocationsReducer.currLng,
-        this.props.geolocationsReducer.toggledKey
-      );
-      //once the disable button is hit, the functions will fire once more, and stop.
-      if (!this.state.trackFlag) {
-        clearInterval(start);
-      }
-    }, 5000);
+        this.props.isInBounds(
+          this.props.geolocationsReducer.currLat,
+          this.props.geolocationsReducer.currLng,
+          this.props.geolocationsReducer.toggledKey
+        );
+        //once the disable button is hit, the functions will fire once more, and stop.
+        if (!this.state.trackFlag) {
+          clearInterval(start);
+        }
+      }, 5000);
+    }
   }
 
   componentDidUpdate() {
@@ -77,23 +82,6 @@ class Geolocations extends Component {
     );
     return (
       <div>
-        <nav className="geolocations-nav">
-          <AppBar
-            iconElementLeft={
-              <ListItem
-                leftAvatar={
-                  <Avatar src={this.props.userReducer.user.profile_pic} />
-                }
-              >
-                {this.props.userReducer.user.display_name}
-              </ListItem>
-            }
-            iconElementRight={<HamburgerMenu />}
-            title={<NavBarLinks />}
-            style={{ background: "#3c8dbc" }}
-            zDepth={1}
-          />
-        </nav>
         <div className="geolocations-body-container">
           <RaisedButton
             className="tracking-button"

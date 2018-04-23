@@ -1,12 +1,9 @@
 import React, { Component } from "react";
 
-import AppBar from "material-ui/AppBar";
-
-import HamburgerMenu from "./HamburgerMenu/HamburgerMenu";
 import IntroQ from "./IntroQ/IntroQ";
 import { Link } from "react-router-dom";
-import NavBarLinks from "./NavBarLinks";
 import { connect } from "react-redux";
+import "./LandingPage.css";
 
 class LandingPage extends Component {
   constructor() {
@@ -20,22 +17,18 @@ class LandingPage extends Component {
     };
   }
   componentWillMount() {
-    if (!this.props.geolocationsReducer.isInBounds) {
-      this.props.history.push("/alert");
-    }
+    //redirects to alert page if user out of bounds
+    // if (!this.props.geolocationsReducer.isInBounds) {
+    //   this.props.history.push("/alert");
+    // }
   }
   render() {
+    console.log(this.props);
     var { styles } = this.state;
     return (
-      <div>
-        <AppBar
-          showMenuIconButton={false}
-          iconElementRight={<HamburgerMenu />}
-          title={<NavBarLinks />}
-          style={{ background: "#3c8dbc" }}
-          zDepth={1}
-        />
-        <Link style={styles.noDecoration} to="/About">
+      <div className="landing-container">
+        <div className="appbar-imitator" />
+        <Link style={styles.noDecoration} to="/about">
           <IntroQ />
         </Link>
       </div>

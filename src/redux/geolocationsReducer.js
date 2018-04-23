@@ -50,7 +50,7 @@ export function isInBounds(lat, lng, key) {
     type: IS_IN_BOUNDS,
     payload: axios.get(
       `https://api.fencer.io/v1.0/position/inside/${
-        process.env.REACT_APP_DEV_KEY //!!!!!NEED TO MAKE IT ONLY FENCE THAT IS TOGGLED!!!!!!!//////
+        key //!!!!!NEED TO MAKE IT ONLY FENCE THAT IS TOGGLED!!!!!!!//////
       }`,
       {
         headers: {

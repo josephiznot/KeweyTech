@@ -1,3 +1,6 @@
+.appbar-imitator {
+  height: 64px;
+}
 .navbar-links-wrapper {
   display: none;
   justify-content: flex-start;

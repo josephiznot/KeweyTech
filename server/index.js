@@ -130,11 +130,11 @@ app.delete("/api/ridhistory/:id", deleteHistory);
 //-------------------------geofences CONTROLLER--------------------
 
 app.get("/api/geofence/:id", getGeofence);
-app.get("/api/geofences", getGeofences);
+app.get("/api/geofences", getGeofences); //USED
 app.put("/api/updatecenter/:id", updateCenter);
 app.put("/api/updatename/:id", updateName);
-app.put("/api/toggleactive/:id", toggleActive);
-app.put("/api/resettoggles", resetToggles);
+app.put("/api/toggleactive/:id", toggleActive); //USED
+app.put("/api/resettoggles", resetToggles); //USED
 //---------------------------------------------------------------
 app.listen(PORT, () => {
   console.log(`I am listening on port ${PORT}`);
