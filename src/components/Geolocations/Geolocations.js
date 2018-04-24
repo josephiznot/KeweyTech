@@ -24,9 +24,15 @@ class Geolocations extends Component {
   //this is going to start a setInterval in order to continually be tracking the user.
   enableTracking() {
     //ENABLE TRACKING ONLY IF THE USER IS WITHIN A GEOFENCE
+    //--------------
     if (!this.props.geolocationsReducer.toggledKey) {
-      swal("USER NOT IN KEWEY FENCE");
+      swal({
+        title: "Error",
+        text: "KEWEY FENCE MUST BE ACTIVATED",
+        icon: "info"
+      });
     } else {
+      //----------------------
       //the flag allows the user to enable/disable the setInterval
       var { trackFlag, isEnabled } = this.state;
       isEnabled

@@ -7,7 +7,13 @@ import { handleRequestClose } from "./../../../redux/HamburgerReducer";
 import { Link } from "react-router-dom";
 
 function DropDown(props) {
-  var { login, signOut, settings, history } = props.HamburgerReducer;
+  var {
+    login,
+    signOut,
+    settings,
+    history,
+    geolocations
+  } = props.HamburgerReducer;
 
   return (
     <Popover
@@ -30,6 +36,12 @@ function DropDown(props) {
         <a href="http://localhost:3001/logout">
           <MenuItem style={{ paddingRight: "30px" }} primaryText={signOut} />
         </a>
+        <Link to="/geolocations">
+          <MenuItem
+            style={{ paddingRight: "30px" }}
+            primaryText={geolocations}
+          />
+        </Link>
         <Link to="/settings">
           <MenuItem style={{ paddingRight: "30px" }} primaryText={settings} />
         </Link>

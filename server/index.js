@@ -25,9 +25,9 @@ const {
   getGeofence,
   getGeofences,
   updatePoints,
-  updateName,
   toggleActive,
-  resetToggles
+  resetToggles,
+  addGeofence
 } = require("./controllers/geofencesCtrl");
 
 massive(process.env.CONNECTION_STRING)
@@ -129,10 +129,10 @@ app.delete("/api/ridhistory/:id", deleteHistory);
 
 //-------------------------geofences CONTROLLER--------------------
 
-app.get("/api/geofence/:id", getGeofence);
+app.get("/api/geofence/:id", getGeofence); //USED
 app.get("/api/geofences", getGeofences); //USED
-app.put("/api/updatepoints/:id", updatePoints);
-app.put("/api/updatename/:id", updateName);
+app.put("/api/updatepoints/:id", updatePoints); //USED
+app.post("/api/addgeofence/:id", addGeofence); //USED
 app.put("/api/toggleactive/:id", toggleActive); //USED
 app.put("/api/resettoggles", resetToggles); //USED
 //---------------------------------------------------------------

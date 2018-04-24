@@ -10,8 +10,8 @@ class Settings extends Component {
       keys: []
     };
   }
-  componentDidMount() {
-    // var { keys } = this.state;
+  // componentDidMount() {
+  handleUpdate() {
     axios
       .get("https://api.fencer.io/v1.0/geofence", {
         headers: {
@@ -20,43 +20,44 @@ class Settings extends Component {
       })
       //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
       .then(response => {
-        console.log(response.data.data);
         response.data.data.map((e, i) => {
           this.setState({ keys: this.state.keys.concat(e.id) });
         });
         this.state.keys.map((e, i) => {
-          // e.slice(1, -1);
           axios
             .get(`https://api.fencer.io/v1.0/geofence/${e}`, {
               headers: {
                 Authorization: `${process.env.REACT_APP_FENCER_API_KEY}`
               }
             })
-            //^^^^^^^^^^^^^^^^^^^^^^^RETREIVE GEOFENCES AND THEIR INFO^^^^^^^^^^^^^^^^^^^^^
+            //^^^^^^^^^^^^^^^^^^^^^^^RETREIVE GEOFENCES AND THEIR INFO FROM FENCER^^^^^^^^^^^^^^^^^^^^^
             .then(response => {
-              console.log(e);
-              console.log(response.data.data);
-              axios
-                .put(`/api/updatepoints/${e}`, {
-                  center: response.data.data.center,
-                  points: response.data.data.points
-                })
-                .then(response2 => {
-                  console.log(response2);
-                })
-                //^^^^^^^^^^^^^^^^^^^^^UPDATE POINTS AND CENTER IN DB^^^^^^^^^^^^^^^^^^^^^^^^
-                .catch(console.log);
+              axios.get(`/api/geofence/${e}`).then(res => {
+                if (res.data[0]) {
+                  axios.put(`/api/updatepoints/${e}`, {
+                    center: response.data.data.center,
+                    points: response.data.data.points,
+                    alias: response.data.data.alias
+                  });
+                } else {
+                  axios.post(`/api/addgeofence/${e}`, {
+                    center: response.data.data.center,
+                    points: response.data.data.points,
+                    alias: response.data.data.alias
+                  });
+                }
+              });
+              //^^^^^^^^^^^^^^^^^^^^^UPDATES CURRENT FENCE OR CREATES NEW ONE^^^^^^^^^^^^^^^^^^^^^^^^
             })
             .catch(console.log);
         });
       })
       .catch(console.log);
-  }
-  handleUpdate() {
+    // }
     swal("GOOD JOB", "SOFTWARE UP-TO-DATE", "success");
   }
   render() {
-    // console.log(this.state.keys);
+    console.log(this.state.keys);
     return (
       <div>
         <div className="appbar-imitator" />

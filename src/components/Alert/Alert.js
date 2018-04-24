@@ -13,7 +13,7 @@ class Alert extends Component {
   //-----------------------------------------------------------------------------
   handleIgnore() {
     this.props.geolocationsReducer.isInBounds = true;
-    this.props.history.push("/");
+    this.props.history.push("/geolocations");
     // console.log(this.props.geolocationsReducer.isInBounds);
   }
   render() {

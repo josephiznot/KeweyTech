@@ -17,7 +17,6 @@ class App extends Component {
     // if (true) {
     //   this.props.history.push("/alert");
     // }
-    console.log(this.props);
     return (
       //I am conditionally rendering a different appbar based on route location
       <div>

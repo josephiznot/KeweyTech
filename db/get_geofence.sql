@@ -1,3 +1,3 @@
-GET *
+SELECT *
 FROM geofences
-WHERE fence_id = $1;
+WHERE fence_key = $1;

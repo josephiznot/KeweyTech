@@ -1,5 +1,4 @@
 const getGeofences = (req, res) => {
-  console.log("hit too");
   req.app
     .get("db")
     .get_geofences()
@@ -16,28 +15,25 @@ const getGeofence = (req, res) => {
     .then(response => {
       res.status(200).send(response);
     })
-    .catch(console.log);
+    .catch(err => console.log(err));
 };
 const updatePoints = (req, res) => {
-  //could update alias(name) if wanted to.
-  // console.log(req.params.id);
-  var { center, points } = req.body;
-  console.log(center, points);
+  var { center, points, alias } = req.body;
   var { id } = req.params;
   req.app
     .get("db")
-    .update_points([center, points, id])
+    .update_geofence([center, JSON.stringify(points), id, alias, false])
     .then(response => {
       getGeofences(req, res);
     })
     .catch(console.log);
 };
-const updateName = (req, res) => {
-  var { name } = req.body;
+const addGeofence = (req, res) => {
+  var { center, points, alias } = req.body;
   var { id } = req.params;
   req.app
     .get("db")
-    .update_name(name, id)
+    .add_geofence([center, JSON.stringify(points), id, alias, false])
     .then(response => {
       getGeofences(req, res);
     });
@@ -68,7 +64,7 @@ module.exports = {
   getGeofence,
   getGeofences,
   updatePoints,
-  updateName,
   toggleActive,
-  resetToggles
+  resetToggles,
+  addGeofence
 };

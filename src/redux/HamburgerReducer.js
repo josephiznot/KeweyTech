@@ -5,7 +5,8 @@ const initialState = {
   settings: "SETTINGS",
   keweyFence: "KEWEY FENCE",
   about: "ABOUT",
-  history: "HISTORY"
+  history: "HISTORY",
+  geolocations: "GEOLOCATIONS"
 };
 
 const HAMBURGER_OPEN = "HAMBURGER_CLICK";

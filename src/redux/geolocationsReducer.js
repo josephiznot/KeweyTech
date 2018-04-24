@@ -44,8 +44,6 @@ export function updateCurrentLocation() {
   };
 }
 export function isInBounds(lat, lng, key) {
-  //make axios request for one that is toggled
-  console.log("here is the key:", key);
   return {
     type: IS_IN_BOUNDS,
     payload: axios.get(
@@ -64,7 +62,6 @@ export function isInBounds(lat, lng, key) {
 }
 
 export function updateToggledKey(key) {
-  console.log("hit function in reducer");
   return {
     type: UPDATE_TOGGLED_KEY,
     payload: key
@@ -92,7 +89,6 @@ export default function geolocationsReducer(state = initialState, action) {
     case `${IS_IN_BOUNDS}_FULFILLED`:
       return { ...state, isInBounds: action.payload.data.data.inside };
     case `${UPDATE_TOGGLED_KEY}`:
-      console.log(action.payload, "hit reducer");
       return { ...state, toggledKey: action.payload };
     default:
       return state;
