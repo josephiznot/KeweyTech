@@ -24,7 +24,7 @@ const {
 const {
   getGeofence,
   getGeofences,
-  updateCenter,
+  updatePoints,
   updateName,
   toggleActive,
   resetToggles
@@ -131,7 +131,7 @@ app.delete("/api/ridhistory/:id", deleteHistory);
 
 app.get("/api/geofence/:id", getGeofence);
 app.get("/api/geofences", getGeofences); //USED
-app.put("/api/updatecenter/:id", updateCenter);
+app.put("/api/updatepoints/:id", updatePoints);
 app.put("/api/updatename/:id", updateName);
 app.put("/api/toggleactive/:id", toggleActive); //USED
 app.put("/api/resettoggles", resetToggles); //USED

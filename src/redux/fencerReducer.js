@@ -8,6 +8,8 @@ const GET_GEOFENCES = "GET_GEOFENCES";
 const GET_POINTS = "GET_POINTS";
 const GET_POSITION = "GET_POSITION";
 const RID_ERROR = "RID_ERROR";
+const UPDATE_GEOFENCE = "UPDATE_GEOFENCE";
+
 export function getGeofences() {
   console.log("hit");
   return {
@@ -41,6 +43,14 @@ export function ridError() {
     payload: ""
   };
 }
+
+export function updateGeofence(key) {
+  return {
+    type: UPDATE_GEOFENCE,
+    payload: key
+  };
+}
+
 //////////////////////////////////////////////////////////////
 //------------------REDUCER------------------
 //////////////////////////////////////////////////////////////

@@ -15,7 +15,6 @@ import {
 import Toggle from "material-ui/Toggle";
 import CircularProgress from "material-ui/CircularProgress";
 import axios from "axios";
-import swal from "sweetalert";
 class GoogleMaps extends Component {
   constructor() {
     super();
@@ -28,7 +27,6 @@ class GoogleMaps extends Component {
   componentDidMount() {
     this.props.updateCurrentLocation().then(res => {
       //^^^^^^^^^^RETURNS CURRENT LOCATION^^^^^^^^^^^^^^^^
-      console.log(res);
       this.props
         .getPosition(
           this.props.geolocationsReducer.currLat,
@@ -56,7 +54,7 @@ class GoogleMaps extends Component {
               });
           }
           //^^^^^^^^^^^^^^IF USER IS NOT IN ANY FENCE, IT'LL JUST RETREIVE THE FENCES^^^^^^^^^^^^^^
-          //!!!!!!!!!!!!!!!!!!!!!NEEDS TO RESET IS_ACTIVE_2 IN DB!!!!!!!!!!!!!!!!!!!
+          //!!!!!!!!!!!!!!!!!!!!!IT WILL RESET IS_ACTIVE_2 IN DB!!!!!!!!!!!!!!!!!!!
         });
     });
   }

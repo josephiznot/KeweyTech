@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 
-import LandingPage from "./components/LandingPage/LandingPage";
 import routes from "./routes";
 import AppBar from "material-ui/AppBar";
 import NavBarLinks from "./components/LandingPage/NavBarLinks";
@@ -14,9 +13,6 @@ import FlatButton from "material-ui/FlatButton";
 import Home from "material-ui/svg-icons/action/home";
 
 class App extends Component {
-  constructor() {
-    super();
-  }
   render() {
     // if (true) {
     //   this.props.history.push("/alert");

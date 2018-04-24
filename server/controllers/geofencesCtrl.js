@@ -18,15 +18,19 @@ const getGeofence = (req, res) => {
     })
     .catch(console.log);
 };
-const updateCenter = (req, res) => {
-  var { latitude, longitude } = req.body;
+const updatePoints = (req, res) => {
+  //could update alias(name) if wanted to.
+  // console.log(req.params.id);
+  var { center, points } = req.body;
+  console.log(center, points);
   var { id } = req.params;
   req.app
     .get("db")
-    .update_center([latitude, longitude, id])
+    .update_points([center, points, id])
     .then(response => {
       getGeofences(req, res);
-    });
+    })
+    .catch(console.log);
 };
 const updateName = (req, res) => {
   var { name } = req.body;
@@ -63,7 +67,7 @@ const resetToggles = (req, res) => {
 module.exports = {
   getGeofence,
   getGeofences,
-  updateCenter,
+  updatePoints,
   updateName,
   toggleActive,
   resetToggles

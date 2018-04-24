@@ -1,10 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import AppBar from "material-ui/AppBar";
-import Avatar from "material-ui/Avatar";
-import ListItem from "material-ui/List/ListItem";
-import HamburgerMenu from "./../LandingPage/HamburgerMenu/HamburgerMenu";
-import NavBarLinks from "./../LandingPage/NavBarLinks";
 import {
   getGeolocations,
   getDependent,

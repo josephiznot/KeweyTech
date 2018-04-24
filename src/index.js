@@ -5,7 +5,6 @@ import "./index.css";
 import registerServiceWorker from "./registerServiceWorker";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import { HashRouter } from "react-router-dom";
-import routes from "./routes";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 import App from "./App";

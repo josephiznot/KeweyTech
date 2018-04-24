@@ -5,12 +5,12 @@ import RaisedButton from "material-ui/RaisedButton";
 
 class Alert extends Component {
   //----------This is going to make the TWILIO get request-----------------
-  //---------DONT WANT TO GET TEXT RIGHT NOW---------------
   // componentDidMount() {
   //   axios.get(`/api/textalert`).then(res => {
   //     console.log(res.data);
   //   });
   // }
+  //-----------------------------------------------------------------------------
   handleIgnore() {
     this.props.geolocationsReducer.isInBounds = true;
     this.props.history.push("/");
