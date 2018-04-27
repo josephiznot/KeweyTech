@@ -7,7 +7,6 @@ var initialState = {
 const GET_GEOFENCES = "GET_GEOFENCES";
 const GET_POINTS = "GET_POINTS";
 const GET_POSITION = "GET_POSITION";
-const RID_ERROR = "RID_ERROR";
 const UPDATE_GEOFENCE = "UPDATE_GEOFENCE";
 
 export function getGeofences() {
@@ -35,12 +34,6 @@ export function getPosition(lat, lng) {
         "Lng-Pos": lng
       }
     })
-  };
-}
-export function ridError() {
-  return {
-    type: RID_ERROR,
-    payload: ""
   };
 }
 
@@ -82,12 +75,6 @@ export default function fencerReducer(state = initialState, action) {
             ...state,
             currentLocationId: action.payload.data.data[0].id
           };
-
-    case RID_ERROR:
-      return {
-        ...state,
-        message: action.payload
-      };
     default:
       return state;
   }

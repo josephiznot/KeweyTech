@@ -24,7 +24,6 @@ class Geolocations extends Component {
   //this is going to start a setInterval in order to continually be tracking the user.
   enableTracking() {
     //ENABLE TRACKING ONLY IF THE USER IS WITHIN A GEOFENCE
-    //--------------
     if (!this.props.geolocationsReducer.toggledKey) {
       swal({
         title: "Error",
@@ -32,7 +31,6 @@ class Geolocations extends Component {
         icon: "info"
       });
     } else {
-      //----------------------
       //the flag allows the user to enable/disable the setInterval
       var { trackFlag, isEnabled } = this.state;
       isEnabled
@@ -73,14 +71,6 @@ class Geolocations extends Component {
     this.props.getUser();
   }
   render() {
-    console.log(
-      "Lat:",
-      this.props.geolocationsReducer.currLat,
-      "Lng:",
-      this.props.geolocationsReducer.currLng,
-      "Key:",
-      this.props.geolocationsReducer.toggledKey
-    );
     return (
       <div>
         <div className="geolocations-body-container">

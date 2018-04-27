@@ -5,7 +5,6 @@ import "./GoogleMaps.css";
 import {
   getPoints,
   getPosition,
-  ridError,
   getGeofences
 } from "./../../redux/fencerReducer";
 import {
@@ -34,7 +33,11 @@ class GoogleMaps extends Component {
         )
         //^^^^^^^^^^RETURNS THE FENCE KEY THAT THE USER IS IN^^^^^^^^^^^^^^
         .then(response => {
-          console.log(response);
+          // if (this.props.obReducer.outsideTracking) {
+          //   axios.put("api/resettoggles", { isActive: true }).then(response => {
+          //     this.setState({ geofences: response.data });
+          //   });
+          // } else
           if (response.value.data.data) {
             //^^^^^^^^^^^^^^^^WILL EXECUTE IF USER IS IN A FENCE^^^^^^^^^^^^^^^
             axios
@@ -66,6 +69,7 @@ class GoogleMaps extends Component {
 
   render() {
     console.log("Initially empty:", this.props.geolocationsReducer.toggledKey);
+    console.log(this.state.toggled);
     const mapped = this.state.geofences
       .map((e, i, a) => {
         return withGoogleMap(() => (
@@ -77,8 +81,8 @@ class GoogleMaps extends Component {
             <h1 className="google-map-header">{e.alias}</h1>
             <Toggle
               label="TRACKING ENABLED"
-              disabled={!e.is_active_2}
-              toggled={e.is_active_2 && this.state.toggled ? true : false}
+              disabled={!e.is_active_2 && !this.props.obReducer.outsideTracking}
+              toggled={e.is_active_2 && this.state.toggled}
               labelPosition="right"
               onToggle={() => this.handleToggle(e.fence_key)}
             />
@@ -114,7 +118,6 @@ export default connect(mapStateToProps, {
   getPoints,
   getPosition,
   updateCurrentLocation,
-  ridError,
   getGeofences,
   updateToggledKey
 })(GoogleMaps);

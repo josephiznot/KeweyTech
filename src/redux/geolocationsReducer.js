@@ -48,7 +48,7 @@ export function isInBounds(lat, lng, key) {
     type: IS_IN_BOUNDS,
     payload: axios.get(
       `https://api.fencer.io/v1.0/position/inside/${
-        key //!!!!!NEED TO MAKE IT ONLY FENCE THAT IS TOGGLED!!!!!!!//////
+        key //!!!!!ONLY CHECKS MOST RECENT TOGGLED FENCE!!!!!!!//////
       }`,
       {
         headers: {
@@ -79,7 +79,6 @@ export default function geolocationsReducer(state = initialState, action) {
     case `${FIND_DEPENDENT}_FULFILLED`:
       return { ...state, dependentLocation: action.payload.data };
     case `${UPDATE_CURRENT_LOCATION}_FULFILLED`:
-      console.log(initialState);
       return {
         ...state,
         currLocation: action.payload.data.location,
@@ -88,7 +87,7 @@ export default function geolocationsReducer(state = initialState, action) {
       };
     case `${IS_IN_BOUNDS}_FULFILLED`:
       return { ...state, isInBounds: action.payload.data.data.inside };
-    case `${UPDATE_TOGGLED_KEY}`:
+    case UPDATE_TOGGLED_KEY:
       return { ...state, toggledKey: action.payload };
     default:
       return state;

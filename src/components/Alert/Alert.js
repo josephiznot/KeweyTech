@@ -13,10 +13,12 @@ class Alert extends Component {
   //-----------------------------------------------------------------------------
   handleIgnore() {
     this.props.geolocationsReducer.isInBounds = true;
+    //^^^^^^^^^^^might need to bootstrap a method in order to modify the state^^^^^^^^^^^^
     this.props.history.push("/geolocations");
     // console.log(this.props.geolocationsReducer.isInBounds);
   }
   render() {
+    console.log(this.props.obReducer.outsideTracking);
     return (
       <div>
         <h1>alert div</h1>
