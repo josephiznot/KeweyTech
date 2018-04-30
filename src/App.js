@@ -57,6 +57,8 @@ class App extends Component {
                 background: "#3c8dbc"
               }}
             />
+          ) : this.props.history.location.pathname === "/alert" ? (
+            <div />
           ) : (
             <AppBar
               iconElementLeft={

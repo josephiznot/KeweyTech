@@ -1,6 +1,10 @@
 import React from "react";
 import "./Component404.css";
 function Component404() {
-  return <div>Component404 div</div>;
+  return (
+    <div>
+      <div className="appbar-imitator" />Component404 div
+    </div>
+  );
 }
 export default Component404;

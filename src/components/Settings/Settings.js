@@ -5,7 +5,7 @@ import axios from "axios";
 import Toggle from "material-ui/Toggle";
 import { connect } from "react-redux";
 import { toggleOutsideTracking } from "./../../redux/obReducer";
-
+//save this
 class Settings extends Component {
   constructor() {
     super();
@@ -56,7 +56,8 @@ class Settings extends Component {
         });
       })
       .catch(console.log);
-    swal("GOOD JOB", "SOFTWARE UP-TO-DATE", "success");
+    swal("GOOD JOB", "SOFTWARE UP-TO-DATE", "error");
+    // alert("updated!!!");
   }
   render() {
     console.log(this.props.obReducer.outsideTracking);
