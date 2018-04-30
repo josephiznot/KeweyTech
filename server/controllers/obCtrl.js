@@ -1,19 +1,13 @@
 const axios = require("axios");
 
 const addHit = (req, res) => {
-  var {
-    latitude,
-    longitude,
-    accuracy,
-    user_id,
-    fence_id,
-    resolution
-  } = req.body;
+  var { latitude, longitude, accuracy, user_id, fence_id } = req.body;
+  console.log("fence_id being sent to DB: ", fence_id);
   req.app
     .get("db")
-    .add_hit([latitude, longitude, accuracy, user_id, fence_id, resolution])
+    .add_hit([latitude, longitude, accuracy, user_id, fence_id])
     .then(response => {
-      res.status(200).send(response);
+      getHistory(req, res);
     });
 };
 /*
@@ -48,10 +42,21 @@ const editResolution = (req, res) => {
     })
     .catch(console.log);
 };
+const putHit = (req, res) => {
+  var { id } = req.params;
+  var { latitude, longitude } = req.body;
+  req.app
+    .get("db")
+    .put_hit([latitdue, longitude, id])
+    .then(response => {
+      getHistory(req, res);
+    });
+};
 
 module.exports = {
   addHit,
   deleteHistory,
   getHistory,
-  editResolution
+  editResolution,
+  putHit
 };

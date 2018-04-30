@@ -23,5 +23,16 @@ module.exports = {
   },
   addCurrentLocation: (req, res, next) => {
     req.app.get("db").add_current_location();
+  },
+  getFenceId: (req, res) => {
+    console.log("hit");
+    req.app
+      .get("db")
+      .get_fence_id(req.params.fence_key)
+      .then(response => {
+        console.log(JSON.stringify(response[0].fence_id));
+        res.status(200).send(JSON.stringify(response[0].fence_id));
+      })
+      .catch(console.log);
   }
 };

@@ -78,7 +78,6 @@ class GoogleMaps extends Component {
               <GoogleMap defaultCenter={e.fence_center} defaultZoom={15} />
               <Polygon path={e.fence_points} />
             </div>
-            <h1 className="google-map-header">{e.alias}</h1>
             <Toggle
               label="TRACKING ENABLED"
               disabled={!e.is_active_2 && !this.props.obReducer.outsideTracking}
@@ -86,6 +85,7 @@ class GoogleMaps extends Component {
               labelPosition="right"
               onToggle={() => this.handleToggle(e.fence_key)}
             />
+            <h1 className="google-map-header">{e.fence_alias}</h1>
           </div>
         ));
       })

@@ -1,16 +1,16 @@
 import React, { Component } from "react";
 import RaisedButton from "material-ui/RaisedButton";
-import swal from "sweetalert";
 import axios from "axios";
 import Toggle from "material-ui/Toggle";
 import { connect } from "react-redux";
 import { toggleOutsideTracking } from "./../../redux/obReducer";
-//save this
+import swal from "sweetalert";
 class Settings extends Component {
   constructor() {
     super();
     this.state = {
-      keys: []
+      keys: [],
+      outFenceToggled: false
     };
   }
   handleUpdate() {
@@ -73,11 +73,37 @@ class Settings extends Component {
         <Toggle
           label="ALLOW OUT-FENCE TRACKING"
           labelPosition="left"
-          onToggle={() =>
-            this.props.toggleOutsideTracking(
-              this.props.obReducer.outsideTracking
-            )
-          }
+          onToggle={() => {
+            if (!this.state.outFenceToggled) {
+              swal({
+                title: "Are you sure?",
+                text:
+                  "Outfence tracking can produce unintentional side-effects with the Kewey fence!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true
+              }).then(willDelete => {
+                if (willDelete) {
+                  this.props.toggleOutsideTracking(
+                    this.props.obReducer.outsideTracking
+                  );
+                  this.setState({
+                    outFenceToggled: !this.state.outFenceToggled
+                  });
+                  swal("Out-fence tracking enabled!", {
+                    icon: "success"
+                  });
+                } else {
+                  swal("unchanged");
+                }
+              });
+            } else {
+              this.props.toggleOutsideTracking(
+                this.props.obReducer.outsideTracking
+              );
+              this.setState({ outFenceToggled: !this.state.outFenceToggled });
+            }
+          }}
           toggled={this.props.obReducer.outsideTracking}
         />
       </div>

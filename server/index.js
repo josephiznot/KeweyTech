@@ -17,6 +17,7 @@ const client = require("twilio")(
 );
 const {
   addHit,
+  putHit,
   deleteHistory,
   getHistory,
   editResolution
@@ -122,13 +123,14 @@ app.get("/api/textalert", () =>
 );
 //----------------------out_of_bounds CONTROLLER----------------
 
-app.post("/api/out_of_bounds_hit", addHit);
+app.post("/api/out_of_bounds_hit", addHit); //used
+app.put(`/api/out_of_bounds_hit/:id`, putHit);
 app.get("/api/history", getHistory);
 app.put("/api/resolution/", editResolution);
 app.delete("/api/ridhistory/:id", deleteHistory);
 
 //-------------------------geofences CONTROLLER--------------------
-
+app.get("/api/geofence/:fence_key", geolocationsCtrl.getFenceId);
 app.get("/api/geofence/:id", getGeofence); //USED
 app.get("/api/geofences", getGeofences); //USED
 app.put("/api/updatepoints/:id", updatePoints); //USED

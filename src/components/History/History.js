@@ -1,7 +1,17 @@
 import React from "react";
+import { connect } from "react-redux";
+import axios from "axios";
 
 function History() {
-  return <div>History</div>;
+  axios.get("/api/history").then(res => {
+    console.log(res);
+  });
+  return (
+    <div>
+      <div className="appbar-imitator" />
+      history
+    </div>
+  );
 }
-
-export default History;
+const mapStateToProps = state => state;
+export default connect(mapStateToProps)(History);
