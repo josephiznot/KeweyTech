@@ -54,11 +54,16 @@ class Alert extends Component {
           });
         });
     });
+    this.interval = setInterval(() => {
+      if (this.state.mounted) {
+        this.updateHit(this.state.o_b_id);
+      }
+    }, 5000);
   }
-  updateHit() {
+  updateHit(id) {
     this.props.updateCurrentLocation().then(res => {
       axios
-        .put(`/api/out_of_bounds_hit/${this.state.o_b_id}`, {
+        .put(`/api/out_of_bounds_hit/${id}`, {
           latitude: res.value.data.location.lat,
           longitude: res.value.data.location.lng
         })
@@ -67,10 +72,12 @@ class Alert extends Component {
         });
     });
   }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
   render() {
-    if (this.state.mounted) {
-      this.updateHit();
-    }
     return <div>OMG ALERT!!!!!!!!!!</div>;
   }
 }

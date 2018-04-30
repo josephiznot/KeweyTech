@@ -43,11 +43,12 @@ const editResolution = (req, res) => {
     .catch(console.log);
 };
 const putHit = (req, res) => {
+  console.log("hit ctrl");
   var { id } = req.params;
   var { latitude, longitude } = req.body;
   req.app
     .get("db")
-    .put_hit([latitdue, longitude, id])
+    .put_hit([latitude, longitude, id])
     .then(response => {
       getHistory(req, res);
     });

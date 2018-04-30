@@ -14,6 +14,14 @@ import {
 import Toggle from "material-ui/Toggle";
 import CircularProgress from "material-ui/CircularProgress";
 import axios from "axios";
+import {
+  Card,
+  CardActions,
+  CardHeader,
+  CardMedia,
+  CardTitle,
+  CardText
+} from "material-ui/Card";
 class GoogleMaps extends Component {
   constructor() {
     super();
@@ -33,11 +41,6 @@ class GoogleMaps extends Component {
         )
         //^^^^^^^^^^RETURNS THE FENCE KEY THAT THE USER IS IN^^^^^^^^^^^^^^
         .then(response => {
-          // if (this.props.obReducer.outsideTracking) {
-          //   axios.put("api/resettoggles", { isActive: true }).then(response => {
-          //     this.setState({ geofences: response.data });
-          //   });
-          // } else
           if (response.value.data.data) {
             //^^^^^^^^^^^^^^^^WILL EXECUTE IF USER IS IN A FENCE^^^^^^^^^^^^^^^
             axios
@@ -74,18 +77,23 @@ class GoogleMaps extends Component {
       .map((e, i, a) => {
         return withGoogleMap(() => (
           <div>
-            <div>
-              <GoogleMap defaultCenter={e.fence_center} defaultZoom={15} />
-              <Polygon path={e.fence_points} />
-            </div>
-            <Toggle
-              label="TRACKING ENABLED"
-              disabled={!e.is_active_2 && !this.props.obReducer.outsideTracking}
-              toggled={e.is_active_2 && this.state.toggled}
-              labelPosition="right"
-              onToggle={() => this.handleToggle(e.fence_key)}
-            />
-            <h1 className="google-map-header">{e.fence_alias}</h1>
+            <Card>
+              <CardMedia overlay={<CardTitle title={e.fence_alias} />}>
+                <GoogleMap defaultCenter={e.fence_center} defaultZoom={15} />
+                <Polygon path={e.fence_points} />
+              </CardMedia>
+              <CardActions>
+                <Toggle
+                  label="TRACKING ENABLED"
+                  disabled={
+                    !e.is_active_2 && !this.props.obReducer.outsideTracking
+                  }
+                  toggled={e.is_active_2 && this.state.toggled}
+                  labelPosition="right"
+                  onToggle={() => this.handleToggle(e.fence_key)}
+                />
+              </CardActions>
+            </Card>
           </div>
         ));
       })

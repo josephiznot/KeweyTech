@@ -40,7 +40,7 @@ class Geolocations extends Component {
         trackFlag: !trackFlag,
         isEnabled: !isEnabled
       });
-      var start = setInterval(() => {
+      this.start = setInterval(() => {
         //updates current location in the reducer
         this.props.updateCurrentLocation();
         /*
@@ -55,7 +55,7 @@ class Geolocations extends Component {
         );
         //once the disable button is hit, the functions will fire once more, and stop.
         if (!this.state.trackFlag) {
-          clearInterval(start);
+          clearInterval(this.start);
         }
       }, 5000);
     }
@@ -70,6 +70,10 @@ class Geolocations extends Component {
   componentDidMount() {
     this.props.getUser();
   }
+  componentWillUnmount() {
+    clearInterval(this.start);
+  }
+  //^^^^^^^^^^^^^^^^^CLEARS INTERVAL WHEN USER LEAVES COMPONENT^^^^^^^^^^^^^^^
   render() {
     return (
       <div>
