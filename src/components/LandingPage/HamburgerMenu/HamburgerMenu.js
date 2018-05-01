@@ -7,17 +7,50 @@ import DropDown from "./DropDown";
 import { connect } from "react-redux";
 import { handleClick } from "./../../../redux/HamburgerReducer";
 
-function HamburgerMenu(props) {
-  return (
-    <div>
-      <div className="hamburger-wrapper">
-        <IconButton onClick={props.handleClick}>
-          <MenuIcon />
-        </IconButton>
+class HamburgerMenu extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      open: false,
+      login: "LOGIN/SIGNUP_",
+      signOut: "SIGN OUT",
+      settings: "SETTINGS",
+      keweyFence: "KEWEY FENCE",
+      about: "ABOUT",
+      history: "HISTORY",
+      geolocations: "GEOLOCATIONS"
+    };
+    this.handleClick = this.handleClick.bind(this);
+    this.handleRequestClose = this.handleRequestClose.bind(this);
+  }
+  handleClick(event) {
+    event.preventDefault();
+    this.setState({ anchorEl: event.currentTarget });
+  }
+  handleRequestClose() {
+    this.setState({ open: false });
+  }
+  render() {
+    const { login, signOut, settings, history, geolocations } = this.state;
+    return (
+      <div>
+        <div className="hamburger-wrapper">
+          <IconButton onClick={this.handleClick}>
+            <MenuIcon />
+          </IconButton>
+        </div>
+        <DropDown
+          login={login}
+          signOut={signOut}
+          settings={settings}
+          history={history}
+          geolocations={geolocations}
+          handleRequestClose={this.handleRequestClose}
+          anchorEl={this.state.anchorEl}
+        />
       </div>
-      <DropDown />
-    </div>
-  );
+    );
+  }
 }
 const mapStateToProps = state => state;
 export default connect(mapStateToProps, { handleClick })(HamburgerMenu);

@@ -2,8 +2,6 @@ import React from "react";
 import Popover, { PopoverAnimationVertical } from "material-ui/Popover";
 import Menu from "material-ui/Menu";
 import MenuItem from "material-ui/MenuItem";
-import { connect } from "react-redux";
-import { handleRequestClose } from "./../../../redux/HamburgerReducer";
 import { Link } from "react-router-dom";
 
 function DropDown(props) {
@@ -12,13 +10,15 @@ function DropDown(props) {
     signOut,
     settings,
     history,
-    geolocations
-  } = props.HamburgerReducer;
+    geolocations,
+    open,
+    anchorEl
+  } = props;
 
   return (
     <Popover
-      open={props.HamburgerReducer.open}
-      anchorEl={props.HamburgerReducer.anchorEl}
+      open={open}
+      anchorEl={anchorEl}
       anchorOrigin={{ horizontal: "left", vertical: "bottom" }}
       targetOrigin={{ horizontal: "left", vertical: "top" }}
       onRequestClose={props.handleRequestClose}
@@ -69,5 +69,4 @@ function DropDown(props) {
     </Popover>
   );
 }
-const mapStateToProps = state => state;
-export default connect(mapStateToProps, { handleRequestClose })(DropDown);
+export default DropDown;

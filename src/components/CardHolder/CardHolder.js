@@ -21,6 +21,7 @@ class CardHolder extends Component {
     this.setState({ newResolution: val });
   }
   render() {
+    console.log("rendered");
     return (
       <div>
         <Card>

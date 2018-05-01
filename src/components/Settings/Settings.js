@@ -19,10 +19,12 @@ class Settings extends Component {
   handleUpdate() {
     axios
       .get("/api/get_fence_keys")
+      //^^^^^^GRABS FENCES FROM DB^^^^^^^^^^^
       .then(elResponse => {
         this.setState({ oldKeys: _.map(elResponse.data, "fence_key") });
         axios
           .get("https://api.fencer.io/v1.0/geofence", {
+            //^^^^^^^GRABS CURRENT FENCES FROM FENCER.IO^^^^^^^^^
             headers: {
               Authorization: `${process.env.REACT_APP_FENCER_API_KEY}`
             }
@@ -33,14 +35,17 @@ class Settings extends Component {
             });
             this.state.keys.map((e, i) => {
               var { oldKeys, keys } = this.state;
-              console.log(_.difference(oldKeys, keys));
               if (_.difference(oldKeys, keys)[0]) {
+                //^^^^CHECKS TO SEE IF A FENCE WAS DELETED FROM FENCER.IO^^^^^
                 _.difference(oldKeys, keys).map(element => {
-                  return axios
-                    .delete(`/api/delete_history_hits/${element}`)
-                    .then(afterwards => {
-                      axios.delete(`/api/delete_old_fence/${element}`);
-                    });
+                  return (
+                    axios
+                      .delete(`/api/delete_history_hits/${element}`)
+                      //^^^^^MUST DELETE HISTORY HITS BEFORE DELETING FENCE^^^^^^
+                      .then(afterwards => {
+                        axios.delete(`/api/delete_old_fence/${element}`);
+                      })
+                  );
                   //^^^^^^^^DELETES FROM GEOFENCE TABLE^^^^^^^^^^^^
                 });
               }
