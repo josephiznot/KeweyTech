@@ -32,6 +32,7 @@ const deleteHistory = (req, res) => {
     .catch(console.log);
 };
 const editResolution = (req, res) => {
+  console.log("hits ctrlr");
   var { resolution } = req.body;
   var { id } = req.params;
   req.app
@@ -53,11 +54,20 @@ const putHit = (req, res) => {
       getHistory(req, res);
     });
 };
+const fetchAvatar = (req, res) => {
+  req.app
+    .get("db")
+    .fetch_avatar(req.params.id)
+    .then(response => {
+      res.status(200).send(response);
+    });
+};
 
 module.exports = {
   addHit,
   deleteHistory,
   getHistory,
   editResolution,
-  putHit
+  putHit,
+  fetchAvatar
 };

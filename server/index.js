@@ -20,7 +20,8 @@ const {
   putHit,
   deleteHistory,
   getHistory,
-  editResolution
+  editResolution,
+  fetchAvatar
 } = require("./controllers/obCtrl");
 const {
   getGeofence,
@@ -28,7 +29,9 @@ const {
   updatePoints,
   toggleActive,
   resetToggles,
-  addGeofence
+  addGeofence,
+  getFenceKeys,
+  deleteOldFence
 } = require("./controllers/geofencesCtrl");
 
 massive(process.env.CONNECTION_STRING)
@@ -124,19 +127,23 @@ app.get("/api/textalert", () =>
 //----------------------out_of_bounds CONTROLLER----------------
 
 app.post("/api/out_of_bounds_hit", addHit); //used
-app.put(`/api/out_of_bounds_hit/:id`, putHit);
-app.get("/api/history", getHistory);
-app.put("/api/resolution/", editResolution);
-app.delete("/api/ridhistory/:id", deleteHistory);
+app.put(`/api/out_of_bounds_hit/:id`, putHit); //USED
+app.get("/api/history", getHistory); //USED
+app.put("/api/resolution/:id", editResolution); //USED
+app.delete("/api/ridhistory/:id", deleteHistory); //USED
+app.get("/api/fetch_avatar/:id", fetchAvatar);
 
 //-------------------------geofences CONTROLLER--------------------
-app.get("/api/geofence/:fence_key", geolocationsCtrl.getFenceId);
+app.get("/api/geofence_key/:fence_key", geolocationsCtrl.getFenceId);
+//used to be --/api/geofence/:fence_key---///////
+app.get("/api/get_fence_keys", getFenceKeys);
 app.get("/api/geofence/:id", getGeofence); //USED
 app.get("/api/geofences", getGeofences); //USED
 app.put("/api/updatepoints/:id", updatePoints); //USED
 app.post("/api/addgeofence/:id", addGeofence); //USED
 app.put("/api/toggleactive/:id", toggleActive); //USED
 app.put("/api/resettoggles", resetToggles); //USED
+app.delete(`/api/delete_old_fence/:key`, deleteOldFence);
 //---------------------------------------------------------------
 app.listen(PORT, () => {
   console.log(`I am listening on port ${PORT}`);

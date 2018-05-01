@@ -75,6 +75,7 @@ class Geolocations extends Component {
   }
   //^^^^^^^^^^^^^^^^^CLEARS INTERVAL WHEN USER LEAVES COMPONENT^^^^^^^^^^^^^^^
   render() {
+    console.log(this.props.geolocationsReducer.currLocation);
     return (
       <div>
         <div className="geolocations-body-container">

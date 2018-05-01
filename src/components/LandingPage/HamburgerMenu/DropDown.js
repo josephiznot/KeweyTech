@@ -31,22 +31,39 @@ function DropDown(props) {
         }}
       >
         <a href="http://localhost:3001/auth">
-          <MenuItem style={{ paddingRight: "30px" }} primaryText={login} />
+          <MenuItem
+            style={{ paddingRight: "30px" }}
+            primaryText={login}
+            onClick={props.handleRequestClose}
+          />
         </a>
         <a href="http://localhost:3001/logout">
-          <MenuItem style={{ paddingRight: "30px" }} primaryText={signOut} />
+          <MenuItem
+            style={{ paddingRight: "30px" }}
+            primaryText={signOut}
+            onClick={props.handleRequestClose}
+          />
         </a>
         <Link to="/geolocations">
           <MenuItem
             style={{ paddingRight: "30px" }}
             primaryText={geolocations}
+            onClick={props.handleRequestClose}
           />
         </Link>
         <Link to="/settings">
-          <MenuItem style={{ paddingRight: "30px" }} primaryText={settings} />
+          <MenuItem
+            style={{ paddingRight: "30px" }}
+            primaryText={settings}
+            onClick={props.handleRequestClose}
+          />
         </Link>
         <Link to="/history">
-          <MenuItem style={{ paddingRight: "30px" }} primaryText={history} />
+          <MenuItem
+            style={{ paddingRight: "30px" }}
+            primaryText={history}
+            onClick={props.handleRequestClose}
+          />
         </Link>
       </Menu>
     </Popover>

@@ -59,6 +59,23 @@ const resetToggles = (req, res) => {
     })
     .catch(console.log);
 };
+const getFenceKeys = (req, res) => {
+  req.app
+    .get("db")
+    .get_fence_keys()
+    .then(response => {
+      res.status(200).send(response);
+    });
+};
+const deleteOldFence = (req, res) => {
+  console.log(req.params.key);
+  req.app
+    .get("db")
+    .delete_old_fence(req.params.key)
+    .then(response => {
+      getGeofences(req, res);
+    });
+};
 
 module.exports = {
   getGeofence,
@@ -66,5 +83,7 @@ module.exports = {
   updatePoints,
   toggleActive,
   resetToggles,
-  addGeofence
+  addGeofence,
+  getFenceKeys,
+  deleteOldFence
 };

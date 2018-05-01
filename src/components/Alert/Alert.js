@@ -35,6 +35,7 @@ class Alert extends Component {
         .get(`/api/geofence/${this.props.geolocationsReducer.toggledKey}`)
         //^^^^^^^^^^^^^^GETS THE TOGGLED FENCE_ID^^^^^^^^^^^^^
         .then(axres => {
+          console.log(axres);
           this.props.updateCurrentLocation().then(res => {
             console.log(res);
             // ^^^^^^^^^^GETS CURRENT LOCATION^^^^^^^^^^^^^
@@ -44,7 +45,7 @@ class Alert extends Component {
                 longitude: res.value.data.location.lng,
                 accuracy: res.value.data.accuracy,
                 user_id: response.value.data.user_id,
-                fence_id: axres.data,
+                fence_id: axres.data[0].fence_id,
                 date: res.value.headers.date
               })
               .then(response => {
