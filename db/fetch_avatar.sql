@@ -1,5 +1,4 @@
-SELECT profile_pic
+SELECT DISTINCT users.profile_pic
 FROM users
-WHERE user_id IN (SELECT user_id
-                  FROM out_of_bounds
-                  WHERE o_b_id = $1)
+JOIN out_of_bounds ON out_of_bounds.user_id = users.user_id
+WHERE out_of_bounds.user_id = users.user_id

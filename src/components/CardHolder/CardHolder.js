@@ -4,12 +4,10 @@ import {
   CardActions,
   CardHeader,
   CardMedia,
-  CardTitle,
+  // CardTitle,
   CardText
 } from "material-ui/Card";
 import FlatButton from "material-ui/FlatButton";
-import swal from "sweetalert";
-import axios from "axios";
 
 class CardHolder extends Component {
   constructor() {

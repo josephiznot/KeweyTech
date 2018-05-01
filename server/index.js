@@ -21,7 +21,8 @@ const {
   deleteHistory,
   getHistory,
   editResolution,
-  fetchAvatar
+  fetchAvatar,
+  deleteHistoryHits
 } = require("./controllers/obCtrl");
 const {
   getGeofence,
@@ -132,6 +133,7 @@ app.get("/api/history", getHistory); //USED
 app.put("/api/resolution/:id", editResolution); //USED
 app.delete("/api/ridhistory/:id", deleteHistory); //USED
 app.get("/api/fetch_avatar/:id", fetchAvatar);
+app.delete("/api/delete_history_hits/:key", deleteHistoryHits);
 
 //-------------------------geofences CONTROLLER--------------------
 app.get("/api/geofence_key/:fence_key", geolocationsCtrl.getFenceId);

@@ -17,10 +17,10 @@ import axios from "axios";
 import {
   Card,
   CardActions,
-  CardHeader,
+  // CardHeader,
   CardMedia,
-  CardTitle,
-  CardText
+  CardTitle
+  // CardText
 } from "material-ui/Card";
 class GoogleMaps extends Component {
   constructor() {

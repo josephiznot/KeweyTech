@@ -1,3 +1,4 @@
+//USE NODE MAILER TO EMAIL USER OF THE DELETED HITS FROM out_of_bounds HISTORY.
 import React, { Component } from "react";
 import RaisedButton from "material-ui/RaisedButton";
 import axios from "axios";
@@ -35,7 +36,12 @@ class Settings extends Component {
               console.log(_.difference(oldKeys, keys));
               if (_.difference(oldKeys, keys)[0]) {
                 _.difference(oldKeys, keys).map(element => {
-                  axios.delete(`/api/delete_old_fence/${element}`);
+                  return axios
+                    .delete(`/api/delete_history_hits/${element}`)
+                    .then(afterwards => {
+                      axios.delete(`/api/delete_old_fence/${element}`);
+                    });
+                  //^^^^^^^^DELETES FROM GEOFENCE TABLE^^^^^^^^^^^^
                 });
               }
               return (

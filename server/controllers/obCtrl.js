@@ -2,7 +2,6 @@ const axios = require("axios");
 
 const addHit = (req, res) => {
   var { latitude, longitude, accuracy, user_id, fence_id, date } = req.body;
-  console.log("fence_id being sent to DB: ", fence_id);
   req.app
     .get("db")
     .add_hit([latitude, longitude, accuracy, user_id, fence_id, date])
@@ -32,7 +31,6 @@ const deleteHistory = (req, res) => {
     .catch(console.log);
 };
 const editResolution = (req, res) => {
-  console.log("hits ctrlr");
   var { resolution } = req.body;
   var { id } = req.params;
   req.app
@@ -44,7 +42,6 @@ const editResolution = (req, res) => {
     .catch(console.log);
 };
 const putHit = (req, res) => {
-  console.log("hit ctrl");
   var { id } = req.params;
   var { latitude, longitude, date } = req.body;
   req.app
@@ -62,6 +59,14 @@ const fetchAvatar = (req, res) => {
       res.status(200).send(response);
     });
 };
+const deleteHistoryHits = (req, res) => {
+  req.app
+    .get("db")
+    .delete_history_hits(req.params.key)
+    .then(response => {
+      getHistory(req, res);
+    });
+};
 
 module.exports = {
   addHit,
@@ -69,5 +74,6 @@ module.exports = {
   getHistory,
   editResolution,
   putHit,
-  fetchAvatar
+  fetchAvatar,
+  deleteHistoryHits
 };

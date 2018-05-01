@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import axios from "axios";
-import RaisedButton from "material-ui/RaisedButton";
+
 import { updateCurrentLocation } from "./../../redux/geolocationsReducer";
 import { getUser } from "./../../redux/userReducer";
 

@@ -1,15 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import axios from "axios";
-import {
-  Card,
-  CardActions,
-  CardHeader,
-  CardMedia,
-  CardTitle,
-  CardText
-} from "material-ui/Card";
-import FlatButton from "material-ui/FlatButton";
 import swal from "sweetalert";
 import CardHolder from "./../CardHolder/CardHolder";
 
