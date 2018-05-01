@@ -29,12 +29,14 @@ class Alert extends Component {
     console.log("mounted");
     this.setState({ mounted: true });
     this.props.getUser().then(response => {
+      console.log(response);
       //^^^^^^^^^^GETS USERS ID^^^^^^^^^^^^^^
       axios
         .get(`/api/geofence/${this.props.geolocationsReducer.toggledKey}`)
         //^^^^^^^^^^^^^^GETS THE TOGGLED FENCE_ID^^^^^^^^^^^^^
         .then(axres => {
           this.props.updateCurrentLocation().then(res => {
+            console.log(res);
             // ^^^^^^^^^^GETS CURRENT LOCATION^^^^^^^^^^^^^
             axios
               .post(`/api/out_of_bounds_hit`, {
@@ -42,15 +44,16 @@ class Alert extends Component {
                 longitude: res.value.data.location.lng,
                 accuracy: res.value.data.accuracy,
                 user_id: response.value.data.user_id,
-                fence_id: axres.data
+                fence_id: axres.data,
+                date: res.value.headers.date
               })
-              .then(
-                response =>
-                  this.setState({
-                    o_b_id: response.data[response.data.length - 1].o_b_id
-                  })
+              .then(response => {
+                this.setState({
+                  o_b_id: response.data[response.data.length - 1].o_b_id
+                  //^^^^^^^^^^^^^ONLY WORKS IF LAST OBJECT IN ARRAY IS THE MOST RECENT ONE^^^^^^
+                });
                 //^^^^^^^^^^^^TAKES THE NEW OB ID AND SETS IT IN STATE^^^^^^^^^^^
-              );
+              });
           });
         });
     });
@@ -62,14 +65,14 @@ class Alert extends Component {
   }
   updateHit(id) {
     this.props.updateCurrentLocation().then(res => {
-      axios
-        .put(`/api/out_of_bounds_hit/${id}`, {
-          latitude: res.value.data.location.lat,
-          longitude: res.value.data.location.lng
-        })
-        .then(response => {
-          console.log(`updated response: ${response}`);
-        });
+      axios.put(`/api/out_of_bounds_hit/${id}`, {
+        latitude: res.value.data.location.lat,
+        longitude: res.value.data.location.lng,
+        date: res.value.headers.date
+      });
+      // .then(response => {
+      //   console.log(`updated response: ${response}`);
+      // });
     });
   }
 

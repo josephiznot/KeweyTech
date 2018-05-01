@@ -1,11 +1,11 @@
 const axios = require("axios");
 
 const addHit = (req, res) => {
-  var { latitude, longitude, accuracy, user_id, fence_id } = req.body;
+  var { latitude, longitude, accuracy, user_id, fence_id, date } = req.body;
   console.log("fence_id being sent to DB: ", fence_id);
   req.app
     .get("db")
-    .add_hit([latitude, longitude, accuracy, user_id, fence_id])
+    .add_hit([latitude, longitude, accuracy, user_id, fence_id, date])
     .then(response => {
       getHistory(req, res);
     });
@@ -45,10 +45,10 @@ const editResolution = (req, res) => {
 const putHit = (req, res) => {
   console.log("hit ctrl");
   var { id } = req.params;
-  var { latitude, longitude } = req.body;
+  var { latitude, longitude, date } = req.body;
   req.app
     .get("db")
-    .put_hit([latitude, longitude, id])
+    .put_hit([latitude, longitude, id, date])
     .then(response => {
       getHistory(req, res);
     });

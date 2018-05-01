@@ -14,7 +14,8 @@ class History extends React.Component {
   constructor() {
     super();
     this.state = {
-      hits: []
+      hits: [],
+      expanded: false
     };
   }
   componentDidMount() {
@@ -23,11 +24,12 @@ class History extends React.Component {
     });
   }
   render() {
+    console.log(this.state.hits);
     const mapped = this.state.hits.map((e, i) => {
       return (
         <div key={i}>
           <Card>
-            <CardHeader title="Hit" />
+            <CardHeader title={e.hit_date} showExpandableButton={true} />
           </Card>
         </div>
       );
