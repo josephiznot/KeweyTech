@@ -337,6 +337,21 @@ autoprefixer@^6.3.1:
     postcss "^5.2.16"
     postcss-value-parser "^3.2.3"
 
+aws-sdk@^2.2.36:
+  version "2.230.1"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.230.1.tgz#494cef6aed2e16db1ed9c12acf4bd2a7317f5365"
+  dependencies:
+    buffer "4.9.1"
+    events "1.1.1"
+    ieee754 "1.1.8"
+    jmespath "0.15.0"
+    querystring "0.2.0"
+    sax "1.2.1"
+    url "0.10.3"
+    uuid "3.1.0"
+    xml2js "0.4.17"
+    xmlbuilder "4.2.1"
+
 aws-sdk@^2.224.1:
   version "2.224.1"
   resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.224.1.tgz#82fe93e10b3e818f315c35ce8667cdc8db94a0b3"
@@ -4982,6 +4997,12 @@ node-pre-gyp@^0.6.39:
     semver "^5.3.0"
     tar "^2.2.1"
     tar-pack "^3.4.0"
+
+nodemailer-ses-transport@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/nodemailer-ses-transport/-/nodemailer-ses-transport-1.5.1.tgz#dc0598c1bf53e8652e632e8f31692ce022d7dea9"
+  dependencies:
+    aws-sdk "^2.2.36"
 
 nodemailer@^4.6.4:
   version "4.6.4"

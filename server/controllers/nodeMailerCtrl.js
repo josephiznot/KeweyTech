@@ -1,29 +1,30 @@
-let nodemailer = require("nodemailer");
-let aws = require("aws-sdk");
-aws.config.loadFromPath("config.json");
+// require("dotenv").config();
+var nodemailer = require("nodemailer");
+var ses = require("nodemailer-ses-transport");
 
-let transporter = nodemailer.createTransport({
-  SES: new aws.SES({ apiVersion: "2010-12-01" })
-});
-
-var message = {
-  from: "josephiznot@gmail.com",
-  to: "josephiznot@gmail.com",
-  subject: "Message title",
-  text: "Plaintext version of the message",
-  html: "<p>HTML version of the message</p>"
-};
-
+var transporter = nodemailer.createTransport(
+  ses({
+    accessKeyId: process.env.AWS_KEY,
+    secretAccessKey: process.env.AWS_SECRET_KEY
+  })
+);
 const sendExpiredHits = (req, res) => {
-  console.log("MAILED!");
-  transporter.sendMail(message, (error, info) => {
-    if (error) {
-      return console.log(error);
-    } else {
-      console.log("server is ready to take messages");
-    }
+  var transporter = nodemailer.createTransport(
+    ses({
+      accessKeyId: process.env.AWS_KEY,
+      secretAccessKey: process.env.AWS_SECRET_KEY
+    })
+  );
+
+  console.log(process.env.AWS_KEY);
+  transporter.sendMail({
+    from: "josephiznot@gmail.com",
+    to: "josephiznot@gmail.com",
+    subject: "My Amazon SES Simple Email",
+    text: "Amazon SES is cool"
   });
 };
+
 module.exports = {
   sendExpiredHits
 };

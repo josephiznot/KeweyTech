@@ -152,6 +152,7 @@ app.delete(`/api/delete_old_fence/:key`, deleteOldFence);
 //----------------------NODE MAILER-----------------------//
 
 app.post("/api/send_expired_hits/", sendExpiredHits);
+//-----------------------------------------
 app.listen(PORT, () => {
   console.log(`I am listening on port ${PORT}`);
 });
