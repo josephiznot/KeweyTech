@@ -29,7 +29,6 @@ class HamburgerMenu extends React.Component {
     this.setState({ anchorEl: event.currentTarget, open: !open });
   };
   handleRequestClose = () => {
-    console.log("closed!!!");
     this.setState({ open: false });
   };
   render() {

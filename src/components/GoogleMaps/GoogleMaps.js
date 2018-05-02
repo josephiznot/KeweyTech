@@ -71,8 +71,6 @@ class GoogleMaps extends Component {
   }
 
   render() {
-    console.log("Initially empty:", this.props.geolocationsReducer.toggledKey);
-    console.log(this.state.toggled);
     const mapped = this.state.geofences
       .map((e, i, a) => {
         return withGoogleMap(() => (

@@ -11,17 +11,23 @@ class Settings extends Component {
   constructor() {
     super();
     this.state = {
-      keys: [],
+      newKeys: [],
       outFenceToggled: false,
-      oldKeys: []
+      oldKeys: [],
+      oldCenter: "",
+      newCenter: []
     };
   }
   handleUpdate() {
     axios
       .get("/api/get_fence_keys")
-      //^^^^^^GRABS FENCES FROM DB^^^^^^^^^^^
-      .then(elResponse => {
-        this.setState({ oldKeys: _.map(elResponse.data, "fence_key") });
+      //^^^^^^GRABS FENCE KEYS FROM DB^^^^^^^^^^^
+      .then(db_hit => {
+        this.setState({
+          oldKeys: _.map(db_hit.data, "fence_key"),
+          oldCenter: _.map(db_hit.data, "fence_center")
+        });
+        //-------ARRAY OF DB KEYS and CENTERS-----------
         axios
           .get("https://api.fencer.io/v1.0/geofence", {
             //^^^^^^^GRABS CURRENT FENCES FROM FENCER.IO^^^^^^^^^
@@ -31,15 +37,18 @@ class Settings extends Component {
           })
           .then(response => {
             response.data.data.map((e, i) => {
-              return this.setState({ keys: this.state.keys.concat(e.id) });
+              return this.setState({
+                newKeys: this.state.newKeys.concat(e.id)
+              });
             });
-            this.state.keys.map((e, i) => {
-              var { oldKeys, keys } = this.state;
-              if (_.difference(oldKeys, keys)[0]) {
-                //^^^^CHECKS TO SEE IF A FENCE WAS DELETED FROM FENCER.IO^^^^^
-                _.difference(oldKeys, keys).map(element => {
-                  //the element is the fence_key btw---------
-                  console.log(element);
+            //---------ARRAY OF CURRENT KEYS
+            this.state.newKeys.map((e, i) => {
+              var { oldKeys, newKeys } = this.state;
+              if (_.difference(oldKeys, newKeys)[0]) {
+                //^^^^CHECKS TO SEE IF A FENCE WAS DELETED FROM FENCER.IO BY COMPARING THE KEY^^^^^
+                _.difference(oldKeys, newKeys).map(element => {
+                  //the element is the deleted fence_key---------
+                  //------NODEMAILER HERE----------
                   return (
                     axios
                       .delete(`/api/delete_history_hits/${element}`)
@@ -54,15 +63,18 @@ class Settings extends Component {
               return (
                 axios
                   .get(`https://api.fencer.io/v1.0/geofence/${e}`, {
+                    //e is each current geofence key
                     headers: {
                       Authorization: `${process.env.REACT_APP_FENCER_API_KEY}`
                     }
                   })
                   //^^^^^^^^^^^^^^^^^^^^^^^RETREIVE GEOFENCES AND THEIR INFO FROM FENCER^^^^^^^^^^^^^^^^^^^^^
                   .then(response => {
+                    var { newCenter } = this.state;
+                    this.setState({
+                      newCenter: newCenter.concat(response.data.data.center)
+                    });
                     axios.get(`/api/geofence/${e}`).then(res => {
-                      console.log(res);
-                      console.log(response);
                       if (res.data[0]) {
                         axios.put(`/api/updatepoints/${e}`, {
                           center: response.data.data.center,
@@ -89,8 +101,12 @@ class Settings extends Component {
     // alert("updated!!!");
   }
   render() {
-    console.log(this.state.oldKeys);
-    console.log(this.state.keys);
+    console.log(
+      _.isEqual(
+        _.sortBy(this.state.newCenter, "lat"),
+        _.sortBy(this.state.oldCenter, "lat")
+      )
+    );
     return (
       <div>
         <div className="appbar-imitator" />

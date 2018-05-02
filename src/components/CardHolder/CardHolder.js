@@ -33,6 +33,7 @@ class CardHolder extends Component {
         >
           <CardHeader
             title={this.props.hit_date}
+            textStyle={{ paddingRight: 0 }}
             showExpandableButton={true}
             actAsExpander={true}
             avatar={this.props.avatar}

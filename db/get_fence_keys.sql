@@ -1,2 +1,2 @@
-SELECT fence_key
+SELECT *
 FROM geofences;
