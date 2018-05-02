@@ -23,15 +23,25 @@ class HamburgerMenu extends React.Component {
     this.handleClick = this.handleClick.bind(this);
     this.handleRequestClose = this.handleRequestClose.bind(this);
   }
-  handleClick(event) {
+  handleClick = event => {
+    var { open } = this.state;
     event.preventDefault();
-    this.setState({ anchorEl: event.currentTarget });
-  }
-  handleRequestClose() {
+    this.setState({ anchorEl: event.currentTarget, open: !open });
+  };
+  handleRequestClose = () => {
+    console.log("closed!!!");
     this.setState({ open: false });
-  }
+  };
   render() {
-    const { login, signOut, settings, history, geolocations } = this.state;
+    const {
+      login,
+      signOut,
+      settings,
+      history,
+      geolocations,
+      open,
+      anchorEl
+    } = this.state;
     return (
       <div>
         <div className="hamburger-wrapper">
@@ -46,7 +56,8 @@ class HamburgerMenu extends React.Component {
           history={history}
           geolocations={geolocations}
           handleRequestClose={this.handleRequestClose}
-          anchorEl={this.state.anchorEl}
+          anchorEl={anchorEl}
+          open={open}
         />
       </div>
     );

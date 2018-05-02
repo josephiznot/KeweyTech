@@ -34,6 +34,7 @@ const {
   getFenceKeys,
   deleteOldFence
 } = require("./controllers/geofencesCtrl");
+const { sendExpiredHits } = require("./controllers/nodeMailerCtrl");
 
 massive(process.env.CONNECTION_STRING)
   .then(db => {
@@ -147,6 +148,10 @@ app.put("/api/toggleactive/:id", toggleActive); //USED
 app.put("/api/resettoggles", resetToggles); //USED
 app.delete(`/api/delete_old_fence/:key`, deleteOldFence);
 //---------------------------------------------------------------
+
+//----------------------NODE MAILER-----------------------//
+
+app.post("/api/send_expired_hits/", sendExpiredHits);
 app.listen(PORT, () => {
   console.log(`I am listening on port ${PORT}`);
 });
