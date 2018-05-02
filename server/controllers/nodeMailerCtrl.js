@@ -9,22 +9,25 @@ var transporter = nodemailer.createTransport(
   })
 );
 const sendExpiredHits = (req, res) => {
-  var transporter = nodemailer.createTransport(
-    ses({
-      accessKeyId: process.env.AWS_KEY,
-      secretAccessKey: process.env.AWS_SECRET_KEY
-    })
-  );
-
-  console.log(process.env.AWS_KEY);
+  var { text } = req.body;
   transporter.sendMail({
     from: "josephiznot@gmail.com",
-    to: "josephiznot@gmail.com",
-    subject: "My Amazon SES Simple Email",
-    text: "Amazon SES is cool"
+    to: "c.s.anderson848@gmail.com",
+    subject: "History Statement",
+    text: text
   });
+};
+const getHitsBeforeDeleted = (req, res) => {
+  req.app
+    .get("db")
+    .get_hits_before_deleted(req.params.key)
+    .then(response => {
+      console.log(response);
+      res.status(200).send(response);
+    });
 };
 
 module.exports = {
-  sendExpiredHits
+  sendExpiredHits,
+  getHitsBeforeDeleted
 };

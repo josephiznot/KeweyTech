@@ -34,7 +34,10 @@ const {
   getFenceKeys,
   deleteOldFence
 } = require("./controllers/geofencesCtrl");
-const { sendExpiredHits } = require("./controllers/nodeMailerCtrl");
+const {
+  sendExpiredHits,
+  getHitsBeforeDeleted
+} = require("./controllers/nodeMailerCtrl");
 
 massive(process.env.CONNECTION_STRING)
   .then(db => {
@@ -133,7 +136,7 @@ app.put(`/api/out_of_bounds_hit/:id`, putHit); //USED
 app.get("/api/history", getHistory); //USED
 app.put("/api/resolution/:id", editResolution); //USED
 app.delete("/api/ridhistory/:id", deleteHistory); //USED
-app.get("/api/fetch_avatar/:id", fetchAvatar);
+app.get("/api/fetch_avatar/:id", fetchAvatar); //DONT NEED ANYMORE
 app.delete("/api/delete_history_hits/:key", deleteHistoryHits);
 
 //-------------------------geofences CONTROLLER--------------------
@@ -152,6 +155,7 @@ app.delete(`/api/delete_old_fence/:key`, deleteOldFence);
 //----------------------NODE MAILER-----------------------//
 
 app.post("/api/send_expired_hits/", sendExpiredHits);
+app.get("/api/get_hits_before_deleted/:key", getHitsBeforeDeleted);
 //-----------------------------------------
 app.listen(PORT, () => {
   console.log(`I am listening on port ${PORT}`);

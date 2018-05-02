@@ -8,14 +8,17 @@ import {
   CardText
 } from "material-ui/Card";
 import FlatButton from "material-ui/FlatButton";
+import RaisedButton from "material-ui/RaisedButton";
+import FloatingActionButton from "material-ui/FloatingActionButton";
+import TextField from "material-ui/TextField";
 
 class CardHolder extends Component {
   constructor() {
     super();
-    this.state = { canEdit: false };
+    this.state = { canEdit: false, expanded: false };
   }
   handleExpandChange(expanded) {
-    this.setState({ expanded: expanded });
+    this.setState({ expanded: !expanded, canEdit: false });
   }
   handleChange(val) {
     this.setState({ newResolution: val });
@@ -24,33 +27,46 @@ class CardHolder extends Component {
     console.log("rendered");
     return (
       <div>
-        <Card>
+        <Card
+          expanded={this.state.expanded}
+          onExpandChange={() => this.handleExpandChange(this.state.expanded)}
+        >
           <CardHeader
             title={this.props.hit_date}
             showExpandableButton={true}
             actAsExpander={true}
             avatar={this.props.avatar}
           />
-          <CardText>Card Text</CardText>
+          <CardText>{this.props.fence_alias}</CardText>
           <CardMedia expandable={true} />
           <CardActions expandable={true}>
             {/* ----------------CONDITIONALLY RENDERED-------------------- */}
             {this.state.canEdit ? (
               <div>
                 <CardText expandable={true}>
-                  Resolution:
-                  <input
+                  <TextField
                     defaultValue={this.props.resolution}
                     onChange={e => this.handleChange(e.target.value)}
+                    floatingLabelText="Resolution"
                   />
                 </CardText>
-                <FlatButton
+                {/* <FlatButton
                   label="CANCEL"
-                  onClick={() => this.setState({ canEdit: false })}
-                />
-                <FlatButton
+                  onClick={() =>
+                    this.setState({ canEdit: false, expanded: false })
+                  }
+                /> */}
+                <RaisedButton
                   label="SAVE"
-                  onClick={() => this.props.handleSave(this.props.o_b_id)}
+                  disabled={!this.state.newResolution}
+                  primary={true}
+                  onClick={() => {
+                    this.props.handleSave(
+                      this.props.o_b_id,
+                      this.state.newResolution
+                    ),
+                      this.setState({ expanded: false, canEdit: false });
+                  }}
                 />
               </div>
             ) : (
@@ -58,13 +74,16 @@ class CardHolder extends Component {
                 <CardText expandable={true}>
                   Resolution: {this.props.resolution}
                 </CardText>
-                <FlatButton
+                <RaisedButton
                   label="EDIT"
                   onClick={() => this.setState({ canEdit: true })}
+                  primary={true}
+                  style={{ marginRight: "20px" }}
                 />
-                <FlatButton
+                <RaisedButton
                   label="DELETE"
                   onClick={() => this.props.handleDelete(this.props.o_b_id)}
+                  secondary={true}
                 />
               </div>
             )}

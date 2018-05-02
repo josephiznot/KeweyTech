@@ -38,6 +38,8 @@ class Settings extends Component {
               if (_.difference(oldKeys, keys)[0]) {
                 //^^^^CHECKS TO SEE IF A FENCE WAS DELETED FROM FENCER.IO^^^^^
                 _.difference(oldKeys, keys).map(element => {
+                  //the element is the fence_key btw---------
+                  console.log(element);
                   return (
                     axios
                       .delete(`/api/delete_history_hits/${element}`)

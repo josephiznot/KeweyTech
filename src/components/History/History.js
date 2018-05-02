@@ -3,30 +3,23 @@ import { connect } from "react-redux";
 import axios from "axios";
 import swal from "sweetalert";
 import CardHolder from "./../CardHolder/CardHolder";
+import "./History.css";
 
 class History extends React.Component {
   constructor() {
     super();
     this.state = {
       hits: [],
-      expanded: false,
+
       newResolution: ""
     };
-    this.fetchAvatar = this.fetchAvatar.bind(this);
+
     this.handleSave = this.handleSave.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
   }
   componentDidMount() {
     axios.get("/api/history").then(res => {
       this.setState({ hits: res.data });
-    });
-  }
-  fetchAvatar(id) {
-    console.log(id);
-    axios.get(`/api/fetch_avatar/${id}`).then(res => {
-      console.log(res.data[0].profile_pic);
-      // return res.data[0].profile_pic;
-      this.setState({ avatar: res.data[0].profile_pic });
     });
   }
   handleDelete(id) {
@@ -47,27 +40,33 @@ class History extends React.Component {
       }
     });
   }
-  handleSave(id) {
+  handleSave(id, resolution) {
+    console.log(id, resolution);
     axios
       .put(`/api/resolution/${id}`, {
-        resolution: this.state.newResolution
+        resolution: resolution
       })
       .then(response => {
-        this.setState({ hits: response.data, canEdit: false });
+        console.log(response);
+        this.setState({
+          hits: response.data,
+          canEdit: false
+        });
       });
   }
 
   render() {
     const mapped = this.state.hits.map((e, i) => {
       return (
-        <div key={i}>
+        <div className="cards-container" key={i}>
           <CardHolder
             hit_date={e.hit_date}
-            avatar={this.state.avatar}
+            avatar={e.profile_pic}
             resolution={e.resolution}
             o_b_id={e.o_b_id}
             handleDelete={this.handleDelete}
             handleSave={this.handleSave}
+            fence_alias={e.fence_alias}
           />
         </div>
       );
