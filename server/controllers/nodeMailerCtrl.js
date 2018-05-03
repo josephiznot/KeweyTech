@@ -1,6 +1,7 @@
 // require("dotenv").config();
 var nodemailer = require("nodemailer");
 var ses = require("nodemailer-ses-transport");
+var _ = require("lodash");
 
 var transporter = nodemailer.createTransport(
   ses({
@@ -10,12 +11,15 @@ var transporter = nodemailer.createTransport(
 );
 const sendExpiredHits = (req, res) => {
   var { history } = req.body;
-  console.log(req.body);
+  console.log(_.keyBy(req.body.History, "o_b_id"));
+
   transporter.sendMail({
     from: "keweytechnologies@gmail.com",
     to: "andythemacjoe@gmail.com",
     subject: "History Statement",
-    text: `Here is a record of your previously deleted hits: ${req.body}`
+    text: `Here is a record of your previously deleted hits: ${JSON.stringify(
+      req.body.History
+    )}`
   });
 };
 const getHitsBeforeDeleted = (req, res) => {

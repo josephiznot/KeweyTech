@@ -3,7 +3,7 @@ ONLY ALLOW ADMINS TO UPDATE AS OF RIGHT NOW....
 MUST DELETE FENCE AND RECREATE IF YOU WANT TO CHANGE TO POINTS ON FENCER.IO
 */
 
-//use _.includes
+//use _.includes FOR UPDATED POINTS
 import React, { Component } from "react";
 import RaisedButton from "material-ui/RaisedButton";
 import axios from "axios";
@@ -55,7 +55,7 @@ class Settings extends Component {
               _.difference(oldKeys, newKeys).map(element => {
                 //the element is the deleted fence_key---------
                 //------NODEMAILER HERE----------
-                    axios.get(`/api/get_hits_before_deleted/${element}`)
+                axios.get(`/api/get_hits_before_deleted/${element}`);
                 return (
                   axios
                     .delete(`/api/delete_history_hits/${element}`)
