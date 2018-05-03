@@ -4,6 +4,8 @@ import axios from "axios";
 import swal from "sweetalert";
 import CardHolder from "./../CardHolder/CardHolder";
 import "./History.css";
+import Authorized from "./../Authorized/Authorized";
+import { getUser } from "./../../redux/userReducer";
 
 class History extends React.Component {
   constructor() {
@@ -18,9 +20,39 @@ class History extends React.Component {
     this.handleDelete = this.handleDelete.bind(this);
   }
   componentDidMount() {
-    axios.get("/api/history").then(res => {
-      this.setState({ hits: res.data });
-    });
+    if (
+      this.props.location.pathname !== "/" &&
+      this.props.location.pathname !== "/about"
+    ) {
+      this.props
+        .getUser()
+        .then(response => {
+          axios.get("/api/history").then(res => {
+            console.log(res);
+            this.setState({ hits: res.data });
+          });
+        })
+        .catch(err => {
+          if (err) {
+            this.props.history.push("/");
+            return swal({
+              title: "User unauthorized",
+              text: "Please login",
+              icon: "warning",
+              button: "Login"
+            }).then(login => {
+              if (login) {
+                window.location.replace("http://localhost:3001/auth");
+              }
+            });
+          }
+        });
+    } else {
+      axios.get("/api/history").then(res => {
+        console.log(res);
+        this.setState({ hits: res.data });
+      });
+    }
   }
   handleDelete(id) {
     swal({
@@ -47,7 +79,6 @@ class History extends React.Component {
         resolution: resolution
       })
       .then(response => {
-        console.log(response);
         this.setState({
           hits: response.data,
           canEdit: false
@@ -56,6 +87,7 @@ class History extends React.Component {
   }
 
   render() {
+    console.log("rendered");
     const mapped = this.state.hits.map((e, i) => {
       return (
         <div className="cards-container" key={i}>
@@ -80,4 +112,4 @@ class History extends React.Component {
   }
 }
 const mapStateToProps = state => state;
-export default connect(mapStateToProps)(History);
+export default connect(mapStateToProps, { getUser })(History);

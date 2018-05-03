@@ -68,7 +68,29 @@ class Geolocations extends Component {
     }
   }
   componentDidMount() {
-    this.props.getUser();
+    if (
+      this.props.location.pathname !== "/" &&
+      this.props.location.pathname !== "/about"
+    ) {
+      this.props
+        .getUser()
+        .then(response => console.log(response))
+        .catch(err => {
+          if (err) {
+            this.props.history.push("/");
+            return swal({
+              title: "User unauthorized",
+              text: "Please login",
+              icon: "warning",
+              button: "Login"
+            }).then(login => {
+              if (login) {
+                window.location.replace("http://localhost:3001/auth");
+              }
+            });
+          }
+        });
+    }
   }
   componentWillUnmount() {
     clearInterval(this.start);

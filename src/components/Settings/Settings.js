@@ -12,6 +12,8 @@ import { connect } from "react-redux";
 import { toggleOutsideTracking } from "./../../redux/obReducer";
 import swal from "sweetalert";
 import _ from "lodash";
+import Authorized from "./../Authorized/Authorized";
+import { getUser } from "./../../redux/userReducer";
 class Settings extends Component {
   constructor() {
     super();
@@ -22,6 +24,31 @@ class Settings extends Component {
       oldCenter: "",
       newCenter: []
     };
+  }
+  componentDidMount() {
+    if (
+      this.props.location.pathname !== "/" &&
+      this.props.location.pathname !== "/about"
+    ) {
+      this.props
+        .getUser()
+        .then(response => console.log(response))
+        .catch(err => {
+          if (err) {
+            this.props.history.push("/");
+            return swal({
+              title: "User unauthorized",
+              text: "Please login",
+              icon: "warning",
+              button: "Login"
+            }).then(login => {
+              if (login) {
+                window.location.replace("http://localhost:3001/auth");
+              }
+            });
+          }
+        });
+    }
   }
   handleUpdate() {
     axios
@@ -174,4 +201,6 @@ class Settings extends Component {
   }
 }
 const mapStateToProps = state => state;
-export default connect(mapStateToProps, { toggleOutsideTracking })(Settings);
+export default connect(mapStateToProps, { toggleOutsideTracking, getUser })(
+  Settings
+);
