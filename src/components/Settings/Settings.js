@@ -1,4 +1,5 @@
 //USE NODE MAILER TO EMAIL USER OF THE DELETED HITS FROM out_of_bounds HISTORY.
+//use _.includes
 import React, { Component } from "react";
 import RaisedButton from "material-ui/RaisedButton";
 import axios from "axios";
@@ -27,6 +28,7 @@ class Settings extends Component {
           oldKeys: _.map(db_hit.data, "fence_key"),
           oldCenter: _.map(db_hit.data, "fence_center")
         });
+        // });
         //-------ARRAY OF DB KEYS and CENTERS-----------
         axios
           .get("https://api.fencer.io/v1.0/geofence", {
@@ -36,30 +38,31 @@ class Settings extends Component {
             }
           })
           .then(response => {
-            response.data.data.map((e, i) => {
+            response.data.data.map((fence, i) => {
               return this.setState({
-                newKeys: this.state.newKeys.concat(e.id)
+                newKeys: this.state.newKeys.concat(fence.id)
               });
             });
             //---------ARRAY OF CURRENT KEYS
+            // this.state.newKeys.map((e, i) => { ////moved downwards
+            var { oldKeys, newKeys } = this.state;
+            if (_.difference(oldKeys, newKeys)[0]) {
+              //^^^^CHECKS TO SEE IF A FENCE WAS DELETED FROM FENCER.IO BY COMPARING THE KEY^^^^^
+              _.difference(oldKeys, newKeys).map(element => {
+                //the element is the deleted fence_key---------
+                //------NODEMAILER HERE----------
+                return (
+                  axios
+                    .delete(`/api/delete_history_hits/${element}`)
+                    //^^^^^MUST DELETE HISTORY HITS BEFORE DELETING FENCE^^^^^^
+                    .then(afterwards => {
+                      axios.delete(`/api/delete_old_fence/${element}`);
+                    })
+                );
+                //^^^^^^^^DELETES FROM GEOFENCE TABLE^^^^^^^^^^^^
+              });
+            }
             this.state.newKeys.map((e, i) => {
-              var { oldKeys, newKeys } = this.state;
-              if (_.difference(oldKeys, newKeys)[0]) {
-                //^^^^CHECKS TO SEE IF A FENCE WAS DELETED FROM FENCER.IO BY COMPARING THE KEY^^^^^
-                _.difference(oldKeys, newKeys).map(element => {
-                  //the element is the deleted fence_key---------
-                  //------NODEMAILER HERE----------
-                  return (
-                    axios
-                      .delete(`/api/delete_history_hits/${element}`)
-                      //^^^^^MUST DELETE HISTORY HITS BEFORE DELETING FENCE^^^^^^
-                      .then(afterwards => {
-                        axios.delete(`/api/delete_old_fence/${element}`);
-                      })
-                  );
-                  //^^^^^^^^DELETES FROM GEOFENCE TABLE^^^^^^^^^^^^
-                });
-              }
               return (
                 axios
                   .get(`https://api.fencer.io/v1.0/geofence/${e}`, {
@@ -70,25 +73,33 @@ class Settings extends Component {
                   })
                   //^^^^^^^^^^^^^^^^^^^^^^^RETREIVE GEOFENCES AND THEIR INFO FROM FENCER^^^^^^^^^^^^^^^^^^^^^
                   .then(response => {
+                    // console.log(response);
                     var { newCenter } = this.state;
                     this.setState({
                       newCenter: newCenter.concat(response.data.data.center)
                     });
-                    axios.get(`/api/geofence/${e}`).then(res => {
-                      if (res.data[0]) {
-                        axios.put(`/api/updatepoints/${e}`, {
-                          center: response.data.data.center,
-                          points: response.data.data.points,
-                          alias: response.data.data.alias
-                        });
-                      } else {
-                        axios.post(`/api/addgeofence/${e}`, {
-                          center: response.data.data.center,
-                          points: response.data.data.points,
-                          alias: response.data.data.alias
-                        });
-                      }
-                    });
+                    if (
+                      _.isEqual(
+                        _.sortBy(this.state.newCenter, "lat"),
+                        _.sortBy(this.state.oldCenter, "lat")
+                      )
+                    ) {
+                      axios.get(`/api/geofence/${e}`).then(res => {
+                        if (res.data[0]) {
+                          axios.put(`/api/updatepoints/${e}`, {
+                            center: response.data.data.center,
+                            points: response.data.data.points,
+                            alias: response.data.data.alias
+                          });
+                        } else {
+                          axios.post(`/api/addgeofence/${e}`, {
+                            center: response.data.data.center,
+                            points: response.data.data.points,
+                            alias: response.data.data.alias
+                          });
+                        }
+                      });
+                    }
                     //^^^^^^^^^^^^^^^^^^^^^UPDATES CURRENT FENCE OR CREATES NEW ONE^^^^^^^^^^^^^^^^^^^^^^^^
                   })
                   .catch(console.log)
@@ -98,15 +109,16 @@ class Settings extends Component {
       })
       .catch(console.log);
     swal("GOOD JOB", "SOFTWARE UP TO DATE", "success");
-    // alert("updated!!!");
+
+    console.log(
+      // _.isEqual(
+      _.sortBy(this.state.newCenter, "lat"),
+      _.sortBy(this.state.oldCenter, "lat")
+      // )
+    );
+    this.setState({ newKeys: [], newCenter: [] });
   }
   render() {
-    console.log(
-      _.isEqual(
-        _.sortBy(this.state.newCenter, "lat"),
-        _.sortBy(this.state.oldCenter, "lat")
-      )
-    );
     return (
       <div>
         <div className="appbar-imitator" />
