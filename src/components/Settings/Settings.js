@@ -1,4 +1,8 @@
-//USE NODE MAILER TO EMAIL USER OF THE DELETED HITS FROM out_of_bounds HISTORY.
+/*
+ONLY ALLOW ADMINS TO UPDATE AS OF RIGHT NOW....
+MUST DELETE FENCE AND RECREATE IF YOU WANT TO CHANGE TO POINTS ON FENCER.IO
+*/
+
 //use _.includes
 import React, { Component } from "react";
 import RaisedButton from "material-ui/RaisedButton";
@@ -51,6 +55,7 @@ class Settings extends Component {
               _.difference(oldKeys, newKeys).map(element => {
                 //the element is the deleted fence_key---------
                 //------NODEMAILER HERE----------
+                    axios.get(`/api/get_hits_before_deleted/${element}`)
                 return (
                   axios
                     .delete(`/api/delete_history_hits/${element}`)

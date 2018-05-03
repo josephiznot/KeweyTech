@@ -9,12 +9,13 @@ var transporter = nodemailer.createTransport(
   })
 );
 const sendExpiredHits = (req, res) => {
-  var { text } = req.body;
+  var { history } = req.body;
+  console.log(req.body);
   transporter.sendMail({
     from: "keweytechnologies@gmail.com",
     to: "andythemacjoe@gmail.com",
     subject: "History Statement",
-    text: text
+    text: `Here is a record of your previously deleted hits: ${req.body}`
   });
 };
 const getHitsBeforeDeleted = (req, res) => {
@@ -22,7 +23,6 @@ const getHitsBeforeDeleted = (req, res) => {
     .get("db")
     .get_hits_before_deleted(req.params.key)
     .then(response => {
-      console.log(response);
       res.status(200).send(response);
     });
 };
