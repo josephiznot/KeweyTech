@@ -11,8 +11,8 @@ var transporter = nodemailer.createTransport(
 const sendExpiredHits = (req, res) => {
   var { text } = req.body;
   transporter.sendMail({
-    from: "josephiznot@gmail.com",
-    to: "c.s.anderson848@gmail.com",
+    from: "keweytechnologies@gmail.com",
+    to: "andythemacjoe@gmail.com",
     subject: "History Statement",
     text: text
   });
@@ -26,8 +26,19 @@ const getHitsBeforeDeleted = (req, res) => {
       res.status(200).send(response);
     });
 };
+const emailDirections = (req, res) => {
+  console.log(req.body);
+  var { lat, lng, user, contact_email } = req.body;
+  transporter.sendMail({
+    from: "keweytechnologies@gmail.com",
+    to: contact_email,
+    subject: `Directions to ${user}`,
+    text: `Click this link for directions to ${user}: http://maps.google.com/?q=${lat},${lng}`
+  });
+};
 
 module.exports = {
   sendExpiredHits,
-  getHitsBeforeDeleted
+  getHitsBeforeDeleted,
+  emailDirections
 };

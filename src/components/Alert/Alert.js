@@ -14,13 +14,6 @@ class Alert extends Component {
     };
     this.updateHit = this.updateHit.bind(this);
   }
-  //----------This is going to make the TWILIO get request-----------------
-  // componentDidMount() {
-  //   axios.get(`/api/textalert`).then(res => {
-  //     console.log(res.data);
-  //   });
-  // }
-  //-----------------------------------------------------------------------------
   handleIgnore() {
     this.props.toggleBounds();
     this.props.history.push("/geolocations");
@@ -29,8 +22,19 @@ class Alert extends Component {
     console.log("mounted");
     this.setState({ mounted: true });
     this.props.getUser().then(response => {
-      console.log(response);
+      console.log(response.value);
+      this.setState({
+        user: response.value.data.display_name,
+        email: response.value.data.contact_email
+      });
       //^^^^^^^^^^GETS USERS ID^^^^^^^^^^^^^^
+      //----------This is going to make the TWILIO get request-----------------
+      // axios
+      //   .post(`/api/textalert`, { user_id: response.value.data.display_name })
+      //   .then(res => {
+      //     console.log(res.data);
+      //   });
+      //-----------------------------------------------------------------------------
       axios
         .get(`/api/geofence/${this.props.geolocationsReducer.toggledKey}`)
         //^^^^^^^^^^^^^^GETS THE TOGGLED FENCE_ID^^^^^^^^^^^^^
@@ -66,14 +70,28 @@ class Alert extends Component {
   }
   updateHit(id) {
     this.props.updateCurrentLocation().then(res => {
-      axios.put(`/api/out_of_bounds_hit/${id}`, {
-        latitude: res.value.data.location.lat,
-        longitude: res.value.data.location.lng,
-        date: res.value.headers.date
-      });
-      // .then(response => {
-      //   console.log(`updated response: ${response}`);
-      // });
+      axios
+        .put(`/api/out_of_bounds_hit/${id}`, {
+          latitude: res.value.data.location.lat,
+          longitude: res.value.data.location.lng,
+          date: res.value.headers.date
+        })
+        .then(afterUpdate => {
+          this.emailDirections(
+            res.value.data.location.lat,
+            res.value.data.location.lng,
+            this.state.user,
+            this.state.email
+          );
+        });
+    });
+  }
+  emailDirections(lat, lng, name, email) {
+    axios.post(`/api/email_directions`, {
+      lat: lat,
+      lng: lng,
+      user: name,
+      contact_email: email
     });
   }
 

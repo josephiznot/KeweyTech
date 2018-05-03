@@ -36,7 +36,8 @@ const {
 } = require("./controllers/geofencesCtrl");
 const {
   sendExpiredHits,
-  getHitsBeforeDeleted
+  getHitsBeforeDeleted,
+  emailDirections
 } = require("./controllers/nodeMailerCtrl");
 
 massive(process.env.CONNECTION_STRING)
@@ -119,12 +120,12 @@ app.get("/api/getuser", getUser);
 //-----------------TWILIO TEXT ALERT----------------------
 // app.get("/api/textalert", geolocationsCtrl.textAlert);
 
-app.get("/api/textalert", () =>
+app.post("/api/textalert", (req, res) =>
   client.messages
     .create({
       to: process.env.PERSONAL_CELL,
       from: process.env.TWILIO_PHONE_NUMBER,
-      body: "This is Joe Anderson"
+      body: `USER #${req.body.user_id} out of bounds!`
     })
     .then(() => console.log(client.httpClient.lastResponse.statusCode))
     .catch(err => console.log(err))
@@ -156,6 +157,7 @@ app.delete(`/api/delete_old_fence/:key`, deleteOldFence);
 
 app.post("/api/send_expired_hits/", sendExpiredHits);
 app.get("/api/get_hits_before_deleted/:key", getHitsBeforeDeleted);
+app.post("/api/email_directions", emailDirections);
 //-----------------------------------------
 app.listen(PORT, () => {
   console.log(`I am listening on port ${PORT}`);
