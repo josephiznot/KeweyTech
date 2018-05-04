@@ -12,12 +12,12 @@ import IconButton from "material-ui/IconButton";
 import FlatButton from "material-ui/FlatButton";
 import Home from "material-ui/svg-icons/action/home";
 import { getUser } from "./redux/userReducer";
-import swal from "sweetalert";
-import Location from "material-ui/svg-icons/communication/location-on";
+import Location from "material-ui/svg-icons/device/location-searching";
+import "./App.css";
 
 class App extends Component {
   render() {
-    console.log(this.props.geolocationsReducer.searching);
+    console.log(this.props.geolocationsReducer.searchToggle);
     return (
       //I am conditionally rendering a different appbar based on route location
       <div>
@@ -26,7 +26,7 @@ class App extends Component {
             <AppBar
               showMenuIconButton={false}
               iconElementRight={<HamburgerMenu />}
-              title={<NavBarLinks />}
+              // title={<NavBarLinks />}
               style={{ background: "#3c8dbc" }}
               zDepth={1}
             />
@@ -72,10 +72,16 @@ class App extends Component {
                 </ListItem>
               }
               iconElementRight={<HamburgerMenu />}
-              title={<NavBarLinks />}
+              // title={<NavBarLinks />}
               style={{ background: "#3c8dbc" }}
               zDepth={1}
-              title={<div className="blink_me">blink me</div>}
+              title={
+                this.props.geolocationsReducer.searchToggle ? (
+                  <div className="blink-me">
+                    <Location />
+                  </div>
+                ) : null
+              }
             />
           )}
         </nav>

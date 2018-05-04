@@ -7,9 +7,7 @@ import {
   // CardTitle,
   CardText
 } from "material-ui/Card";
-import FlatButton from "material-ui/FlatButton";
 import RaisedButton from "material-ui/RaisedButton";
-import FloatingActionButton from "material-ui/FloatingActionButton";
 import TextField from "material-ui/TextField";
 
 class CardHolder extends Component {
@@ -22,6 +20,14 @@ class CardHolder extends Component {
   }
   handleChange(val) {
     this.setState({ newResolution: val });
+  }
+  personalSave(id, res) {
+    this.props.handleSave(id, res),
+      this.setState({
+        expanded: false,
+        canEdit: false,
+        newResolution: ""
+      });
   }
   render() {
     return (
@@ -55,15 +61,10 @@ class CardHolder extends Component {
                   disabled={!this.state.newResolution}
                   primary={true}
                   onClick={() => {
-                    this.props.handleSave(
+                    this.personalSave(
                       this.props.o_b_id,
                       this.state.newResolution
-                    ),
-                      this.setState({
-                        expanded: false,
-                        canEdit: false,
-                        newResolution: ""
-                      });
+                    );
                   }}
                 />
               </div>

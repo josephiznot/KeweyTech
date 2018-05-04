@@ -16,6 +16,10 @@ import Authorized from "./../Authorized/Authorized";
 import { getUser } from "./../../redux/userReducer";
 import "./Settings.css";
 import Setting from "material-ui/svg-icons/action/settings";
+import TrackChanges from "material-ui/svg-icons/action/track-changes";
+import Email from "material-ui/svg-icons/communication/email";
+import TextField from "material-ui/TextField";
+import Floating from "material-ui/FloatingButton";
 class Settings extends Component {
   constructor() {
     super();
@@ -26,6 +30,11 @@ class Settings extends Component {
       oldCenter: "",
       newCenter: []
     };
+    this.handleChange = this.handleChange.bind(this);
+    this.updateEmail = this.updateEmail.bind(this);
+  }
+  handleChange(val) {
+    this.setState({ contact_email: val });
   }
   componentDidMount() {
     if (
@@ -35,7 +44,10 @@ class Settings extends Component {
       this.props
         .getUser()
         .then(response =>
-          this.setState({ isAdmin: response.value.data.is_admin })
+          this.setState({
+            isAdmin: response.value.data.is_admin,
+            contact_email: response.value.data.contact_email
+          })
         )
         .catch(err => {
           if (err) {
@@ -144,17 +156,10 @@ class Settings extends Component {
       })
       .catch(console.log);
     swal("GOOD JOB", "SOFTWARE UP TO DATE", "success");
-
-    console.log(
-      // _.isEqual(
-      _.sortBy(this.state.newCenter, "lat"),
-      _.sortBy(this.state.oldCenter, "lat")
-      // )
-    );
     this.setState({ newKeys: [], newCenter: [] });
   }
   render() {
-    console.log(this.state.isAdmin);
+    console.log(this.state.isAdmin ? "Admin!" : "Not Admin");
     return (
       <div>
         <div className="appbar-imitator" />
@@ -166,43 +171,63 @@ class Settings extends Component {
             label="UPDATE LOCATIONS"
             primary={true}
             onClick={() => this.handleUpdate()}
+            disabled={!this.state.isAdmin}
           />
-          <Toggle
-            label="ALLOW OUT-FENCE TRACKING"
-            labelPosition="left"
-            onToggle={() => {
-              if (!this.state.outFenceToggled) {
-                swal({
-                  title: "Are you sure?",
-                  text:
-                    "Outfence tracking can produce unintentional side-effects with the Kewey fence!",
-                  icon: "warning",
-                  buttons: true,
-                  dangerMode: true
-                }).then(willDelete => {
-                  if (willDelete) {
-                    this.props.toggleOutsideTracking(
-                      this.props.obReducer.outsideTracking
-                    );
-                    this.setState({
-                      outFenceToggled: !this.state.outFenceToggled
-                    });
-                    swal("Out-fence tracking enabled!", {
-                      icon: "success"
-                    });
-                  } else {
-                    swal("unchanged");
-                  }
-                });
-              } else {
-                this.props.toggleOutsideTracking(
-                  this.props.obReducer.outsideTracking
-                );
-                this.setState({ outFenceToggled: !this.state.outFenceToggled });
-              }
-            }}
-            toggled={this.props.obReducer.outsideTracking}
-          />
+          <div className="options-container">
+            <TrackChanges style={{ marginRight: 20 }} />
+            <Toggle
+              disabled={!this.state.isAdmin}
+              label="ALLOW OUT-FENCE TRACKING"
+              labelPosition="left"
+              onToggle={() => {
+                if (!this.state.outFenceToggled) {
+                  swal({
+                    title: "Are you sure?",
+                    text:
+                      "Outfence tracking can produce unintentional side-effects with the Kewey fence!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true
+                  }).then(willDelete => {
+                    if (willDelete) {
+                      this.props.toggleOutsideTracking(
+                        this.props.obReducer.outsideTracking
+                      );
+                      this.setState({
+                        outFenceToggled: !this.state.outFenceToggled
+                      });
+                      swal("Out-fence tracking enabled!", {
+                        icon: "success"
+                      });
+                    } else {
+                      swal("unchanged");
+                    }
+                  });
+                } else {
+                  this.props.toggleOutsideTracking(
+                    this.props.obReducer.outsideTracking
+                  );
+                  this.setState({
+                    outFenceToggled: !this.state.outFenceToggled
+                  });
+                }
+              }}
+              toggled={this.props.obReducer.outsideTracking}
+            />
+          </div>
+          <div>
+            <Email style={{ marginRight: 20 }} />
+            <TextField
+              floatingLabelText="Contact Email"
+              hintText={this.state.contact_email || "Enter contact email"}
+              onChange={e => this.handleChange(e.target.value)}
+            />
+            <FloatingButton
+              label="UPDATE"
+              primary={true}
+              onClick={this.updateEmail}
+            />
+          </div>
         </div>
       </div>
     );

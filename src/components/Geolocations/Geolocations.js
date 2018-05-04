@@ -4,7 +4,8 @@ import {
   getGeolocations,
   getDependent,
   updateCurrentLocation,
-  isInBounds
+  isInBounds,
+  toggleSearch
 } from "./../../redux/geolocationsReducer";
 import { getUser } from "./../../redux/userReducer";
 import RaisedButton from "material-ui/RaisedButton";
@@ -31,6 +32,7 @@ class Geolocations extends Component {
         icon: "info"
       });
     } else {
+      this.props.toggleSearch(this.props.geolocationsReducer.searchToggle);
       //the flag allows the user to enable/disable the setInterval
       var { trackFlag, isEnabled } = this.state;
       isEnabled
@@ -97,7 +99,7 @@ class Geolocations extends Component {
   }
   //^^^^^^^^^^^^^^^^^CLEARS INTERVAL WHEN USER LEAVES COMPONENT^^^^^^^^^^^^^^^
   render() {
-    console.log(this.props.geolocationsReducer.currLocation);
+    console.log(this.props.geolocationsReducer.searchToggle);
     return (
       <div>
         <div className="geolocations-body-container">
@@ -121,5 +123,6 @@ export default connect(mapStateToProps, {
   getDependent,
   updateCurrentLocation,
   isInBounds,
-  getUser
+  getUser,
+  toggleSearch
 })(Geolocations);
