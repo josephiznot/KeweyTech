@@ -35,7 +35,7 @@ function DropDown(props) {
         }}
       >
         {!props.isLoggedIn ? (
-          <a href={REACT_APP_LOGIN}>
+          <a href={process.env.REACT_APP_LOGIN}>
             <MenuItem
               rightIcon={<SignIn />}
               style={{ paddingRight: "30px" }}
@@ -44,7 +44,7 @@ function DropDown(props) {
             />
           </a>
         ) : (
-          <a href={REACT_APP_LOGOUT}>
+          <a href={process.env.REACT_APP_LOGOUT}>
             <MenuItem
               rightIcon={<Logout />}
               style={{ paddingRight: "30px" }}
