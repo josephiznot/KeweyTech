@@ -18,6 +18,7 @@ import "./App.css";
 class App extends Component {
   render() {
     console.log(this.props.geolocationsReducer.searchToggle);
+
     return (
       //I am conditionally rendering a different appbar based on route location
       <div>

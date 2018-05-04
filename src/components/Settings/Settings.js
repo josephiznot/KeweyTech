@@ -19,7 +19,10 @@ import Setting from "material-ui/svg-icons/action/settings";
 import TrackChanges from "material-ui/svg-icons/action/track-changes";
 import Email from "material-ui/svg-icons/communication/email";
 import TextField from "material-ui/TextField";
-import Floating from "material-ui/FloatingButton";
+import validator from "email-validator";
+import Timer from "material-ui/svg-icons/av/av-timer";
+import DropDownMenu from "material-ui/DropDownMenu";
+import MenuItem from "material-ui/Menu";
 class Settings extends Component {
   constructor() {
     super();
@@ -28,13 +31,29 @@ class Settings extends Component {
       outFenceToggled: false,
       oldKeys: [],
       oldCenter: "",
-      newCenter: []
+      newCenter: [],
+      contact_email: "",
+      changingEmail: ""
     };
     this.handleChange = this.handleChange.bind(this);
     this.updateEmail = this.updateEmail.bind(this);
   }
+  updateEmail() {
+    validator.validate(this.state.changingEmail)
+      ? axios
+          .put(`/api/update_contact_email/${this.state.user_id}`, {
+            email: this.state.changingEmail
+          })
+          .then(response => {
+            this.setState({
+              contact_email: this.state.changingEmail,
+              changingEmail: ""
+            });
+          })
+      : swal("Invalid email address");
+  }
   handleChange(val) {
-    this.setState({ contact_email: val });
+    this.setState({ changingEmail: val });
   }
   componentDidMount() {
     if (
@@ -46,7 +65,8 @@ class Settings extends Component {
         .then(response =>
           this.setState({
             isAdmin: response.value.data.is_admin,
-            contact_email: response.value.data.contact_email
+            contact_email: response.value.data.contact_email,
+            user_id: response.value.data.user_id
           })
         )
         .catch(err => {
@@ -221,13 +241,21 @@ class Settings extends Component {
               floatingLabelText="Contact Email"
               hintText={this.state.contact_email || "Enter contact email"}
               onChange={e => this.handleChange(e.target.value)}
+              value={this.state.changingEmail}
             />
-            <FloatingButton
-              label="UPDATE"
-              primary={true}
-              onClick={this.updateEmail}
-            />
+            {this.state.changingEmail ? (
+              <RaisedButton
+                label="UPDATE EMAIL"
+                primary={true}
+                onClick={this.updateEmail}
+              />
+            ) : null}
           </div>
+          <div>
+            <Timer />
+            <h1>CHANGE TRACK TIME</h1>
+          </div>
+          <div />
         </div>
       </div>
     );

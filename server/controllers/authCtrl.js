@@ -27,9 +27,18 @@ function logout(req, res) {
     res.redirect("http://localhost:3000/");
   });
 }
+const updateContactEmail = (req, res) => {
+  req.app
+    .get("db")
+    .update_contact_email([req.body.email, req.params.id])
+    .then(response => {
+      getUser(req, res);
+    });
+};
 
 module.exports = {
   strat,
   logout,
-  getUser
+  getUser,
+  updateContactEmail
 };

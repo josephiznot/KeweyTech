@@ -7,7 +7,12 @@ const session = require("express-session");
 const PORT = 3001;
 const { json } = require("body-parser");
 const passport = require("passport");
-const { strat, logout, getUser } = require(`${__dirname}/controllers/authCtrl`);
+const {
+  strat,
+  logout,
+  getUser,
+  updateContactEmail
+} = require(`${__dirname}/controllers/authCtrl`);
 const geolocationsCtrl = require("./controllers/geolocationsCtrl");
 const userCtrl = require("./controllers/userCtrl");
 const authCtrl = require("./controllers/authCtrl");
@@ -104,6 +109,7 @@ app.get(
 );
 app.get("/logout", logout);
 app.get("/api/me", getUser);
+app.put("/api/update_contact_email/:id", updateContactEmail);
 
 //---------------------GEOLOCATION REQUESTS------------------------
 

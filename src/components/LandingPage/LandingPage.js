@@ -16,14 +16,10 @@ class LandingPage extends Component {
       }
     };
   }
-  componentWillMount() {
-    //redirects to alert page if user out of bounds
-    // if (!this.props.geolocationsReducer.isInBounds) {
-    //   this.props.history.push("/alert");
-    // }
-  }
+
   render() {
     console.log(this.props);
+
     var { styles } = this.state;
     return (
       <div className="landing-container">
