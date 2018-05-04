@@ -13,13 +13,11 @@ import FlatButton from "material-ui/FlatButton";
 import Home from "material-ui/svg-icons/action/home";
 import { getUser } from "./redux/userReducer";
 import swal from "sweetalert";
+import Location from "material-ui/svg-icons/communication/location-on";
 
 class App extends Component {
   render() {
-    // if (true) {
-    //   this.props.history.push("/alert");
-    // // }
-
+    console.log(this.props.geolocationsReducer.searching);
     return (
       //I am conditionally rendering a different appbar based on route location
       <div>
@@ -77,6 +75,7 @@ class App extends Component {
               title={<NavBarLinks />}
               style={{ background: "#3c8dbc" }}
               zDepth={1}
+              title={<div className="blink_me">blink me</div>}
             />
           )}
         </nav>

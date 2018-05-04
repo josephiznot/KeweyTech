@@ -24,7 +24,6 @@ class CardHolder extends Component {
     this.setState({ newResolution: val });
   }
   render() {
-    console.log("rendered");
     return (
       <div>
         <Card
@@ -51,12 +50,6 @@ class CardHolder extends Component {
                     floatingLabelText="Resolution"
                   />
                 </CardText>
-                {/* <FlatButton
-                  label="CANCEL"
-                  onClick={() =>
-                    this.setState({ canEdit: false, expanded: false })
-                  }
-                /> */}
                 <RaisedButton
                   label="SAVE"
                   disabled={!this.state.newResolution}
@@ -66,7 +59,11 @@ class CardHolder extends Component {
                       this.props.o_b_id,
                       this.state.newResolution
                     ),
-                      this.setState({ expanded: false, canEdit: false });
+                      this.setState({
+                        expanded: false,
+                        canEdit: false,
+                        newResolution: ""
+                      });
                   }}
                 />
               </div>

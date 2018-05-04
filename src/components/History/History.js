@@ -20,39 +20,28 @@ class History extends React.Component {
     this.handleDelete = this.handleDelete.bind(this);
   }
   componentDidMount() {
-    if (
-      this.props.location.pathname !== "/" &&
-      this.props.location.pathname !== "/about"
-    ) {
-      this.props
-        .getUser()
-        .then(response => {
-          axios.get("/api/history").then(res => {
-            console.log(res);
-            this.setState({ hits: res.data });
-          });
-        })
-        .catch(err => {
-          if (err) {
-            this.props.history.push("/");
-            return swal({
-              title: "User unauthorized",
-              text: "Please login",
-              icon: "warning",
-              button: "Login"
-            }).then(login => {
-              if (login) {
-                window.location.replace("http://localhost:3001/auth");
-              }
-            });
-          }
+    this.props
+      .getUser()
+      .then(response => {
+        axios.get("/api/history").then(res => {
+          this.setState({ hits: res.data });
         });
-    } else {
-      axios.get("/api/history").then(res => {
-        console.log(res);
-        this.setState({ hits: res.data });
+      })
+      .catch(err => {
+        if (err) {
+          this.props.history.push("/");
+          return swal({
+            title: "User unauthorized",
+            text: "Please login",
+            icon: "warning",
+            button: "Login"
+          }).then(login => {
+            if (login) {
+              window.location.replace("http://localhost:3001/auth");
+            }
+          });
+        }
       });
-    }
   }
   handleDelete(id) {
     swal({
@@ -87,7 +76,6 @@ class History extends React.Component {
   }
 
   render() {
-    console.log("rendered");
     const mapped = this.state.hits.map((e, i) => {
       return (
         <div className="cards-container" key={i}>

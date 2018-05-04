@@ -1,0 +1,19 @@
+.settings-header {
+  height: 50px;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 500;
+  font-size: 20px;
+  margin-bottom: 30px;
+}
+.settings-container {
+  width: 100vw;
+  height: calc(100vw - 50px);
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+}

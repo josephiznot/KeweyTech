@@ -3,6 +3,11 @@ import Popover, { PopoverAnimationVertical } from "material-ui/Popover";
 import Menu from "material-ui/Menu";
 import MenuItem from "material-ui/MenuItem";
 import { Link } from "react-router-dom";
+import History from "material-ui/svg-icons/action/history";
+import Setting from "material-ui/svg-icons/action/settings";
+import Location from "material-ui/svg-icons/communication/location-on";
+import SignIn from "material-ui/svg-icons/action/fingerprint";
+import Logout from "material-ui/svg-icons/action/power-settings-new";
 
 function DropDown(props) {
   var {
@@ -14,7 +19,6 @@ function DropDown(props) {
     open,
     anchorEl
   } = props;
-
   return (
     <Popover
       open={open}
@@ -30,22 +34,28 @@ function DropDown(props) {
           width: "100vw"
         }}
       >
-        <a href="http://localhost:3001/auth">
-          <MenuItem
-            style={{ paddingRight: "30px" }}
-            primaryText={login}
-            onClick={props.handleRequestClose}
-          />
-        </a>
-        <a href="http://localhost:3001/logout">
-          <MenuItem
-            style={{ paddingRight: "30px" }}
-            primaryText={signOut}
-            onClick={props.handleRequestClose}
-          />
-        </a>
+        {!props.isLoggedIn ? (
+          <a href="http://localhost:3001/auth">
+            <MenuItem
+              rightIcon={<SignIn />}
+              style={{ paddingRight: "30px" }}
+              primaryText={login}
+              onClick={props.handleRequestClose}
+            />
+          </a>
+        ) : (
+          <a href="http://localhost:3001/logout">
+            <MenuItem
+              rightIcon={<Logout />}
+              style={{ paddingRight: "30px" }}
+              primaryText={signOut}
+              onClick={props.handleRequestClose}
+            />
+          </a>
+        )}
         <Link to="/geolocations">
           <MenuItem
+            rightIcon={<Location />}
             style={{ paddingRight: "30px" }}
             primaryText={geolocations}
             onClick={props.handleRequestClose}
@@ -53,6 +63,7 @@ function DropDown(props) {
         </Link>
         <Link to="/settings">
           <MenuItem
+            rightIcon={<Setting />}
             style={{ paddingRight: "30px" }}
             primaryText={settings}
             onClick={props.handleRequestClose}
@@ -60,6 +71,7 @@ function DropDown(props) {
         </Link>
         <Link to="/history">
           <MenuItem
+            rightIcon={<History />}
             style={{ paddingRight: "30px" }}
             primaryText={history}
             onClick={props.handleRequestClose}

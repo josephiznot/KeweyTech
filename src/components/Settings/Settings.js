@@ -14,6 +14,8 @@ import swal from "sweetalert";
 import _ from "lodash";
 import Authorized from "./../Authorized/Authorized";
 import { getUser } from "./../../redux/userReducer";
+import "./Settings.css";
+import Setting from "material-ui/svg-icons/action/settings";
 class Settings extends Component {
   constructor() {
     super();
@@ -32,7 +34,9 @@ class Settings extends Component {
     ) {
       this.props
         .getUser()
-        .then(response => console.log(response))
+        .then(response =>
+          this.setState({ isAdmin: response.value.data.is_admin })
+        )
         .catch(err => {
           if (err) {
             this.props.history.push("/");
@@ -82,7 +86,7 @@ class Settings extends Component {
               _.difference(oldKeys, newKeys).map(element => {
                 //the element is the deleted fence_key---------
                 //------NODEMAILER HERE----------
-                axios.get(`/api/get_hits_before_deleted/${element}`);
+                // axios.get(`/api/get_hits_before_deleted/${element}`);
                 return (
                   axios
                     .delete(`/api/delete_history_hits/${element}`)
@@ -105,7 +109,6 @@ class Settings extends Component {
                   })
                   //^^^^^^^^^^^^^^^^^^^^^^^RETREIVE GEOFENCES AND THEIR INFO FROM FENCER^^^^^^^^^^^^^^^^^^^^^
                   .then(response => {
-                    // console.log(response);
                     var { newCenter } = this.state;
                     this.setState({
                       newCenter: newCenter.concat(response.data.data.center)
@@ -151,51 +154,56 @@ class Settings extends Component {
     this.setState({ newKeys: [], newCenter: [] });
   }
   render() {
+    console.log(this.state.isAdmin);
     return (
       <div>
         <div className="appbar-imitator" />
-        <header>SETTINGS</header>
-        <RaisedButton
-          label="UPDATE LOCATIONS"
-          primary={true}
-          onClick={() => this.handleUpdate()}
-        />
-        <Toggle
-          label="ALLOW OUT-FENCE TRACKING"
-          labelPosition="left"
-          onToggle={() => {
-            if (!this.state.outFenceToggled) {
-              swal({
-                title: "Are you sure?",
-                text:
-                  "Outfence tracking can produce unintentional side-effects with the Kewey fence!",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true
-              }).then(willDelete => {
-                if (willDelete) {
-                  this.props.toggleOutsideTracking(
-                    this.props.obReducer.outsideTracking
-                  );
-                  this.setState({
-                    outFenceToggled: !this.state.outFenceToggled
-                  });
-                  swal("Out-fence tracking enabled!", {
-                    icon: "success"
-                  });
-                } else {
-                  swal("unchanged");
-                }
-              });
-            } else {
-              this.props.toggleOutsideTracking(
-                this.props.obReducer.outsideTracking
-              );
-              this.setState({ outFenceToggled: !this.state.outFenceToggled });
-            }
-          }}
-          toggled={this.props.obReducer.outsideTracking}
-        />
+        <header className="settings-header">
+          <Setting />SETTINGS
+        </header>
+        <div className="settings-container">
+          <RaisedButton
+            label="UPDATE LOCATIONS"
+            primary={true}
+            onClick={() => this.handleUpdate()}
+          />
+          <Toggle
+            label="ALLOW OUT-FENCE TRACKING"
+            labelPosition="left"
+            onToggle={() => {
+              if (!this.state.outFenceToggled) {
+                swal({
+                  title: "Are you sure?",
+                  text:
+                    "Outfence tracking can produce unintentional side-effects with the Kewey fence!",
+                  icon: "warning",
+                  buttons: true,
+                  dangerMode: true
+                }).then(willDelete => {
+                  if (willDelete) {
+                    this.props.toggleOutsideTracking(
+                      this.props.obReducer.outsideTracking
+                    );
+                    this.setState({
+                      outFenceToggled: !this.state.outFenceToggled
+                    });
+                    swal("Out-fence tracking enabled!", {
+                      icon: "success"
+                    });
+                  } else {
+                    swal("unchanged");
+                  }
+                });
+              } else {
+                this.props.toggleOutsideTracking(
+                  this.props.obReducer.outsideTracking
+                );
+                this.setState({ outFenceToggled: !this.state.outFenceToggled });
+              }
+            }}
+            toggled={this.props.obReducer.outsideTracking}
+          />
+        </div>
       </div>
     );
   }

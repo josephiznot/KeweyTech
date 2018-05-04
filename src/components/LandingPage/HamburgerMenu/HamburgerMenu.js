@@ -6,6 +6,7 @@ import MenuIcon from "./MenuIcon";
 import DropDown from "./DropDown";
 import { connect } from "react-redux";
 import { handleClick } from "./../../../redux/HamburgerReducer";
+import { getUser } from "./../../../redux/userReducer";
 
 class HamburgerMenu extends React.Component {
   constructor() {
@@ -31,6 +32,16 @@ class HamburgerMenu extends React.Component {
   handleRequestClose = () => {
     this.setState({ open: false });
   };
+  componentDidMount() {
+    this.props
+      .getUser()
+      .then(response => {
+        this.setState({ isLoggedIn: true });
+      })
+      .catch(err => {
+        err ? this.setState({ isLoggedIn: false }) : err;
+      });
+  }
   render() {
     const {
       login,
@@ -39,7 +50,8 @@ class HamburgerMenu extends React.Component {
       history,
       geolocations,
       open,
-      anchorEl
+      anchorEl,
+      isLoggedIn
     } = this.state;
     return (
       <div>
@@ -57,10 +69,13 @@ class HamburgerMenu extends React.Component {
           handleRequestClose={this.handleRequestClose}
           anchorEl={anchorEl}
           open={open}
+          isLoggedIn={isLoggedIn}
         />
       </div>
     );
   }
 }
 const mapStateToProps = state => state;
-export default connect(mapStateToProps, { handleClick })(HamburgerMenu);
+export default connect(mapStateToProps, { handleClick, getUser })(
+  HamburgerMenu
+);
