@@ -3,6 +3,7 @@ const massive = require("massive");
 const cors = require("cors");
 const express = require("express");
 const app = express();
+app.use(express.static(`${__dirname}/../build`));
 const session = require("express-session");
 const PORT = 3001;
 const { json } = require("body-parser");
@@ -165,6 +166,11 @@ app.post("/api/send_expired_hits/", sendExpiredHits);
 app.get("/api/get_hits_before_deleted/:key", getHitsBeforeDeleted);
 app.post("/api/email_directions", emailDirections);
 //-----------------------------------------
+const path = require("path");
+app.get("*", (req, res, next) => {
+  res.sendFile(path.join(__dirname, "/../build/index.html"));
+});
+
 app.listen(PORT, () => {
   console.log(`I am listening on port ${PORT}`);
 });
