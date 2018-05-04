@@ -23,6 +23,7 @@ import validator from "email-validator";
 import Timer from "material-ui/svg-icons/av/av-timer";
 import DropDownMenu from "material-ui/DropDownMenu";
 import MenuItem from "material-ui/Menu";
+import Menu from "material-ui/Menu/Menu";
 class Settings extends Component {
   constructor() {
     super();
@@ -238,7 +239,7 @@ class Settings extends Component {
           <div>
             <Email style={{ marginRight: 20 }} />
             <TextField
-              floatingLabelText="Contact Email"
+              floatingLabelText="Update Contact Email"
               hintText={this.state.contact_email || "Enter contact email"}
               onChange={e => this.handleChange(e.target.value)}
               value={this.state.changingEmail}
@@ -251,11 +252,6 @@ class Settings extends Component {
               />
             ) : null}
           </div>
-          <div>
-            <Timer />
-            <h1>CHANGE TRACK TIME</h1>
-          </div>
-          <div />
         </div>
       </div>
     );

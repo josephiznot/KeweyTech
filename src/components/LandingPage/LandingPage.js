@@ -18,8 +18,6 @@ class LandingPage extends Component {
   }
 
   render() {
-    console.log(this.props);
-
     var { styles } = this.state;
     return (
       <div className="landing-container">

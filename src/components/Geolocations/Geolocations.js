@@ -32,7 +32,7 @@ class Geolocations extends Component {
         icon: "info"
       });
     } else {
-      this.props.toggleSearch(this.props.geolocationsReducer.searchToggle);
+      // this.props.toggleSearch(this.props.geolocationsReducer.searchToggle);
       //the flag allows the user to enable/disable the setInterval
       var { trackFlag, isEnabled } = this.state;
       isEnabled
@@ -42,24 +42,24 @@ class Geolocations extends Component {
         trackFlag: !trackFlag,
         isEnabled: !isEnabled
       });
-      this.start = setInterval(() => {
-        //updates current location in the reducer
-        this.props.updateCurrentLocation();
-        /*
+      if (!this.state.trackFlag) {
+        this.start = setInterval(() => {
+          //updates current location in the reducer
+          this.props.updateCurrentLocation();
+          /*
       takes the updated state and passes in the coordinates as props.
       You will receive a 400 err when server is restarted because
       the props have not been updated yet. 
       */
-        this.props.isInBounds(
-          this.props.geolocationsReducer.currLat,
-          this.props.geolocationsReducer.currLng,
-          this.props.geolocationsReducer.toggledKey
-        );
-        //once the disable button is hit, the functions will fire once more, and stop.
-        if (!this.state.trackFlag) {
-          clearInterval(this.start);
-        }
-      }, 5000);
+          this.props.isInBounds(
+            this.props.geolocationsReducer.currLat,
+            this.props.geolocationsReducer.currLng,
+            this.props.geolocationsReducer.toggledKey
+          );
+        }, 5000);
+      } else {
+        clearInterval(this.start);
+      }
     }
   }
 
@@ -69,31 +69,31 @@ class Geolocations extends Component {
       this.props.history.push("/alert");
     }
   }
-  componentDidMount() {
-    if (
-      this.props.location.pathname !== "/" &&
-      this.props.location.pathname !== "/about"
-    ) {
-      this.props
-        .getUser()
-        .then(response => console.log(response))
-        .catch(err => {
-          if (err) {
-            this.props.history.push("/");
-            return swal({
-              title: "User unauthorized",
-              text: "Please login",
-              icon: "warning",
-              button: "Login"
-            }).then(login => {
-              if (login) {
-                window.location.replace("http://localhost:3001/auth");
-              }
-            });
-          }
-        });
-    }
-  }
+  // componentDidMount() {
+  //   if (
+  //     this.props.location.pathname !== "/" &&
+  //     this.props.location.pathname !== "/about"
+  //   ) {
+  //     this.props
+  //       .getUser()
+  //       .then(response => console.log(response))
+  //       .catch(err => {
+  //         if (err) {
+  //           this.props.history.push("/");
+  //           return swal({
+  //             title: "User unauthorized",
+  //             text: "Please login",
+  //             icon: "warning",
+  //             button: "Login"
+  //           }).then(login => {
+  //             if (login) {
+  //               window.location.replace("http://localhost:3001/auth");
+  //             }
+  //           });
+  //         }
+  //       });
+  //   }
+  // }
   componentWillUnmount() {
     clearInterval(this.start);
   }

@@ -86,7 +86,12 @@ class GoogleMaps extends Component {
                   disabled={
                     !e.is_active_2 && !this.props.obReducer.outsideTracking
                   }
-                  toggled={e.is_active_2 && this.state.toggled}
+                  toggled={
+                    this.props.obReducer.outsideTracking
+                      ? this.props.geolocationsReducer.toggledKey ===
+                        e.fence_key
+                      : e.is_active_2 && this.state.toggled
+                  }
                   labelPosition="right"
                   onToggle={() => this.handleToggle(e.fence_key)}
                 />

@@ -4,6 +4,7 @@ import axios from "axios";
 
 import { updateCurrentLocation } from "./../../redux/geolocationsReducer";
 import { getUser } from "./../../redux/userReducer";
+import swal from "sweetalert";
 
 class Alert extends Component {
   constructor() {
@@ -19,7 +20,17 @@ class Alert extends Component {
     this.props.history.push("/geolocations");
   }
   componentDidMount() {
-    console.log("mounted");
+    swal({
+      title: "OUT OF BOUNDS",
+      text: "RETURN TO KEWEY FENCE",
+      icon: "warning",
+      button: "Dismiss"
+    }).then(response => {
+      swal({
+        title: "Enter Admin Password",
+        content: "input"
+      }).then(authenticate => {});
+    });
     this.setState({ mounted: true });
     this.props.getUser().then(response => {
       console.log(response.value);
@@ -77,6 +88,7 @@ class Alert extends Component {
           date: res.value.headers.date
         })
         .then(afterUpdate => {
+          console.log("email sent");
           this.emailDirections(
             res.value.data.location.lat,
             res.value.data.location.lng,

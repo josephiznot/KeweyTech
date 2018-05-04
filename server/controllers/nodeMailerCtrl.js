@@ -11,7 +11,6 @@ var transporter = nodemailer.createTransport(
 );
 const sendExpiredHits = (req, res) => {
   var { history } = req.body;
-  console.log(_.keyBy(req.body.History, "o_b_id"));
 
   transporter.sendMail({
     from: "keweytechnologies@gmail.com",
@@ -31,8 +30,8 @@ const getHitsBeforeDeleted = (req, res) => {
     });
 };
 const emailDirections = (req, res) => {
-  console.log(req.body);
   var { lat, lng, user, contact_email } = req.body;
+
   transporter.sendMail({
     from: "keweytechnologies@gmail.com",
     to: contact_email,
