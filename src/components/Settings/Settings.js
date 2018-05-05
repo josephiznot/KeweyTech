@@ -24,6 +24,11 @@ import Timer from "material-ui/svg-icons/av/av-timer";
 import DropDownMenu from "material-ui/DropDownMenu";
 import MenuItem from "material-ui/Menu";
 import Menu from "material-ui/Menu/Menu";
+import Security from "material-ui/svg-icons/hardware/security";
+import Key from "material-ui/svg-icons/communication/vpn-key";
+import Locked from "material-ui/svg-icons/action/lock";
+import Unlocked from "material-ui/svg-icons/action/lock-open";
+import IconButton from "material-ui/IconButton";
 class Settings extends Component {
   constructor() {
     super();
@@ -34,24 +39,29 @@ class Settings extends Component {
       oldCenter: "",
       newCenter: [],
       contact_email: "",
-      changingEmail: ""
+      changingEmail: "",
+      locked: true
     };
     this.handleChange = this.handleChange.bind(this);
     this.updateEmail = this.updateEmail.bind(this);
+    this.handleUnlock = this.handleUnlock.bind(this);
+    this.handleLock = this.handleLock.bind(this);
   }
   updateEmail() {
-    validator.validate(this.state.changingEmail)
-      ? axios
-          .put(`/api/update_contact_email/${this.state.user_id}`, {
-            email: this.state.changingEmail
-          })
-          .then(response => {
-            this.setState({
-              contact_email: this.state.changingEmail,
-              changingEmail: ""
-            });
-          })
-      : swal("Invalid email address");
+    if (this.state.changingEmail) {
+      validator.validate(this.state.changingEmail)
+        ? axios
+            .put(`/api/update_contact_email/${this.state.user_id}`, {
+              email: this.state.changingEmail
+            })
+            .then(response => {
+              this.setState({
+                contact_email: this.state.changingEmail,
+                changingEmail: ""
+              });
+            })
+        : swal("Invalid email address");
+    }
   }
   handleChange(val) {
     this.setState({ changingEmail: val });
@@ -67,7 +77,8 @@ class Settings extends Component {
           this.setState({
             isAdmin: response.value.data.is_admin,
             contact_email: response.value.data.contact_email,
-            user_id: response.value.data.user_id
+            user_id: response.value.data.user_id,
+            examplePassword: response.value.data.first_name
           })
         )
         .catch(err => {
@@ -220,8 +231,15 @@ class Settings extends Component {
     swal("GOOD JOB", "SOFTWARE UP TO DATE", "success");
     this.setState({ newKeys: [], newCenter: [] });
   }
+  handleUnlock() {
+    this.setState({ locked: false });
+  }
+  handleLock() {
+    this.setState({ locked: true });
+    this.updateEmail();
+  }
   render() {
-    console.log(this.state.isAdmin ? "Admin!" : "Not Admin");
+    console.log(this.state.isAdmin ? "Admin!" : "Not Admin", this.state.locked);
     return (
       <div>
         <div className="appbar-imitator" />
@@ -229,17 +247,28 @@ class Settings extends Component {
           <Setting />SETTINGS
         </header>
         <div className="settings-container">
-          <RaisedButton
-            fullWidth={true}
-            label="UPDATE LOCATIONS"
-            primary={true}
-            onClick={() => this.handleUpdate()}
-            disabled={!this.state.isAdmin}
-          />
+          <div className="locked-container">
+            <RaisedButton
+              disabled={this.state.locked}
+              fullWidth={true}
+              label="UPDATE LOCATIONS"
+              primary={true}
+              onClick={() => this.handleUpdate()}
+            />
+          </div>
           <div className="options-container">
-            <TrackChanges style={{ marginRight: 20 }} />
+            <TrackChanges
+              style={
+                this.state.locked
+                  ? {
+                      marginRight: 20,
+                      color: "e5e5e5"
+                    }
+                  : { marginRight: 20 }
+              }
+            />
             <Toggle
-              disabled={!this.state.isAdmin}
+              disabled={this.state.locked}
               label="ALLOW OUT-FENCE TRACKING"
               labelPosition="left"
               onToggle={() => {
@@ -279,20 +308,75 @@ class Settings extends Component {
             />
           </div>
           <div>
-            <Email style={{ marginRight: 20 }} />
+            <Email
+              style={
+                this.state.locked
+                  ? {
+                      marginRight: 20,
+                      color: "e5e5e5"
+                    }
+                  : { marginRight: 20 }
+              }
+            />
             <TextField
+              disabled={this.state.locked}
               floatingLabelText="Update Contact Email"
               hintText={this.state.contact_email || "Enter contact email"}
               onChange={e => this.handleChange(e.target.value)}
               value={this.state.changingEmail}
             />
-            {this.state.changingEmail ? (
-              <RaisedButton
-                label="UPDATE EMAIL"
-                primary={true}
-                onClick={this.updateEmail}
-              />
-            ) : null}
+          </div>
+          <div>
+            <Security
+              style={
+                this.state.locked
+                  ? {
+                      marginRight: 20,
+                      color: "e5e5e5"
+                    }
+                  : { marginRight: 20 }
+              }
+            />
+
+            <TextField
+              disabled={this.state.locked}
+              type="password"
+              floatingLabelText="Change admin Password"
+              hintText={`e.i. ${this.state.examplePassword +
+                Math.floor(Math.random() * 100000)}`}
+            />
+          </div>
+          <div>
+            <Key
+              style={
+                this.state.locked
+                  ? {
+                      marginRight: 20,
+                      color: "e5e5e5"
+                    }
+                  : { marginRight: 20 }
+              }
+            />
+            <TextField
+              disabled={this.state.locked}
+              floatingLabelText="Update Fencer API key"
+              hintText={"paste the API key here"}
+            />
+          </div>
+          <div className="locked-container">
+            <IconButton>
+              {this.state.locked ? (
+                <Locked
+                  onClick={() => this.handleUnlock()}
+                  style={{ marginRight: 20 }}
+                />
+              ) : (
+                <Unlocked
+                  onClick={() => this.handleLock()}
+                  style={{ marginRight: 20 }}
+                />
+              )}
+            </IconButton>Click the lock to make changes.
           </div>
         </div>
       </div>
