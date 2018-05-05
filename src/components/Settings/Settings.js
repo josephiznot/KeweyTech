@@ -136,7 +136,7 @@ class Settings extends Component {
                 //^^^^^^^^DELETES FROM GEOFENCE TABLE^^^^^^^^^^^^
               });
             }
-            console.log(this.state.newKeys);
+
             this.state.newKeys.map((e, i) => {
               return (
                 axios
@@ -165,37 +165,41 @@ class Settings extends Component {
                             _.sortBy(response2.data.data.points, "lat")
                           )
                         ) {
+                          //REALLY ONLY NEED TO UPDATE ALIAS AND CENTER...NOT NECESSARILY POINTS...
                           axios.put(`/api/updatepoints/${e}`, {
                             center: response2.data.data.center,
                             points: response2.data.data.points,
                             alias: response2.data.data.alias
                           });
                         } else {
+                          //^^^^^IF POINTS DONT EQUAL EACH OTHER...MUST UPDATE THEM^^^^^^
                           axios
                             .get(`/api/get_hits_before_deleted/${e}`)
                             .then(oldhits => {
-                              console.log(oldhits);
-                              axios.post("/api/send_expired_hits", {
-                                history: oldhits.data,
-                                email: this.state.contact_email
-                              });
-                              axios
-                                .delete(`/api/delete_history_hits/${e}`)
-                                .then(afterwardsss => {
-                                  axios.put(`/api/updatepoints/${e}`, {
-                                    center: response2.data.data.center,
-                                    points: response2.data.data.points,
-                                    alias: response2.data.data.alias
-                                  });
+                              if (oldhits.data[0]) {
+                                //IF IT HAS ANY VALUES IN THE ARRAY
+                                axios.post("/api/send_expired_hits", {
+                                  history: oldhits.data,
+                                  email: this.state.contact_email
                                 });
+                                axios
+                                  .delete(`/api/delete_history_hits/${e}`)
+                                  .then(afterwardsss => {
+                                    axios.put(`/api/updatepoints/${e}`, {
+                                      center: response2.data.data.center,
+                                      points: response2.data.data.points,
+                                      alias: response2.data.data.alias
+                                    });
+                                  });
+                              } else {
+                                axios.put(`/api/updatepoints/${e}`, {
+                                  center: response2.data.data.center,
+                                  points: response2.data.data.points,
+                                  alias: response2.data.data.alias
+                                });
+                              }
                             });
                         }
-                        /*
-                          WHEN YOU UPDATE THE GEOFENCE POINTS, IT DOES NOT DELETE
-                          THE PRIOR HITS BEFORE YOU UPDATE IT. NEED TO DELETE
-                          ANY HITS FROM HISTORY ASSOCIATE TO PRIOR UPDATE
-                          GEOFENCE
-                        */
                       } else {
                         axios.post(`/api/addgeofence/${e}`, {
                           center: response2.data.data.center,

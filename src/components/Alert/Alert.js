@@ -4,14 +4,15 @@ import axios from "axios";
 
 import { updateCurrentLocation } from "./../../redux/geolocationsReducer";
 import { getUser } from "./../../redux/userReducer";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 
 class Alert extends Component {
   constructor() {
     super();
     this.state = {
       mounted: false,
-      o_b_id: ""
+      o_b_id: "",
+      password: "aaron123"
     };
     this.updateHit = this.updateHit.bind(this);
   }
@@ -19,21 +20,9 @@ class Alert extends Component {
     this.props.toggleBounds();
     this.props.history.push("/geolocations");
   }
-  componentDidMount() {
-    swal({
-      title: "OUT OF BOUNDS",
-      text: "RETURN TO KEWEY FENCE",
-      icon: "warning",
-      button: "Dismiss"
-    }).then(response => {
-      swal({
-        title: "Enter Admin Password",
-        content: "input"
-      }).then(authenticate => {});
-    });
+  async componentDidMount() {
     this.setState({ mounted: true });
     this.props.getUser().then(response => {
-      console.log(response.value);
       this.setState({
         user: response.value.data.display_name,
         email: response.value.data.contact_email
@@ -78,6 +67,26 @@ class Alert extends Component {
         this.updateHit(this.state.o_b_id);
       }
     }, 5000);
+    const { value: password } = await Swal({
+      title: "Enter your password",
+      input: "password",
+      allowOutsideClick: false,
+      inputPlaceholder: "Enter your password",
+      inputAttributes: {
+        maxlength: 10,
+        autocapitalize: "off",
+        autocorrect: "off"
+      },
+      inputValidator: value => {
+        return new Promise(resolve => {
+          if (value === this.state.password) {
+            resolve();
+          } else {
+            resolve("please enter correct password");
+          }
+        });
+      }
+    });
   }
   updateHit(id) {
     this.props.updateCurrentLocation().then(res => {
