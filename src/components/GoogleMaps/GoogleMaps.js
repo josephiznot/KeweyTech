@@ -51,12 +51,13 @@ class GoogleMaps extends Component {
               //^^^^^^^^^^^^^^^^ALLOWS USER TO TOGGLE ONLY THE FENCE THEY ARE IN^^^^^^^^^^^^^
               .then(response => {
                 this.setState({ geofences: response.data });
+                // this.setState({ geofences: response.value.data });
               });
           } else {
             axios
               .put("api/resettoggles", { isActive: false })
-              .then(response => {
-                this.setState({ geofences: response.data });
+              .then(resetToggle => {
+                this.setState({ geofences: resetToggle.data });
               });
           }
           //^^^^^^^^^^^^^^IF USER IS NOT IN ANY FENCE, IT'LL JUST RETREIVE THE FENCES^^^^^^^^^^^^^^

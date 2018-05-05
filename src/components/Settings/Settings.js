@@ -102,19 +102,24 @@ class Settings extends Component {
           .get("https://api.fencer.io/v1.0/geofence", {
             //^^^^^^^GRABS CURRENT FENCES FROM FENCER.IO^^^^^^^^^
             headers: {
-              Authorization: `${process.env.REACT_APP_FENCER_API_KEY}`
+              Authorization: `${
+                process.env.REACT_APP_FENCER_API_KEY
+                // process.env.REACT_APP_TESTER
+              }`
             }
           })
           .then(response => {
+            console.log(response);
             response.data.data.map((fence, i) => {
               return this.setState({
                 newKeys: this.state.newKeys.concat(fence.id)
               });
             });
             //---------ARRAY OF CURRENT KEYS
-            // this.state.newKeys.map((e, i) => { ////moved downwards
+            // this.state.newKeys.map((e, i) => {////moved downwards
             var { oldKeys, newKeys } = this.state;
             if (_.difference(oldKeys, newKeys)[0]) {
+              console.log("trying to delete an old key...");
               //^^^^CHECKS TO SEE IF A FENCE WAS DELETED FROM FENCER.IO BY COMPARING THE KEY^^^^^
               _.difference(oldKeys, newKeys).map(element => {
                 //the element is the deleted fence_key---------
@@ -131,43 +136,75 @@ class Settings extends Component {
                 //^^^^^^^^DELETES FROM GEOFENCE TABLE^^^^^^^^^^^^
               });
             }
+            console.log(this.state.newKeys);
             this.state.newKeys.map((e, i) => {
               return (
                 axios
                   .get(`https://api.fencer.io/v1.0/geofence/${e}`, {
                     //e is each current geofence key
                     headers: {
-                      Authorization: `${process.env.REACT_APP_FENCER_API_KEY}`
+                      Authorization: `${
+                        process.env.REACT_APP_FENCER_API_KEY
+                        // process.env.REACT_APP_TESTER
+                      }`
                     }
                   })
                   //^^^^^^^^^^^^^^^^^^^^^^^RETREIVE GEOFENCES AND THEIR INFO FROM FENCER^^^^^^^^^^^^^^^^^^^^^
-                  .then(response => {
+                  //^^^^^^^^^^^^^^^^^^^^^^^^^(ALIAS, POINTS, CENTER)^^^^^^^^^^^^^^^^^^^^^^^^^
+                  .then(response2 => {
                     var { newCenter } = this.state;
                     this.setState({
-                      newCenter: newCenter.concat(response.data.data.center)
+                      newCenter: newCenter.concat(response2.data.data.center)
                     });
-                    if (
-                      _.isEqual(
-                        _.sortBy(this.state.newCenter, "lat"),
-                        _.sortBy(this.state.oldCenter, "lat")
-                      )
-                    ) {
-                      axios.get(`/api/geofence/${e}`).then(res => {
-                        if (res.data[0]) {
+
+                    axios.get(`/api/geofence/${e}`).then(res => {
+                      if (res.data[0]) {
+                        if (
+                          _.isEqual(
+                            _.sortBy(res.data[0].fence_points, "lat"),
+                            _.sortBy(response2.data.data.points, "lat")
+                          )
+                        ) {
                           axios.put(`/api/updatepoints/${e}`, {
-                            center: response.data.data.center,
-                            points: response.data.data.points,
-                            alias: response.data.data.alias
+                            center: response2.data.data.center,
+                            points: response2.data.data.points,
+                            alias: response2.data.data.alias
                           });
                         } else {
-                          axios.post(`/api/addgeofence/${e}`, {
-                            center: response.data.data.center,
-                            points: response.data.data.points,
-                            alias: response.data.data.alias
-                          });
+                          axios
+                            .get(`/api/get_hits_before_deleted/${e}`)
+                            .then(oldhits => {
+                              console.log(oldhits);
+                              axios.post("/api/send_expired_hits", {
+                                history: oldhits.data,
+                                email: this.state.contact_email
+                              });
+                              axios
+                                .delete(`/api/delete_history_hits/${e}`)
+                                .then(afterwardsss => {
+                                  axios.put(`/api/updatepoints/${e}`, {
+                                    center: response2.data.data.center,
+                                    points: response2.data.data.points,
+                                    alias: response2.data.data.alias
+                                  });
+                                });
+                            });
                         }
-                      });
-                    }
+                        /*
+                          WHEN YOU UPDATE THE GEOFENCE POINTS, IT DOES NOT DELETE
+                          THE PRIOR HITS BEFORE YOU UPDATE IT. NEED TO DELETE
+                          ANY HITS FROM HISTORY ASSOCIATE TO PRIOR UPDATE
+                          GEOFENCE
+                        */
+                      } else {
+                        axios.post(`/api/addgeofence/${e}`, {
+                          center: response2.data.data.center,
+                          points: response2.data.data.points,
+                          alias: response2.data.data.alias
+                        });
+                      }
+                    });
+
                     //^^^^^^^^^^^^^^^^^^^^^UPDATES CURRENT FENCE OR CREATES NEW ONE^^^^^^^^^^^^^^^^^^^^^^^^
                   })
                   .catch(console.log)
@@ -189,6 +226,7 @@ class Settings extends Component {
         </header>
         <div className="settings-container">
           <RaisedButton
+            fullWidth={true}
             label="UPDATE LOCATIONS"
             primary={true}
             onClick={() => this.handleUpdate()}

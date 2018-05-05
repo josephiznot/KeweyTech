@@ -10,15 +10,17 @@ var transporter = nodemailer.createTransport(
   })
 );
 const sendExpiredHits = (req, res) => {
-  var { history } = req.body;
+  var { history, email } = req.body;
+  console.log(req.body);
 
   transporter.sendMail({
     from: "keweytechnologies@gmail.com",
-    to: "andythemacjoe@gmail.com",
+    to: email,
     subject: "History Statement",
-    text: `Here is a record of your previously deleted hits: ${JSON.stringify(
-      req.body.History
-    )}`
+    text: `Here is a record of your previously deleted hits:
+     ${req.body.history.map((e, i) => {
+       return JSON.stringify(e);
+     })}`
   });
 };
 const getHitsBeforeDeleted = (req, res) => {

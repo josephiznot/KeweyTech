@@ -20,7 +20,12 @@ export function getPoints(key) {
   return {
     type: GET_POINTS,
     payload: axios.get(`https://api.fencer.io/v1.0/geofence/${key}`, {
-      headers: { Authorization: `${process.env.REACT_APP_FENCER_API_KEY}` }
+      headers: {
+        Authorization: `${
+          process.env.REACT_APP_FENCER_API_KEY
+          // process.env.REACT_APP_TESTER
+        }`
+      }
     })
   };
 }
@@ -29,7 +34,10 @@ export function getPosition(lat, lng) {
     type: GET_POSITION,
     payload: axios.get("https://api.fencer.io/v1.0/position", {
       headers: {
-        Authorization: `${process.env.REACT_APP_FENCER_API_KEY}`,
+        Authorization: `${
+          process.env.REACT_APP_FENCER_API_KEY
+          // process.env.REACT_APP_TESTER
+        }`,
         "Lat-Pos": lat,
         "Lng-Pos": lng
       }

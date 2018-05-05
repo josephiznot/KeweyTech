@@ -54,7 +54,10 @@ export function isInBounds(lat, lng, key) {
       }`,
       {
         headers: {
-          Authorization: `${process.env.REACT_APP_FENCER_API_KEY}`,
+          Authorization: `${
+            process.env.REACT_APP_FENCER_API_KEY
+            // process.env.REACT_APP_TESTER
+          }`,
           "Lat-Pos": lat,
           "Lng-Pos": lng
         }
