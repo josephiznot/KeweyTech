@@ -376,7 +376,10 @@ class Settings extends Component {
                   style={{ marginRight: 20 }}
                 />
               )}
-            </IconButton>Click the lock to make changes.
+            </IconButton>
+            {this.state.locked
+              ? "Click the lock to make changes."
+              : "Click the lock to prevent further changes."}
           </div>
         </div>
       </div>

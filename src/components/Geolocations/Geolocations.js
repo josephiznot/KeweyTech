@@ -12,13 +12,44 @@ import RaisedButton from "material-ui/RaisedButton";
 import GoogleMaps from "./../GoogleMaps/GoogleMaps";
 import "./Geolocations.css";
 import swal from "sweetalert";
+import Swal from "sweetalert2";
+import axios from "axios";
 
 class Geolocations extends Component {
   constructor() {
     super();
     this.state = {
       trackFlag: false,
-      isEnabled: false
+      isEnabled: false,
+      steps: [
+        {
+          title: "Welcome to Kewey!",
+          text: "Follow along to setup your new Kewey account."
+        },
+        {
+          title: "Admin vs. user",
+          text:
+            "Every Kewey user needs an admin to report to. In order to create a new Kewey user, you must first have access to the admin's password in order to register the new user."
+        },
+        {
+          title: "Select an account",
+          input: "select",
+          inputOptions: {
+            admin: "Admin account",
+            user: "Kewey user"
+          },
+          inputPlaceholder: "Select an account",
+          inputValidator: value => {
+            return new Promise(resolve => {
+              if (value !== "") {
+                resolve();
+              } else {
+                resolve("You need to select an account");
+              }
+            });
+          }
+        }
+      ]
     };
     this.enableTracking = this.enableTracking.bind(this);
   }
@@ -69,37 +100,87 @@ class Geolocations extends Component {
       this.props.history.push("/alert");
     }
   }
-  // componentDidMount() {
-  //   if (
-  //     this.props.location.pathname !== "/" &&
-  //     this.props.location.pathname !== "/about"
-  //   ) {
-  //     this.props
-  //       .getUser()
-  //       .then(response => console.log(response))
-  //       .catch(err => {
-  //         if (err) {
-  //           this.props.history.push("/");
-  //           return swal({
-  //             title: "User unauthorized",
-  //             text: "Please login",
-  //             icon: "warning",
-  //             button: "Login"
-  //           }).then(login => {
-  //             if (login) {
-  //               window.location.replace("http://localhost:3001/auth");
-  //             }
-  //           });
-  //         }
-  //       });
-  //   }
-  // }
+  componentDidMount() {
+    if (
+      this.props.location.pathname !== "/" &&
+      this.props.location.pathname !== "/about"
+    ) {
+      this.props
+        .getUser()
+        .then(response => {
+          console.log(response.value.data.user_id);
+          return response.value.data.is_admin === null
+            ? (Swal.setDefaults({
+                showCancelButton: false,
+                allowOutsideClick: false,
+                confirmButtonText: "Next &rarr;",
+                animation: false,
+                progressSteps: ["1", "2", "3"]
+              }),
+              Swal.queue(this.state.steps).then(
+                result => {
+                  Swal.resetDefaults();
+                  console.log(result.value);
+                  if (result.value[2] === "admin") {
+                    Swal({
+                      title: "Create an admin password",
+                      input: "password"
+                    }).then(adminPassword => {
+                      axios.put(
+                        `/api/create_new_admin/${response.value.data.user_id}`,
+                        { password: adminPassword.value, isAdmin: true }
+                      );
+                      Swal({
+                        title: `Welcome to the Kewey family, ${
+                          response.value.data.display_name
+                        } :)`
+                      });
+                    });
+                  } else {
+                    Swal({
+                      title: "Register an admin password",
+                      text:
+                        "Enter the admin password you would like to link to this account",
+                      input: "password"
+                    }).then(adminPassword => {
+                      axios.put(
+                        `/api/create_new_user/${response.value.data.user_id}`,
+                        { password: adminPassword.value, isAdmin: false }
+                      );
+                      Swal({
+                        title: `Welcome to the Kewey family, ${
+                          response.value.data.display_name
+                        } :)`
+                      });
+                    });
+                  }
+                },
+                () => Swal.resetDefaults()
+              ))
+            : null;
+        })
+        .catch(err => {
+          if (err) {
+            this.props.history.push("/");
+            return swal({
+              title: "User unauthorized",
+              text: "Please login",
+              icon: "warning",
+              button: "Login"
+            }).then(login => {
+              if (login) {
+                window.location.replace("http://localhost:3001/auth");
+              }
+            });
+          }
+        });
+    }
+  }
   componentWillUnmount() {
     clearInterval(this.start);
   }
   //^^^^^^^^^^^^^^^^^CLEARS INTERVAL WHEN USER LEAVES COMPONENT^^^^^^^^^^^^^^^
   render() {
-    console.log(this.props.geolocationsReducer.searchToggle);
     return (
       <div>
         <div className="geolocations-body-container">

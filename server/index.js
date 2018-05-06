@@ -1,4 +1,5 @@
 require("dotenv").config();
+const bcrypt = require("bcrypt");
 const massive = require("massive");
 const cors = require("cors");
 const express = require("express");
@@ -45,6 +46,7 @@ const {
   getHitsBeforeDeleted,
   emailDirections
 } = require("./controllers/nodeMailerCtrl");
+const { createNewAdmin, createNewUser } = require("./controllers/bcryptCtrl");
 
 massive(process.env.CONNECTION_STRING)
   .then(db => {
@@ -166,6 +168,10 @@ app.post("/api/send_expired_hits/", sendExpiredHits);
 app.get("/api/get_hits_before_deleted/:key", getHitsBeforeDeleted);
 app.post("/api/email_directions", emailDirections);
 //-----------------------------------------
+//----------------------BCRYPT-------------------------
+app.put("/api/create_new_admin/:id", createNewAdmin);
+app.put("/api/create_new_user/:id", createNewUser);
+//-----------------------------------------------
 const path = require("path");
 app.get("*", (req, res, next) => {
   res.sendFile(path.join(__dirname, "/../build/index.html"));
