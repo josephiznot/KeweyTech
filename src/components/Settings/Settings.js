@@ -42,7 +42,8 @@ class Settings extends Component {
       contact_email: "",
       changingEmail: "",
       locked: true,
-      newPassword: ""
+      newPassword: "",
+      newApiKey: ""
     };
     this.handleChange = this.handleChange.bind(this);
     this.updateEmail = this.updateEmail.bind(this);
@@ -50,6 +51,7 @@ class Settings extends Component {
     this.handleLock = this.handleLock.bind(this);
     this.updateAdminPassword = this.updateAdminPassword.bind(this);
     this.handleAdminChange = this.handleAdminChange.bind(this);
+    this.updateApiKey = this.updateApiKey.bind(this);
   }
   updateEmail() {
     if (this.state.changingEmail) {
@@ -77,14 +79,20 @@ class Settings extends Component {
     ) {
       this.props
         .getUser()
-        .then(response =>
+        .then(response => {
           this.setState({
             isAdmin: response.value.data.is_admin,
             contact_email: response.value.data.contact_email,
             user_id: response.value.data.user_id,
             examplePassword: response.value.data.first_name
-          })
-        )
+          });
+          axios
+            .get(`/api/get_api_key/${response.value.data.user_id}`)
+            .then(apiKey => {
+              console.log(response.value.data);
+              this.setState({ apiKey: apiKey.data[0].api_key });
+            });
+        })
         .catch(err => {
           if (err) {
             this.props.history.push("/");
@@ -113,123 +121,132 @@ class Settings extends Component {
         });
         // });
         //-------ARRAY OF DB KEYS and CENTERS-----------
-        axios
-          .get("https://api.fencer.io/v1.0/geofence", {
-            //^^^^^^^GRABS CURRENT FENCES FROM FENCER.IO^^^^^^^^^
-            headers: {
-              Authorization: `${
-                process.env.REACT_APP_FENCER_API_KEY
-                // process.env.REACT_APP_TESTER
-              }`
-            }
-          })
-          .then(response => {
-            console.log(response);
-            response.data.data.map((fence, i) => {
-              return this.setState({
-                newKeys: this.state.newKeys.concat(fence.id)
+        axios.get(`/api/get_api_key/${this.state.user_id}`).then(apiKey => {
+          //-------get api key from users table in db-----------
+          axios
+            .get("https://api.fencer.io/v1.0/geofence", {
+              //^^^^^^^GRABS CURRENT FENCES FROM FENCER.IO^^^^^^^^^
+              headers: {
+                Authorization: `${
+                  apiKey.data[0].api_key
+                  // process.env.REACT_APP_FENCER_API_KEY
+                  // process.env.REACT_APP_TESTER
+                }`
+              }
+            })
+            .then(response => {
+              console.log(response);
+              console.log(response);
+              response.data.data.map((fence, i) => {
+                return this.setState({
+                  newKeys: this.state.newKeys.concat(fence.id)
+                });
               });
-            });
-            //---------ARRAY OF CURRENT KEYS
-            // this.state.newKeys.map((e, i) => {////moved downwards
-            var { oldKeys, newKeys } = this.state;
-            if (_.difference(oldKeys, newKeys)[0]) {
-              console.log("trying to delete an old key...");
-              //^^^^CHECKS TO SEE IF A FENCE WAS DELETED FROM FENCER.IO BY COMPARING THE KEY^^^^^
-              _.difference(oldKeys, newKeys).map(element => {
-                //the element is the deleted fence_key---------
-                //------NODEMAILER HERE----------
-                // axios.get(`/api/get_hits_before_deleted/${element}`);
+              //---------ARRAY OF CURRENT KEYS
+              // this.state.newKeys.map((e, i) => {////moved downwards
+              var { oldKeys, newKeys } = this.state;
+              if (_.difference(oldKeys, newKeys)[0]) {
+                console.log("trying to delete an old key...");
+                //^^^^CHECKS TO SEE IF A FENCE WAS DELETED FROM FENCER.IO BY COMPARING THE KEY^^^^^
+                _.difference(oldKeys, newKeys).map(element => {
+                  //the element is the deleted fence_key---------
+                  //------NODEMAILER HERE----------
+                  // axios.get(`/api/get_hits_before_deleted/${element}`);
+                  return (
+                    axios
+                      .delete(`/api/delete_history_hits/${element}`)
+                      //^^^^^MUST DELETE HISTORY HITS BEFORE DELETING FENCE^^^^^^
+                      .then(afterwards => {
+                        axios.delete(`/api/delete_old_fence/${element}`);
+                      })
+                  );
+                  //^^^^^^^^DELETES FROM GEOFENCE TABLE^^^^^^^^^^^^
+                });
+              }
+
+              this.state.newKeys.map((e, i) => {
+                console.log(this.state.apiKey, this.state.api_key);
                 return (
                   axios
-                    .delete(`/api/delete_history_hits/${element}`)
-                    //^^^^^MUST DELETE HISTORY HITS BEFORE DELETING FENCE^^^^^^
-                    .then(afterwards => {
-                      axios.delete(`/api/delete_old_fence/${element}`);
+                    .get(`https://api.fencer.io/v1.0/geofence/${e}`, {
+                      //e is each current geofence key
+                      headers: {
+                        Authorization: `${
+                          // this.state.apiKey
+                          // process.env.REACT_APP_FENCER_API_KEY
+                          process.env.REACT_APP_TESTER
+                        }`
+                      }
                     })
-                );
-                //^^^^^^^^DELETES FROM GEOFENCE TABLE^^^^^^^^^^^^
-              });
-            }
 
-            this.state.newKeys.map((e, i) => {
-              return (
-                axios
-                  .get(`https://api.fencer.io/v1.0/geofence/${e}`, {
-                    //e is each current geofence key
-                    headers: {
-                      Authorization: `${
-                        process.env.REACT_APP_FENCER_API_KEY
-                        // process.env.REACT_APP_TESTER
-                      }`
-                    }
-                  })
-                  //^^^^^^^^^^^^^^^^^^^^^^^RETREIVE GEOFENCES AND THEIR INFO FROM FENCER^^^^^^^^^^^^^^^^^^^^^
-                  //^^^^^^^^^^^^^^^^^^^^^^^^^(ALIAS, POINTS, CENTER)^^^^^^^^^^^^^^^^^^^^^^^^^
-                  .then(response2 => {
-                    var { newCenter } = this.state;
-                    this.setState({
-                      newCenter: newCenter.concat(response2.data.data.center)
-                    });
+                    //^^^^^^^^^^^^^^^^^^^^^^^RETREIVE GEOFENCES AND THEIR INFO FROM FENCER^^^^^^^^^^^^^^^^^^^^^
+                    //^^^^^^^^^^^^^^^^^^^^^^^^^(ALIAS, POINTS, CENTER)^^^^^^^^^^^^^^^^^^^^^^^^^
+                    .then(response2 => {
+                      console.log(response2);
+                      var { newCenter } = this.state;
+                      this.setState({
+                        newCenter: newCenter.concat(response2.data.data.center)
+                      });
 
-                    axios.get(`/api/geofence/${e}`).then(res => {
-                      if (res.data[0]) {
-                        if (
-                          _.isEqual(
-                            _.sortBy(res.data[0].fence_points, "lat"),
-                            _.sortBy(response2.data.data.points, "lat")
-                          )
-                        ) {
-                          //REALLY ONLY NEED TO UPDATE ALIAS AND CENTER...NOT NECESSARILY POINTS...
-                          axios.put(`/api/updatepoints/${e}`, {
+                      axios.get(`/api/geofence/${e}`).then(res => {
+                        if (res.data[0]) {
+                          if (
+                            _.isEqual(
+                              _.sortBy(res.data[0].fence_points, "lat"),
+                              _.sortBy(response2.data.data.points, "lat")
+                            )
+                          ) {
+                            //REALLY ONLY NEED TO UPDATE ALIAS AND CENTER...NOT NECESSARILY POINTS...
+                            axios.put(`/api/updatepoints/${e}`, {
+                              center: response2.data.data.center,
+                              points: response2.data.data.points,
+                              alias: response2.data.data.alias
+                            });
+                          } else {
+                            //^^^^^IF POINTS DONT EQUAL EACH OTHER...MUST UPDATE THEM^^^^^^
+                            axios
+                              .get(`/api/get_hits_before_deleted/${e}`)
+                              .then(oldhits => {
+                                if (oldhits.data[0]) {
+                                  //IF IT HAS ANY VALUES IN THE ARRAY
+                                  axios.post("/api/send_expired_hits", {
+                                    history: oldhits.data,
+                                    email: this.state.contact_email
+                                  });
+                                  axios
+                                    .delete(`/api/delete_history_hits/${e}`)
+                                    .then(afterwardsss => {
+                                      axios.put(`/api/updatepoints/${e}`, {
+                                        center: response2.data.data.center,
+                                        points: response2.data.data.points,
+                                        alias: response2.data.data.alias
+                                      });
+                                    });
+                                } else {
+                                  axios.put(`/api/updatepoints/${e}`, {
+                                    center: response2.data.data.center,
+                                    points: response2.data.data.points,
+                                    alias: response2.data.data.alias
+                                  });
+                                }
+                              });
+                          }
+                        } else {
+                          axios.post(`/api/addgeofence/${e}`, {
                             center: response2.data.data.center,
                             points: response2.data.data.points,
                             alias: response2.data.data.alias
                           });
-                        } else {
-                          //^^^^^IF POINTS DONT EQUAL EACH OTHER...MUST UPDATE THEM^^^^^^
-                          axios
-                            .get(`/api/get_hits_before_deleted/${e}`)
-                            .then(oldhits => {
-                              if (oldhits.data[0]) {
-                                //IF IT HAS ANY VALUES IN THE ARRAY
-                                axios.post("/api/send_expired_hits", {
-                                  history: oldhits.data,
-                                  email: this.state.contact_email
-                                });
-                                axios
-                                  .delete(`/api/delete_history_hits/${e}`)
-                                  .then(afterwardsss => {
-                                    axios.put(`/api/updatepoints/${e}`, {
-                                      center: response2.data.data.center,
-                                      points: response2.data.data.points,
-                                      alias: response2.data.data.alias
-                                    });
-                                  });
-                              } else {
-                                axios.put(`/api/updatepoints/${e}`, {
-                                  center: response2.data.data.center,
-                                  points: response2.data.data.points,
-                                  alias: response2.data.data.alias
-                                });
-                              }
-                            });
                         }
-                      } else {
-                        axios.post(`/api/addgeofence/${e}`, {
-                          center: response2.data.data.center,
-                          points: response2.data.data.points,
-                          alias: response2.data.data.alias
-                        });
-                      }
-                    });
+                      });
 
-                    //^^^^^^^^^^^^^^^^^^^^^UPDATES CURRENT FENCE OR CREATES NEW ONE^^^^^^^^^^^^^^^^^^^^^^^^
-                  })
-                  .catch(console.log)
-              );
+                      //^^^^^^^^^^^^^^^^^^^^^UPDATES CURRENT FENCE OR CREATES NEW ONE^^^^^^^^^^^^^^^^^^^^^^^^
+                    })
+                    .catch(console.log)
+                );
+              });
             });
-          });
+        });
       })
       .catch(console.log);
     swal("GOOD JOB", "SOFTWARE UP TO DATE", "success");
@@ -255,8 +272,19 @@ class Settings extends Component {
   }
   handleLock() {
     this.setState({ locked: true });
-    this.updateEmail();
+    this.state.changingEmail ? this.updateEmail() : true;
     this.updateAdminPassword();
+    this.state.newApiKey ? this.updateApiKey() : true;
+  }
+  handleApiKey(val) {
+    this.setState({ newApiKey: val });
+  }
+  updateApiKey() {
+    console.log(this.state.newApiKey);
+    axios.put(`/api/update_api_key/${this.state.user_id}`, {
+      newApiKey: this.state.newApiKey
+    });
+    this.setState({ newApiKey: "" });
   }
   render() {
     // console.log(this.state.isAdmin ? "Admin!" : "Not Admin", this.state.locked);
@@ -384,6 +412,8 @@ class Settings extends Component {
               disabled={this.state.locked}
               floatingLabelText="Update Fencer API key"
               hintText={"paste the API key here"}
+              onChange={e => this.handleApiKey(e.target.value)}
+              value={this.state.newApiKey}
             />
           </div>
           <div className="locked-container">

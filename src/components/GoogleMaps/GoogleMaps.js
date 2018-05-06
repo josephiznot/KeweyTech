@@ -14,6 +14,7 @@ import {
 import Toggle from "material-ui/Toggle";
 import CircularProgress from "material-ui/CircularProgress";
 import axios from "axios";
+import { getUser } from "./../../redux/userReducer";
 import {
   Card,
   CardActions,
@@ -32,37 +33,50 @@ class GoogleMaps extends Component {
     this.handleToggle = this.handleToggle.bind(this);
   }
   componentDidMount() {
-    this.props.updateCurrentLocation().then(res => {
-      //^^^^^^^^^^RETURNS CURRENT LOCATION^^^^^^^^^^^^^^^^
-      this.props
-        .getPosition(
-          this.props.geolocationsReducer.currLat,
-          this.props.geolocationsReducer.currLng
-        )
-        //^^^^^^^^^^RETURNS THE FENCE KEY THAT THE USER IS IN^^^^^^^^^^^^^^
-        .then(response => {
-          if (response.value.data.data) {
-            //^^^^^^^^^^^^^^^^WILL EXECUTE IF USER IS IN A FENCE^^^^^^^^^^^^^^^
-            axios
-              .put(`/api/toggleactive/${response.value.data.data[0].id}`, {
-                num: true
-              })
-
-              //^^^^^^^^^^^^^^^^ALLOWS USER TO TOGGLE ONLY THE FENCE THEY ARE IN^^^^^^^^^^^^^
+    this.props.getUser().then(user => {
+      console.log(user.value.data.user_id);
+      this.props.updateCurrentLocation().then(res => {
+        axios
+          .get(`/api/get_api_key/${user.value.data.user_id}`)
+          .then(apiKey => {
+            console.log(apiKey);
+            // /^^^^^^^^^^RETURNS CURRENT LOCATION^^^^^^^^^^^^^^^^
+            this.props
+              .getPosition(
+                this.props.geolocationsReducer.currLat,
+                this.props.geolocationsReducer.currLng,
+                user.value.data.user_id,
+                apiKey.data[0].api_key
+              )
+              //^^^^^^^^^^RETURNS THE FENCE KEY THAT THE USER IS IN^^^^^^^^^^^^^^
               .then(response => {
-                this.setState({ geofences: response.data });
-                // this.setState({ geofences: response.value.data });
+                if (response.value.data.data) {
+                  //^^^^^^^^^^^^^^^^WILL EXECUTE IF USER IS IN A FENCE^^^^^^^^^^^^^^^
+                  axios
+                    .put(
+                      `/api/toggleactive/${response.value.data.data[0].id}`,
+                      {
+                        num: true
+                      }
+                    )
+
+                    //^^^^^^^^^^^^^^^^ALLOWS USER TO TOGGLE ONLY THE FENCE THEY ARE IN^^^^^^^^^^^^^
+                    .then(response => {
+                      this.setState({ geofences: response.data });
+                      // this.setState({ geofences: response.value.data });
+                    });
+                } else {
+                  axios
+                    .put("api/resettoggles", { isActive: false })
+                    .then(resetToggle => {
+                      this.setState({ geofences: resetToggle.data });
+                    });
+                }
+                //^^^^^^^^^^^^^^IF USER IS NOT IN ANY FENCE, IT'LL JUST RETREIVE THE FENCES^^^^^^^^^^^^^^
+                //!!!!!!!!!!!!!!!!!!!!!IT WILL RESET IS_ACTIVE_2 IN DB!!!!!!!!!!!!!!!!!!!
               });
-          } else {
-            axios
-              .put("api/resettoggles", { isActive: false })
-              .then(resetToggle => {
-                this.setState({ geofences: resetToggle.data });
-              });
-          }
-          //^^^^^^^^^^^^^^IF USER IS NOT IN ANY FENCE, IT'LL JUST RETREIVE THE FENCES^^^^^^^^^^^^^^
-          //!!!!!!!!!!!!!!!!!!!!!IT WILL RESET IS_ACTIVE_2 IN DB!!!!!!!!!!!!!!!!!!!
-        });
+          });
+      });
     });
   }
   handleToggle(key) {
@@ -131,5 +145,6 @@ export default connect(mapStateToProps, {
   getPosition,
   updateCurrentLocation,
   getGeofences,
-  updateToggledKey
+  updateToggledKey,
+  getUser
 })(GoogleMaps);

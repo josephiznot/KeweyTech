@@ -78,12 +78,23 @@ class Alert extends Component {
         autocorrect: "off"
       },
       inputValidator: value => {
-        return new Promise(resolve => {
-          if (value === this.state.password) {
-            resolve();
-          } else {
-            resolve("please enter correct password");
-          }
+        this.props.getUser().then(afterUser => {
+          console.log(afterUser);
+          return new Promise(resolve => {
+            axios
+              .post(`/api/confirm_password/${value}`, {
+                tracker:
+                  afterUser.value.data.tracker || afterUser.value.data.user_id
+              })
+              .then(afterwards => {
+                console.log(afterwards);
+              });
+          });
+          // if (value === response.value.data.admin_password) {
+          //   resolve();
+          // } else {
+          //   resolve("please enter correct password");
+          // }
         });
       }
     });
@@ -121,6 +132,7 @@ class Alert extends Component {
   }
 
   render() {
+    console.log(this.state.tracker);
     return <div>OMG ALERT!!!!!!!!!!</div>;
   }
 }

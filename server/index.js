@@ -49,7 +49,10 @@ const {
 const {
   createNewAdmin,
   createNewUser,
-  updateAdminPassword
+  updateAdminPassword,
+  updateApiKey,
+  getApiKey,
+  confirmPassword
 } = require("./controllers/bcryptCtrl");
 
 massive(process.env.CONNECTION_STRING)
@@ -176,6 +179,9 @@ app.post("/api/email_directions", emailDirections);
 app.put("/api/create_new_admin/:id", createNewAdmin);
 app.put("/api/create_new_user/:id", createNewUser);
 app.put("/api/update_admin_password/:id", updateAdminPassword);
+app.put("/api/update_api_key/:id", updateApiKey);
+app.get("/api/get_api_key/:id", getApiKey);
+app.post("/api/confirm_password/:password", confirmPassword);
 //-----------------------------------------------
 const path = require("path");
 app.get("*", (req, res, next) => {

@@ -16,6 +16,7 @@ export function getGeofences() {
     payload: axios.get("/api/geofences")
   };
 }
+//-------dont think i actually use this function...hahaha
 export function getPoints(key) {
   return {
     type: GET_POINTS,
@@ -29,13 +30,15 @@ export function getPoints(key) {
     })
   };
 }
-export function getPosition(lat, lng) {
+export function getPosition(lat, lng, user_id, apiKey) {
+  console.log(apiKey);
   return {
     type: GET_POSITION,
     payload: axios.get("https://api.fencer.io/v1.0/position", {
       headers: {
         Authorization: `${
-          process.env.REACT_APP_FENCER_API_KEY
+          apiKey
+          // process.env.REACT_APP_FENCER_API_KEY
           // process.env.REACT_APP_TESTER
         }`,
         "Lat-Pos": lat,
@@ -77,6 +80,7 @@ export default function fencerReducer(state = initialState, action) {
         })
       };
     case `${GET_POSITION}_FULFILLED`:
+      console.log(action.payload);
       return action.payload.data.error
         ? { ...state, message: "USER NOT IN BOUNDS" }
         : {

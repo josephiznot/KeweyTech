@@ -64,8 +64,49 @@ const updateAdminPassword = (req, res) => {
       .catch(console.log);
   });
 };
+const updateApiKey = (req, res) => {
+  console.log(req.body.newApiKey, req.params.id);
+  req.app
+    .get("db")
+    .update_api_key([req.body.newApiKey, req.params.id])
+    .then(response => {
+      res.status(200).send();
+    })
+    .catch(console.log);
+};
+const getApiKey = (req, res) => {
+  req.app
+    .get("db")
+    .get_api_key(req.params.id)
+    .then(response => {
+      console.log(response);
+      res.status(200).send(response);
+    });
+};
+const confirmPassword = (req, res) => {
+  var { tracker } = req.body;
+  var { password } = req.params;
+  console.log(tracker, password);
+  req.app
+    .get("db")
+    .get_admin_email_by_tracker(tracker)
+    .then(response => {
+      req.app
+        .get("db")
+        .get_hash(response[0].g_email)
+        .then(hashRes => {
+          bcrypt.compare(password, hashRes[0].admin_password, (err, hash) => {
+            hash ? res.status(200).send() : res.status(500).send();
+          });
+        })
+        .catch(err => console.log(err));
+    });
+};
 module.exports = {
   createNewAdmin,
   createNewUser,
-  updateAdminPassword
+  updateAdminPassword,
+  updateApiKey,
+  getApiKey,
+  confirmPassword
 };

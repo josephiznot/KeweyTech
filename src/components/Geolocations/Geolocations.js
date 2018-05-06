@@ -103,12 +103,16 @@ class Geolocations extends Component {
       takes the updated state and passes in the coordinates as props.
       You will receive a 400 err when server is restarted because
       the props have not been updated yet. 
-      */
-          this.props.isInBounds(
-            this.props.geolocationsReducer.currLat,
-            this.props.geolocationsReducer.currLng,
-            this.props.geolocationsReducer.toggledKey
-          );
+      */ axios
+            .get(`/api/get_api_key/${this.state.user_id}`)
+            .then(apiKey => {
+              this.props.isInBounds(
+                this.props.geolocationsReducer.currLat,
+                this.props.geolocationsReducer.currLng,
+                this.props.geolocationsReducer.toggledKey,
+                apiKey.data[0].api_key
+              );
+            });
         }, 5000);
       } else {
         clearInterval(this.start);
@@ -130,7 +134,7 @@ class Geolocations extends Component {
       this.props
         .getUser()
         .then(response => {
-          console.log(response.value.data.user_id);
+          this.setState({ user_id: response.value.data.user_id });
           return response.value.data.is_admin === null
             ? (Swal.setDefaults({
                 showCancelButton: false,
