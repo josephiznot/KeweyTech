@@ -134,7 +134,9 @@ class Geolocations extends Component {
       this.props
         .getUser()
         .then(response => {
-          this.setState({ user_id: response.value.data.user_id });
+          this.setState({
+            user_id: response.value.data.user_id
+          });
           return response.value.data.is_admin === null
             ? (Swal.setDefaults({
                 showCancelButton: false,
@@ -205,22 +207,6 @@ class Geolocations extends Component {
                             }
                           });
                       });
-                    // Swal({
-                    //   title: "Register an admin password",
-                    //   text:
-                    //     "Enter the admin password you would like to link to this account",
-                    //   input: "password"
-                    // }).then(adminPassword => {
-                    // axios.put(
-                    //   `/api/create_new_user/${response.value.data.user_id}`,
-                    //   { password: adminPassword.value, isAdmin: false }
-                    // );
-                    // Swal({
-                    //   title: `Welcome to the Kewey family, ${
-                    //     response.value.data.display_name
-                    //   } :)`
-                    // });
-                    // });
                   }
                 },
                 () => Swal.resetDefaults()

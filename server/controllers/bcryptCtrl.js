@@ -79,8 +79,11 @@ const getApiKey = (req, res) => {
     .get("db")
     .get_api_key(req.params.id)
     .then(response => {
-      console.log(response);
       res.status(200).send(response);
+    })
+    .catch(err => {
+      console.log(`joe set this.....${err}`);
+      res.status(500).send(err);
     });
 };
 const confirmPassword = (req, res) => {

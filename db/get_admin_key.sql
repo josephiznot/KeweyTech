@@ -1,0 +1,8 @@
+SELECT api_key
+FROM users
+WHERE
+
+
+
+
+--DEPRACATED

@@ -30,7 +30,7 @@ export function getPoints(key) {
     })
   };
 }
-export function getPosition(lat, lng, user_id, apiKey) {
+export function getPosition(lat, lng, user_id, apiKey, is_admin) {
   console.log(apiKey);
   return {
     type: GET_POSITION,

@@ -34,46 +34,57 @@ class GoogleMaps extends Component {
   }
   componentDidMount() {
     this.props.getUser().then(user => {
-      console.log(user.value.data.user_id);
+      console.log(user.value.data);
       this.props.updateCurrentLocation().then(res => {
+        //if its a user...this request returns null
         axios
           .get(`/api/get_api_key/${user.value.data.user_id}`)
           .then(apiKey => {
-            console.log(apiKey);
-            // /^^^^^^^^^^RETURNS CURRENT LOCATION^^^^^^^^^^^^^^^^
-            this.props
-              .getPosition(
-                this.props.geolocationsReducer.currLat,
-                this.props.geolocationsReducer.currLng,
-                user.value.data.user_id,
-                apiKey.data[0].api_key
+            console.log(apiKey.data[0].api_key);
+            //if its an admin, the req.params.id cannot be null
+            axios
+              .get(
+                `/api/get_api_key/${user.value.data.tracker ||
+                  user.value.data.user_id}`
               )
-              //^^^^^^^^^^RETURNS THE FENCE KEY THAT THE USER IS IN^^^^^^^^^^^^^^
-              .then(response => {
-                if (response.value.data.data) {
-                  //^^^^^^^^^^^^^^^^WILL EXECUTE IF USER IS IN A FENCE^^^^^^^^^^^^^^^
-                  axios
-                    .put(
-                      `/api/toggleactive/${response.value.data.data[0].id}`,
-                      {
-                        num: true
-                      }
-                    )
+              .then(adminKey => {
+                console.log(apiKey.data[0].api_key, adminKey.data[0].api_key);
+                // /^^^^^^^^^^RETURNS CURRENT LOCATION^^^^^^^^^^^^^^^^
+                this.props
+                  .getPosition(
+                    this.props.geolocationsReducer.currLat,
+                    this.props.geolocationsReducer.currLng,
+                    user.value.data.user_id,
+                    apiKey.data[0].api_key || adminKey.data[0].api_key
+                    //if admin, use their key...else, use tracker's key(for users)
+                  )
+                  //^^^^^^^^^^RETURNS THE FENCE KEY THAT THE USER IS IN^^^^^^^^^^^^^^
+                  .then(response => {
+                    if (response.value.data.data) {
+                      //^^^^^^^^^^^^^^^^WILL EXECUTE IF USER IS IN A FENCE^^^^^^^^^^^^^^^
+                      axios
+                        .put(
+                          `/api/toggleactive/${response.value.data.data[0].id}`,
+                          {
+                            num: true
+                          }
+                        )
 
-                    //^^^^^^^^^^^^^^^^ALLOWS USER TO TOGGLE ONLY THE FENCE THEY ARE IN^^^^^^^^^^^^^
-                    .then(response => {
-                      this.setState({ geofences: response.data });
-                      // this.setState({ geofences: response.value.data });
-                    });
-                } else {
-                  axios
-                    .put("api/resettoggles", { isActive: false })
-                    .then(resetToggle => {
-                      this.setState({ geofences: resetToggle.data });
-                    });
-                }
-                //^^^^^^^^^^^^^^IF USER IS NOT IN ANY FENCE, IT'LL JUST RETREIVE THE FENCES^^^^^^^^^^^^^^
-                //!!!!!!!!!!!!!!!!!!!!!IT WILL RESET IS_ACTIVE_2 IN DB!!!!!!!!!!!!!!!!!!!
+                        //^^^^^^^^^^^^^^^^ALLOWS USER TO TOGGLE ONLY THE FENCE THEY ARE IN^^^^^^^^^^^^^
+                        .then(response => {
+                          this.setState({ geofences: response.data });
+                          // this.setState({ geofences: response.value.data });
+                        });
+                    } else {
+                      axios
+                        .put("api/resettoggles", { isActive: false })
+                        .then(resetToggle => {
+                          this.setState({ geofences: resetToggle.data });
+                        });
+                    }
+                    //^^^^^^^^^^^^^^IF USER IS NOT IN ANY FENCE, IT'LL JUST RETREIVE THE FENCES^^^^^^^^^^^^^^
+                    //!!!!!!!!!!!!!!!!!!!!!IT WILL RESET IS_ACTIVE_2 IN DB!!!!!!!!!!!!!!!!!!!
+                  });
               });
           });
       });

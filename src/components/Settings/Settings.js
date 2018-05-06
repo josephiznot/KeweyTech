@@ -262,13 +262,14 @@ class Settings extends Component {
     this.setState({ newPassword: val });
   }
   handleUnlock() {
-    this.state.isAdmin
-      ? this.setState({ locked: false })
-      : Swal({
-          title: "User not an admin",
-          text: "Please login as the admin to edit the settings.",
-          type: "error"
-        });
+    // this.state.isAdmin
+    //   ? this.setState({ locked: false })
+    //   : Swal({
+    //       title: "User not an admin",
+    //       text: "Please login as the admin to edit the settings.",
+    //       type: "error"
+    //     });
+    this.setState({ locked: false });
   }
   handleLock() {
     this.setState({ locked: true });
