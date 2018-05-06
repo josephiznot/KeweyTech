@@ -46,7 +46,11 @@ const {
   getHitsBeforeDeleted,
   emailDirections
 } = require("./controllers/nodeMailerCtrl");
-const { createNewAdmin, createNewUser } = require("./controllers/bcryptCtrl");
+const {
+  createNewAdmin,
+  createNewUser,
+  updateAdminPassword
+} = require("./controllers/bcryptCtrl");
 
 massive(process.env.CONNECTION_STRING)
   .then(db => {
@@ -171,6 +175,7 @@ app.post("/api/email_directions", emailDirections);
 //----------------------BCRYPT-------------------------
 app.put("/api/create_new_admin/:id", createNewAdmin);
 app.put("/api/create_new_user/:id", createNewUser);
+app.put("/api/update_admin_password/:id", updateAdminPassword);
 //-----------------------------------------------
 const path = require("path");
 app.get("*", (req, res, next) => {

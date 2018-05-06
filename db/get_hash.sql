@@ -1,3 +1,3 @@
-SELECT admin_password
+SELECT admin_password, user_id
 FROM users
-WHERE admin_password = $1;
+WHERE g_email = $1;

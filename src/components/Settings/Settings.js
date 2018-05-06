@@ -29,6 +29,7 @@ import Key from "material-ui/svg-icons/communication/vpn-key";
 import Locked from "material-ui/svg-icons/action/lock";
 import Unlocked from "material-ui/svg-icons/action/lock-open";
 import IconButton from "material-ui/IconButton";
+import Swal from "sweetalert2";
 class Settings extends Component {
   constructor() {
     super();
@@ -40,12 +41,15 @@ class Settings extends Component {
       newCenter: [],
       contact_email: "",
       changingEmail: "",
-      locked: true
+      locked: true,
+      newPassword: ""
     };
     this.handleChange = this.handleChange.bind(this);
     this.updateEmail = this.updateEmail.bind(this);
     this.handleUnlock = this.handleUnlock.bind(this);
     this.handleLock = this.handleLock.bind(this);
+    this.updateAdminPassword = this.updateAdminPassword.bind(this);
+    this.handleAdminChange = this.handleAdminChange.bind(this);
   }
   updateEmail() {
     if (this.state.changingEmail) {
@@ -231,15 +235,32 @@ class Settings extends Component {
     swal("GOOD JOB", "SOFTWARE UP TO DATE", "success");
     this.setState({ newKeys: [], newCenter: [] });
   }
+  updateAdminPassword() {
+    axios.put(`/api/update_admin_password/${this.state.user_id}`, {
+      newPassword: this.state.newPassword
+    });
+    this.setState({ newPassword: "" });
+  }
+  handleAdminChange(val) {
+    this.setState({ newPassword: val });
+  }
   handleUnlock() {
-    this.setState({ locked: false });
+    this.state.isAdmin
+      ? this.setState({ locked: false })
+      : Swal({
+          title: "User not an admin",
+          text: "Please login as the admin to edit the settings.",
+          type: "error"
+        });
   }
   handleLock() {
     this.setState({ locked: true });
     this.updateEmail();
+    this.updateAdminPassword();
   }
   render() {
-    console.log(this.state.isAdmin ? "Admin!" : "Not Admin", this.state.locked);
+    // console.log(this.state.isAdmin ? "Admin!" : "Not Admin", this.state.locked);
+    console.log(this.state.newPassword);
     return (
       <div>
         <div className="appbar-imitator" />
@@ -344,6 +365,8 @@ class Settings extends Component {
               floatingLabelText="Change admin Password"
               hintText={`e.i. ${this.state.examplePassword +
                 Math.floor(Math.random() * 100000)}`}
+              onChange={e => this.handleAdminChange(e.target.value)}
+              value={this.state.newPassword}
             />
           </div>
           <div>

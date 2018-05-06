@@ -14,6 +14,7 @@ import "./Geolocations.css";
 import swal from "sweetalert";
 import Swal from "sweetalert2";
 import axios from "axios";
+import validator from "email-validator";
 
 class Geolocations extends Component {
   constructor() {
@@ -48,6 +49,27 @@ class Geolocations extends Component {
               }
             });
           }
+        }
+      ],
+      userSetup: [
+        {
+          title: "Almost done!",
+          text: "You just need to verify the admin's credentials."
+        },
+        {
+          title: "Enter the admin's email.",
+          input: "text",
+          inputValidator: value => {
+            return new Promise(resolve => {
+              validator.validate(value)
+                ? resolve()
+                : resolve("Enter a valid email.");
+            });
+          }
+        },
+        {
+          title: "Confirm the admin's password.",
+          input: "password"
         }
       ]
     };
@@ -137,22 +159,64 @@ class Geolocations extends Component {
                       });
                     });
                   } else {
-                    Swal({
-                      title: "Register an admin password",
-                      text:
-                        "Enter the admin password you would like to link to this account",
-                      input: "password"
-                    }).then(adminPassword => {
-                      axios.put(
-                        `/api/create_new_user/${response.value.data.user_id}`,
-                        { password: adminPassword.value, isAdmin: false }
-                      );
-                      Swal({
-                        title: `Welcome to the Kewey family, ${
-                          response.value.data.display_name
-                        } :)`
+                    Swal.setDefaults({
+                      showCancelButton: false,
+                      allowOutsideClick: false,
+                      confirmButtonText: "Next &rarr;",
+                      animation: false,
+                      progressSteps: ["1", "2", "3"]
+                    }),
+                      Swal.queue(this.state.userSetup).then(newUser => {
+                        Swal.resetDefaults();
+                        console.log(newUser);
+                        axios
+                          .put(
+                            `/api/create_new_user/${
+                              response.value.data.user_id
+                            }`,
+                            {
+                              password: newUser.value[2],
+                              isAdmin: false,
+                              adminEmail: newUser.value[1]
+                            }
+                          )
+                          .then(putResponse => {
+                            Swal({
+                              title: `Welcome to the Kewey family, ${
+                                response.value.data.display_name
+                              } :)`
+                            });
+                          })
+                          .catch(err => {
+                            if (err) {
+                              //want to say "Admin email does not exist"
+                              Swal({
+                                title: "Incorrect email or password.",
+                                text: "Please try again.",
+                                type: "error",
+                                confirmButtonText: "Restart"
+                              }).then(tryAgain => {
+                                window.location.reload();
+                              });
+                            }
+                          });
                       });
-                    });
+                    // Swal({
+                    //   title: "Register an admin password",
+                    //   text:
+                    //     "Enter the admin password you would like to link to this account",
+                    //   input: "password"
+                    // }).then(adminPassword => {
+                    // axios.put(
+                    //   `/api/create_new_user/${response.value.data.user_id}`,
+                    //   { password: adminPassword.value, isAdmin: false }
+                    // );
+                    // Swal({
+                    //   title: `Welcome to the Kewey family, ${
+                    //     response.value.data.display_name
+                    //   } :)`
+                    // });
+                    // });
                   }
                 },
                 () => Swal.resetDefaults()
