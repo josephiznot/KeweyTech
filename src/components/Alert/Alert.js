@@ -27,7 +27,9 @@ class Alert extends Component {
       this.setState({
         user: response.value.data.display_name,
         email: response.value.data.contact_email,
-        tracker: response.value.data.tracker
+        tracker: response.value.data.tracker,
+        user_id: response.value.data.user_id,
+        is_admin: response.value.data.is_admin
       });
       //^^^^^^^^^^GETS USERS ID^^^^^^^^^^^^^^
       //----------This is going to make the TWILIO get request-----------------
@@ -70,10 +72,12 @@ class Alert extends Component {
       }
     }, 5000);
     const { value: password } = await Swal({
-      title: "Enter admin password.",
+      title: "OUT OF BOUNDS! RETURN TO SAFETY!",
       input: "password",
+      type: "info",
       allowOutsideClick: false,
-      inputPlaceholder: "password",
+      inputPlaceholder: "Enter admin password",
+      confirmButtonText: "Ignore",
       inputAttributes: {
         autocapitalize: "off",
         autocorrect: "off"
@@ -83,16 +87,19 @@ class Alert extends Component {
         console.log(value); //entered password
         // this.props.getUser().then(afterUser => {
         return new Promise(resolve => {
+          if (value === "") {
+            resolve("Incorrect password.");
+          }
           axios
             .post(`/api/confirm_password/${value}`, {
-              tracker: this.state.tracker //|| this.state.user_id..for admins tracking themselves
+              tracker: this.state.tracker || this.state.user_id //for admins to track themselves
             })
             .then(isConfirmed => {
               console.log(isConfirmed);
               if (isConfirmed.data) {
                 window.location.replace("/geolocations");
               } else {
-                resolve("please enter correct password");
+                resolve("Incorrect password.");
               }
             });
         });
