@@ -66,7 +66,9 @@ class Settings extends Component {
                 changingEmail: ""
               });
             })
-        : swal("Invalid email address");
+        : swal("Invalid email address").then(res =>
+            this.setState({ changingEmail: "" })
+          );
     }
   }
   handleChange(val) {
@@ -253,10 +255,12 @@ class Settings extends Component {
     this.setState({ newKeys: [], newCenter: [] });
   }
   updateAdminPassword() {
-    axios.put(`/api/update_admin_password/${this.state.user_id}`, {
-      newPassword: this.state.newPassword
-    });
-    this.setState({ newPassword: "" });
+    if (this.state.newPassword) {
+      axios.put(`/api/update_admin_password/${this.state.user_id}`, {
+        newPassword: this.state.newPassword
+      });
+      this.setState({ newPassword: "" });
+    }
   }
   handleAdminChange(val) {
     this.setState({ newPassword: val });
@@ -281,10 +285,11 @@ class Settings extends Component {
     this.setState({ newApiKey: val });
   }
   updateApiKey() {
-    console.log(this.state.newApiKey);
-    axios.put(`/api/update_api_key/${this.state.user_id}`, {
-      newApiKey: this.state.newApiKey
-    });
+    axios
+      .put(`/api/update_api_key/${this.state.user_id}`, {
+        newApiKey: this.state.newApiKey
+      })
+      .then(response => this.handleUpdate());
     this.setState({ newApiKey: "" });
   }
   render() {
@@ -294,7 +299,7 @@ class Settings extends Component {
       <div>
         <div className="appbar-imitator" />
         <header className="settings-header">
-          <Setting />SETTINGS
+          <Setting />ADMIN SETTINGS
         </header>
         <div className="settings-container">
           <div className="locked-container">

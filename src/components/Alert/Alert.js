@@ -97,7 +97,7 @@ class Alert extends Component {
             .then(isConfirmed => {
               console.log(isConfirmed);
               if (isConfirmed.data) {
-                window.location.replace("/geolocations");
+                window.location.replace("/");
               } else {
                 resolve("Incorrect password.");
               }

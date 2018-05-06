@@ -15,7 +15,7 @@ class HamburgerMenu extends React.Component {
       open: false,
       login: "LOGIN/SIGNUP_",
       signOut: "SIGN OUT",
-      settings: "SETTINGS",
+      settings: "ADMIN SETTINGS",
       keweyFence: "KEWEY FENCE",
       about: "ABOUT",
       history: "HISTORY",

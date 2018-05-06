@@ -82,7 +82,7 @@ class Geolocations extends Component {
     if (!this.props.geolocationsReducer.toggledKey) {
       swal({
         title: "Error",
-        text: "KEWEY FENCE MUST BE ACTIVATED",
+        text: "SELECT A KEWEY FENCE.",
         icon: "info"
       });
     } else {
@@ -135,6 +135,7 @@ class Geolocations extends Component {
     }
   }
   componentDidMount() {
+    console.log(window.location);
     if (
       this.props.location.pathname !== "/" &&
       this.props.location.pathname !== "/about"
@@ -199,8 +200,6 @@ class Geolocations extends Component {
                             }
                           )
                           .then(putResponse => {
-                            var { changeState } = this.state;
-                            this.setState({ changeState: !changeState });
                             Swal({
                               title: `Please sign in with your new account.`
                             }).then(again => {
