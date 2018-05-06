@@ -5,7 +5,7 @@ const saltRounds = 10;
 const createNewAdmin = (req, res) => {
   const { password, isAdmin } = req.body;
   const { id } = req.params;
-  console.log(password, id, isAdmin);
+  console.log("createNewAdmin", password, id, isAdmin);
   bcrypt.hash(password, saltRounds, function(err, hash) {
     req.app
       .get("db")
@@ -18,42 +18,47 @@ const createNewAdmin = (req, res) => {
 const createNewUser = (req, res) => {
   const { password, isAdmin, adminEmail } = req.body;
   const { id } = req.params;
-  bcrypt.hash(password, saltRounds, function(err, hash) {
-    req.app
-      .get("db")
-      .get_hash(
-        adminEmail
-          .split("")
-          .splice(0, adminEmail.split("").lastIndexOf("@"))
-          .join("")
-        //splice off whatever is after @
-      )
-      .then(response => {
-        bcrypt.compare(
-          password,
-          response[0].admin_password,
-          (err, bcryptRes) => {
-            //if password matches
-            if (bcryptRes) {
-              bcrypt.hash(password, saltRounds, (err, hash) => {
-                //different hash password than the admin
-                req.app
-                  .get("db")
-                  .create_new_user([adminEmail, response[0].user_id, id, hash])
-                  .then(userResponse => {
-                    res.status(200).send();
-                  });
-              });
-            } else {
-              res.status(500).send(err);
-            }
-          }
-        );
-      })
-      .catch(err => console.log(`Email's probaly do not match: ${err}`));
-  });
+  console.log("createNewUser");
+  console.log(password, isAdmin, adminEmail, id);
+
+  // bcrypt.hash(password, saltRounds, function(err, hash) {
+  req.app
+    .get("db")
+    .get_hash(
+      adminEmail
+        .split("")
+        .splice(0, adminEmail.split("").lastIndexOf("@"))
+        .join("")
+      //splice off whatever is after @)
+    )
+    .then(response => {
+      console.log(`Here is response ${response[0].admin_password}`);
+      bcrypt.compare(password, response[0].admin_password, (err, bcryptRes) => {
+        //if password matches
+        console.log(bcryptRes);
+        if (bcryptRes) {
+          // bcrypt.hash(password, saltRounds, (err, hash) => {
+          //different hash password than the admin
+          req.app
+            .get("db")
+            .create_new_user([adminEmail, response[0].user_id, id])
+            .then(userResponse => {
+              res.status(200).send();
+            });
+          // });
+        } else {
+          console.log("passwords do not match");
+          res.status(500).send();
+        }
+      });
+    })
+    .catch(err => {
+      console.log(`Emails do not match`), res.status(500).send(err);
+    });
+  // });
 };
 const updateAdminPassword = (req, res) => {
+  console.log("updateAdminPassword");
   bcrypt.hash(req.body.newPassword, saltRounds, (err, hash) => {
     req.app
       .get("db")
@@ -65,7 +70,7 @@ const updateAdminPassword = (req, res) => {
   });
 };
 const updateApiKey = (req, res) => {
-  console.log(req.body.newApiKey, req.params.id);
+  console.log("updateApiKey", req.body.newApiKey, req.params.id);
   req.app
     .get("db")
     .update_api_key([req.body.newApiKey, req.params.id])
@@ -75,6 +80,7 @@ const updateApiKey = (req, res) => {
     .catch(console.log);
 };
 const getApiKey = (req, res) => {
+  console.log("getApiKey");
   req.app
     .get("db")
     .get_api_key(req.params.id)
@@ -87,9 +93,12 @@ const getApiKey = (req, res) => {
     });
 };
 const confirmPassword = (req, res) => {
+  //use it for adding a kewey user to and admin's account
+  console.log("confirmPassword");
   var { tracker } = req.body;
   var { password } = req.params;
   console.log(tracker, password);
+
   req.app
     .get("db")
     .get_admin_email_by_tracker(tracker)
@@ -97,9 +106,12 @@ const confirmPassword = (req, res) => {
       req.app
         .get("db")
         .get_hash(response[0].g_email)
+        //gets admin's password and user_id
         .then(hashRes => {
           bcrypt.compare(password, hashRes[0].admin_password, (err, hash) => {
-            hash ? res.status(200).send() : res.status(500).send();
+            console.log(hash);
+            // hash ? res.status(200).send() : res.status(500).send();
+            res.status(200).send(hash);
           });
         })
         .catch(err => console.log(err));

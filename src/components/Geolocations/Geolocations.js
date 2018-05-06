@@ -71,7 +71,8 @@ class Geolocations extends Component {
           title: "Confirm the admin's password.",
           input: "password"
         }
-      ]
+      ],
+      changeState: false
     };
     this.enableTracking = this.enableTracking.bind(this);
   }
@@ -103,9 +104,16 @@ class Geolocations extends Component {
       takes the updated state and passes in the coordinates as props.
       You will receive a 400 err when server is restarted because
       the props have not been updated yet. 
-      */ axios
-            .get(`/api/get_api_key/${this.state.user_id}`)
+      */
+
+          axios
+            .get(
+              `/api/get_api_key/${
+                this.state.is_admin ? this.state.user_id : this.state.tracker
+              }`
+            )
             .then(apiKey => {
+              console.log(apiKey);
               this.props.isInBounds(
                 this.props.geolocationsReducer.currLat,
                 this.props.geolocationsReducer.currLng,
@@ -135,7 +143,9 @@ class Geolocations extends Component {
         .getUser()
         .then(response => {
           this.setState({
-            user_id: response.value.data.user_id
+            user_id: response.value.data.user_id,
+            tracker: response.value.data.tracker,
+            is_admin: response.value.data.is_admin
           });
           return response.value.data.is_admin === null
             ? (Swal.setDefaults({
@@ -150,6 +160,7 @@ class Geolocations extends Component {
                   Swal.resetDefaults();
                   console.log(result.value);
                   if (result.value[2] === "admin") {
+                    console.log("creating and admin...");
                     Swal({
                       title: "Create an admin password",
                       input: "password"
@@ -165,6 +176,7 @@ class Geolocations extends Component {
                       });
                     });
                   } else {
+                    console.log("creating a kewey user");
                     Swal.setDefaults({
                       showCancelButton: false,
                       allowOutsideClick: false,
@@ -187,10 +199,14 @@ class Geolocations extends Component {
                             }
                           )
                           .then(putResponse => {
+                            var { changeState } = this.state;
+                            this.setState({ changeState: !changeState });
                             Swal({
-                              title: `Welcome to the Kewey family, ${
-                                response.value.data.display_name
-                              } :)`
+                              title: `Please sign in with your new account.`
+                            }).then(again => {
+                              window.location.replace(
+                                process.env.REACT_APP_LOGIN
+                              );
                             });
                           })
                           .catch(err => {
@@ -223,7 +239,7 @@ class Geolocations extends Component {
               button: "Login"
             }).then(login => {
               if (login) {
-                window.location.replace("http://localhost:3001/auth");
+                window.location.replace(process.env.REACT_APP_LOGIN);
               }
             });
           }

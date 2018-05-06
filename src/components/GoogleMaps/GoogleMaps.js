@@ -33,8 +33,11 @@ class GoogleMaps extends Component {
     this.handleToggle = this.handleToggle.bind(this);
   }
   componentDidMount() {
+    console.log("rendered in maps");
     this.props.getUser().then(user => {
       console.log(user.value.data);
+      // if (user.value.data.is_admin !== null) {
+      //The page will not bother getting any data from a user that does not exist yet.
       this.props.updateCurrentLocation().then(res => {
         //if its a user...this request returns null
         axios
@@ -88,6 +91,7 @@ class GoogleMaps extends Component {
               });
           });
       });
+      // }
     });
   }
   handleToggle(key) {

@@ -5,6 +5,7 @@ import axios from "axios";
 import { updateCurrentLocation } from "./../../redux/geolocationsReducer";
 import { getUser } from "./../../redux/userReducer";
 import Swal from "sweetalert2";
+import "./Alert.css";
 
 class Alert extends Component {
   constructor() {
@@ -12,7 +13,7 @@ class Alert extends Component {
     this.state = {
       mounted: false,
       o_b_id: "",
-      password: "aaron123"
+      password: ""
     };
     this.updateHit = this.updateHit.bind(this);
   }
@@ -25,7 +26,8 @@ class Alert extends Component {
     this.props.getUser().then(response => {
       this.setState({
         user: response.value.data.display_name,
-        email: response.value.data.contact_email
+        email: response.value.data.contact_email,
+        tracker: response.value.data.tracker
       });
       //^^^^^^^^^^GETS USERS ID^^^^^^^^^^^^^^
       //----------This is going to make the TWILIO get request-----------------
@@ -68,34 +70,33 @@ class Alert extends Component {
       }
     }, 5000);
     const { value: password } = await Swal({
-      title: "Enter your password",
+      title: "Enter admin password.",
       input: "password",
       allowOutsideClick: false,
-      inputPlaceholder: "Enter your password",
+      inputPlaceholder: "password",
       inputAttributes: {
-        maxlength: 10,
         autocapitalize: "off",
         autocorrect: "off"
       },
       inputValidator: value => {
-        this.props.getUser().then(afterUser => {
-          console.log(afterUser);
-          return new Promise(resolve => {
-            axios
-              .post(`/api/confirm_password/${value}`, {
-                tracker:
-                  afterUser.value.data.tracker || afterUser.value.data.user_id
-              })
-              .then(afterwards => {
-                console.log(afterwards);
-              });
-          });
-          // if (value === response.value.data.admin_password) {
-          //   resolve();
-          // } else {
-          //   resolve("please enter correct password");
-          // }
+        this.setState({ password: value });
+        console.log(value); //entered password
+        // this.props.getUser().then(afterUser => {
+        return new Promise(resolve => {
+          axios
+            .post(`/api/confirm_password/${value}`, {
+              tracker: this.state.tracker //|| this.state.user_id..for admins tracking themselves
+            })
+            .then(isConfirmed => {
+              console.log(isConfirmed);
+              if (isConfirmed.data) {
+                window.location.replace("/geolocations");
+              } else {
+                resolve("please enter correct password");
+              }
+            });
         });
+        // });
       }
     });
   }
@@ -132,8 +133,7 @@ class Alert extends Component {
   }
 
   render() {
-    console.log(this.state.tracker);
-    return <div>OMG ALERT!!!!!!!!!!</div>;
+    return <div className="entire-alert">OMG ALERT!!!!!!!!!!</div>;
   }
 }
 const mapStateToProps = state => state;
