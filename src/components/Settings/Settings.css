@@ -6,16 +6,19 @@
   align-items: center;
   font-weight: 500;
   font-size: 20px;
-  margin-bottom: 30px;
+  /* margin-bottom: 30px; */
 }
 .settings-container {
   width: 100vw;
-  height: calc(100vw);
-  padding: 0 20px;
+  /* height: calc(100vw); */
+  min-height: 500px;
+  max-width: 400px;
+  padding: 0 10px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: stretch;
+  margin: auto;
 }
 .options-container {
   display: flex;
@@ -26,8 +29,14 @@
   align-items: center;
 }
 .locked-container {
-  height: 72px;
+  min-height: 77px;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   align-items: center;
+}
+@media (min-width: 348px) {
+  .locked-container {
+    flex-direction: row;
+  }
 }

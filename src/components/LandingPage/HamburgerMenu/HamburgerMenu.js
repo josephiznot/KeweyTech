@@ -17,7 +17,7 @@ class HamburgerMenu extends React.Component {
       login: "LOGIN/SIGNUP",
       signOut: "SIGN OUT",
       settings: "ADMIN SETTINGS",
-      keweyFence: "KEWEY FENCE",
+      keweyFence: "KEWEY FENCES",
       about: "ABOUT",
       history: "HISTORY",
       geolocations: "GEOLOCATIONS"
@@ -52,7 +52,8 @@ class HamburgerMenu extends React.Component {
       geolocations,
       open,
       anchorEl,
-      isLoggedIn
+      isLoggedIn,
+      keweyFence
     } = this.state;
     return (
       <div className="burger-container">
@@ -66,7 +67,7 @@ class HamburgerMenu extends React.Component {
           signOut={signOut}
           settings={settings}
           history={history}
-          geolocations={geolocations}
+          geolocations={keweyFence}
           handleRequestClose={this.handleRequestClose}
           anchorEl={anchorEl}
           open={open}
