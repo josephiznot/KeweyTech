@@ -20,6 +20,6 @@ nav.geolocations-nav {
 .back-drop {
   width: 100vh;
   height: 100vh;
-  z-index: 1000;
+  /* z-index: 1000; */
   background: white;
 }

@@ -83,8 +83,11 @@ class App extends Component {
                   {this.props.userReducer.user.display_name}
                 </ListItem>
               }
-              iconElementRight={<HamburgerMenu />}
-              // title={<NavBarLinks />}
+              iconElementRight={
+                <div className="icon-right-container">
+                  <HamburgerMenu /> <NavBarLinks />
+                </div>
+              }
               style={{ background: "#3c8dbc" }}
               zDepth={1}
               title={

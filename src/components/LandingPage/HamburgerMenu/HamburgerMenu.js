@@ -7,6 +7,7 @@ import DropDown from "./DropDown";
 import { connect } from "react-redux";
 import { handleClick } from "./../../../redux/HamburgerReducer";
 import { getUser } from "./../../../redux/userReducer";
+// import MenuIcon from "material-ui/svg-icons/navigation/menu";
 
 class HamburgerMenu extends React.Component {
   constructor() {
