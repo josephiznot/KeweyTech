@@ -31,12 +31,9 @@ class NavBarLinks extends Component {
       <div id="navbar-links-wrapper">
         <div>
           {!this.state.isLoggedIn ? (
-            //for development
-            <a href={`${process.env.REACT_APP_LOGIN}`}>
-              {/* //for production */}
+            <a href={process.env.REACT_APP_LOGIN}>
               <SignIn />
               <h2>LOGIN/SIGNUP</h2>
-              /
             </a>
           ) : (
             <a href={`${process.env.REACT_APP_LOGOUT}`}>

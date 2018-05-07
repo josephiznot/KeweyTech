@@ -67,6 +67,7 @@
 }
 .stat-section {
   width: calc(100% - 24px); /*100% of container*/
+  max-width: 600px;
   /* height: 350px; */
   border-bottom: 3px#333 solid;
   display: flex;
