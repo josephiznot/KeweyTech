@@ -13,7 +13,7 @@ class HamburgerMenu extends React.Component {
     super();
     this.state = {
       open: false,
-      login: "LOGIN/SIGNUP_",
+      login: "LOGIN/SIGNUP",
       signOut: "SIGN OUT",
       settings: "ADMIN SETTINGS",
       keweyFence: "KEWEY FENCE",
@@ -54,7 +54,7 @@ class HamburgerMenu extends React.Component {
       isLoggedIn
     } = this.state;
     return (
-      <div>
+      <div className="burger-container">
         <div className="hamburger-wrapper">
           <IconButton onClick={this.handleClick}>
             <MenuIcon />

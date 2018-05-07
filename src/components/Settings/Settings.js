@@ -293,7 +293,6 @@ class Settings extends Component {
           text: "Please login as the admin to edit the settings.",
           type: "error"
         });
-    this.setState({ locked: false });
   }
   handleLock() {
     this.setState({ locked: true });

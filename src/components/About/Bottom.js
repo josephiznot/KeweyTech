@@ -7,17 +7,23 @@ const Bottom = () => {
       <div className="about-download-container">
         <h1>Try it for yourself</h1>
         {/* <RaisedButton href="http://localhost:3001/auth" label="DOWNLOAD" /> */}
-        <KeyboardArrowDown style={{ width: 55, height: 55 }} />
+        <KeyboardArrowDown
+          style={{ width: 55, height: 55 }}
+          className="bounce"
+        />
         <div className="app-download">
-          <img
-            src="https://www.usedust.com/img/themes/dust2016/get-it-on-google-play.png"
-            alt="google_play_button"
-          />
-
-          <img
-            src="https://www.usedust.com/img/themes/dust2016/download-on-app-store.png"
-            alt="apple_store_button"
-          />
+          <a href={process.env.REACT_APP_LOGIN}>
+            <img
+              src="https://www.usedust.com/img/themes/dust2016/get-it-on-google-play.png"
+              alt="google_play_button"
+            />
+          </a>
+          <a href={process.env.REACT_APP_LOGIN}>
+            <img
+              src="https://www.usedust.com/img/themes/dust2016/download-on-app-store.png"
+              alt="apple_store_button"
+            />
+          </a>
         </div>
       </div>
     </div>

@@ -34,8 +34,11 @@ class App extends Component {
                 ) : null
               }
               showMenuIconButton={false}
-              iconElementRight={<HamburgerMenu />}
-              // title={<NavBarLinks />}
+              iconElementRight={
+                <div className="icon-right-container">
+                  <HamburgerMenu /> <NavBarLinks />
+                </div>
+              }
               style={{ background: "#3c8dbc" }}
               zDepth={1}
             />

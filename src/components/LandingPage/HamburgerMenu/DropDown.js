@@ -19,6 +19,9 @@ function DropDown(props) {
     open,
     anchorEl
   } = props;
+  var itemStyle = {
+    paddingRight: "20px"
+  };
   return (
     <Popover
       open={open}
@@ -38,7 +41,7 @@ function DropDown(props) {
           <a href={process.env.REACT_APP_LOGIN}>
             <MenuItem
               rightIcon={<SignIn />}
-              style={{ paddingRight: "30px" }}
+              style={itemStyle}
               primaryText={login}
               onClick={props.handleRequestClose}
             />
@@ -47,7 +50,7 @@ function DropDown(props) {
           <a href={process.env.REACT_APP_LOGOUT}>
             <MenuItem
               rightIcon={<Logout />}
-              style={{ paddingRight: "30px" }}
+              style={itemStyle}
               primaryText={signOut}
               onClick={props.handleRequestClose}
             />
@@ -56,7 +59,7 @@ function DropDown(props) {
         <Link to="/geolocations">
           <MenuItem
             rightIcon={<Location />}
-            style={{ paddingRight: "30px" }}
+            style={itemStyle}
             primaryText={geolocations}
             onClick={props.handleRequestClose}
           />
@@ -64,7 +67,7 @@ function DropDown(props) {
         <Link to="/settings">
           <MenuItem
             rightIcon={<Setting />}
-            style={{ paddingRight: "30px" }}
+            style={itemStyle}
             primaryText={settings}
             onClick={props.handleRequestClose}
           />
@@ -72,7 +75,7 @@ function DropDown(props) {
         <Link to="/history">
           <MenuItem
             rightIcon={<History />}
-            style={{ paddingRight: "30px" }}
+            style={itemStyle}
             primaryText={history}
             onClick={props.handleRequestClose}
           />
