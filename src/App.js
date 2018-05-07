@@ -60,7 +60,7 @@ class App extends Component {
                   <FlatButton
                     label="SIGNUP"
                     style={{ width: 60, height: 60, padding: 6 }}
-                    href="http://localhost:3001/auth" //not sure why the button is pushed up when i add the anchor tag to this...
+                    href={process.env.REACT_APP_LOGIN} //not sure why the button is pushed up when i add the anchor tag to this...
                   />
                 </div>
               }

@@ -1,6 +1,6 @@
 const Auth0Strategy = require("passport-auth0");
 
-const { CLIENT_ID, CLIENT_SECRET, DOMAIN } = process.env;
+const { CLIENT_ID, CLIENT_SECRET, DOMAIN, LOGOUT } = process.env;
 
 const strat = new Auth0Strategy(
   {
@@ -24,7 +24,7 @@ const getUser = (req, res) => {
 function logout(req, res) {
   // console.log(req);
   req.session.destroy(() => {
-    res.redirect("http://localhost:3000/");
+    res.redirect(LOGOUT);
   });
 }
 const updateContactEmail = (req, res) => {

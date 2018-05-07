@@ -30,7 +30,7 @@ function Description() {
                 alignItems: "center"
               }}
               labelStyle={{ color: "white", fontSize: 21 }}
-              href="http://localhost:3001/auth" //not sure why the div changes size when you add a href prop
+              href={process.env.REACT_APP_LOGIN} //not sure why the div changes size when you add a href prop
             />
           </div>
         </div>

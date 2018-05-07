@@ -43,7 +43,7 @@ class History extends React.Component {
             button: "Login"
           }).then(login => {
             if (login) {
-              window.location.replace("http://localhost:3001/auth");
+              window.location.replace(process.env.REACT_APP_LOGIN);
             }
           });
         }

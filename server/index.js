@@ -113,8 +113,8 @@ passport.deserializeUser((user, done) => {
 app.get(
   "/auth",
   passport.authenticate("auth0", {
-    successRedirect: "http://localhost:3000/#/geolocations",
-    failureRedirect: "http://localhost:3000/#/login"
+    successRedirect: `${process.env.BASE_URL}/#/geolocations`,
+    failureRedirect: `${process.env.BASE_URL}/#/login`
   })
 );
 app.get("/logout", logout);

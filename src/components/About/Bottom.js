@@ -6,7 +6,7 @@ const Bottom = () => {
     <div className="about-bottom-container">
       <div className="about-download-container">
         <h1>Try it for yourself</h1>
-        {/* <RaisedButton href="http://localhost:3001/auth" label="DOWNLOAD" /> */}
+        {/* <RaisedButton href={process.env.REACT_APP_LOGIN} label="DOWNLOAD" /> */}
         <KeyboardArrowDown
           style={{ width: 55, height: 55 }}
           className="bounce"
