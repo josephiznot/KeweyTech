@@ -22,6 +22,7 @@ class Geolocations extends Component {
     this.state = {
       trackFlag: false,
       isEnabled: false,
+      goGoogle: false,
       steps: [
         {
           title: "Welcome to Kewey!",
@@ -135,7 +136,6 @@ class Geolocations extends Component {
     }
   }
   componentDidMount() {
-    console.log(window.location);
     if (
       this.props.location.pathname !== "/" &&
       this.props.location.pathname !== "/about"
@@ -148,6 +148,16 @@ class Geolocations extends Component {
             tracker: response.value.data.tracker,
             is_admin: response.value.data.is_admin
           });
+          response.value.data.tracker
+            ? this.setState({ goGoogle: true })
+            : true;
+          //ONLY DISPLAYS GOOGLE MAPS IF USER HAS SUCCESSFULLY CREATE ACCOUNT
+          response.value.data.is_admin &&
+          !this.props.geolocationsReducer.hasKey &&
+          response.value.data.api_key === null
+            ? this.props.history.push("/settings")
+            : true;
+          //after admin has created account and resigned in, it will redirect them to settings in order to enter the api key
           return response.value.data.is_admin === null
             ? (Swal.setDefaults({
                 showCancelButton: false,
@@ -168,12 +178,16 @@ class Geolocations extends Component {
                     }).then(adminPassword => {
                       axios.put(
                         `/api/create_new_admin/${response.value.data.user_id}`,
-                        { password: adminPassword.value, isAdmin: true }
+                        {
+                          password: adminPassword.value,
+                          isAdmin: true
+                        }
                       );
+
                       Swal({
-                        title: `Welcome to the Kewey family, ${
-                          response.value.data.display_name
-                        } :)`
+                        title: `Please sign in with your new account.`
+                      }).then(again => {
+                        window.location.replace(process.env.REACT_APP_LOGIN);
                       });
                     });
                   } else {
@@ -201,7 +215,8 @@ class Geolocations extends Component {
                           )
                           .then(putResponse => {
                             Swal({
-                              title: `Please sign in with your new account.`
+                              title: `Please sign in with your new account.`,
+                              animation: false
                             }).then(again => {
                               window.location.replace(
                                 process.env.REACT_APP_LOGIN
@@ -252,6 +267,7 @@ class Geolocations extends Component {
   render() {
     return (
       <div>
+        {!this.state.tracker ? <div className="back-drop" /> : true}
         <div className="geolocations-body-container">
           <RaisedButton
             className="tracking-button"
@@ -260,10 +276,9 @@ class Geolocations extends Component {
             }
             onClick={() => this.enableTracking()}
           />
-          <GoogleMaps />
+          {this.state.goGoogle ? <GoogleMaps /> : true}
         </div>
       </div>
-      // </div>
     );
   }
 }

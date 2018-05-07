@@ -41,7 +41,7 @@ const createNewUser = (req, res) => {
           //different hash password than the admin
           req.app
             .get("db")
-            .create_new_user([adminEmail, response[0].user_id, id])
+            .create_new_user([adminEmail, Number(response[0].user_id), id])
             .then(userResponse => {
               res.status(200).send();
             });

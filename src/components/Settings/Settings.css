@@ -27,4 +27,7 @@
 }
 .locked-container {
   height: 72px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

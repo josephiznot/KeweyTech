@@ -17,3 +17,9 @@ nav.geolocations-nav {
 .tracking-button {
   margin-top: 25px;
 }
+.back-drop {
+  width: 100vh;
+  height: 100vh;
+  z-index: 1000;
+  background: white;
+}

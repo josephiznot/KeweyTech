@@ -12,7 +12,8 @@ var initialState = {
   currLocation: "",
   toggledKey: "",
   isInBounds: true,
-  searchToggle: false
+  searchToggle: false,
+  hasKey: false
 };
 
 const GET_GEOLOCATIONS = "GET_GEOLOCATIONS";
@@ -21,6 +22,7 @@ const UPDATE_CURRENT_LOCATION = "UPDATE_LOCATION";
 const IS_IN_BOUNDS = "IS_IN_BOUNDS";
 const UPDATE_TOGGLED_KEY = "UPDATE_TOGGLED_KEY";
 const TOGGLE_SEARCH = "TOGGLE_SEARCH";
+const ACQUIRE_KEY = "ACQUIRE_KEY";
 
 export function getDependent() {
   return {
@@ -80,6 +82,12 @@ export function toggleSearch(toggle) {
     payload: !toggle
   };
 }
+export function acquireKey(val) {
+  return {
+    type: ACQUIRE_KEY,
+    payload: val
+  };
+}
 ///////////////////////////////////////////////////////////////////
 /////////////////////////REDUCER//////////////////////////////////
 ///////////////////////////////////////////////////////////////////
@@ -106,6 +114,8 @@ export default function geolocationsReducer(state = initialState, action) {
         ...state,
         searchToggle: action.payload
       };
+    case ACQUIRE_KEY:
+      return { ...state, hasKey: action.payload };
     default:
       return state;
   }

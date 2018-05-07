@@ -30,6 +30,8 @@ import Locked from "material-ui/svg-icons/action/lock";
 import Unlocked from "material-ui/svg-icons/action/lock-open";
 import IconButton from "material-ui/IconButton";
 import Swal from "sweetalert2";
+import SnackBar from "material-ui/Snackbar";
+import { acquireKey } from "./../../redux/geolocationsReducer";
 class Settings extends Component {
   constructor() {
     super();
@@ -43,7 +45,8 @@ class Settings extends Component {
       changingEmail: "",
       locked: true,
       newPassword: "",
-      newApiKey: ""
+      newApiKey: "",
+      openSnack: false
     };
     this.handleChange = this.handleChange.bind(this);
     this.updateEmail = this.updateEmail.bind(this);
@@ -52,6 +55,8 @@ class Settings extends Component {
     this.updateAdminPassword = this.updateAdminPassword.bind(this);
     this.handleAdminChange = this.handleAdminChange.bind(this);
     this.updateApiKey = this.updateApiKey.bind(this);
+    this.handleSnackClose = this.handleSnackClose.bind(this);
+    this.openTheSnack = this.openTheSnack.bind(this);
   }
   updateEmail() {
     if (this.state.changingEmail) {
@@ -94,6 +99,15 @@ class Settings extends Component {
               console.log(response.value.data);
               this.setState({ apiKey: apiKey.data[0].api_key });
             });
+          response.value.data.api_key === null && response.value.data.is_admin
+            ? Swal({
+                imageUrl: "https://image.ibb.co/mYnkM7/instructions.png",
+                title: "Get your API key",
+                text:
+                  "In order to create your Kewey fences, you must first head to Fencer's website and create an account. Then you will click the 'Settings' tab and copy and paste your API key below in order to link your Kewey fences. Have fun tracking:)",
+                confirmButtonText: "Take me to Fencer's website"
+              }).then(clicked => window.open("https://fencer.io/", "_blank"))
+            : true;
         })
         .catch(err => {
           if (err) {
@@ -251,7 +265,7 @@ class Settings extends Component {
         });
       })
       .catch(console.log);
-    swal("GOOD JOB", "SOFTWARE UP TO DATE", "success");
+    this.openTheSnack();
     this.setState({ newKeys: [], newCenter: [] });
   }
   updateAdminPassword() {
@@ -266,20 +280,24 @@ class Settings extends Component {
     this.setState({ newPassword: val });
   }
   handleUnlock() {
-    // this.state.isAdmin
-    //   ? this.setState({ locked: false })
-    //   : Swal({
-    //       title: "User not an admin",
-    //       text: "Please login as the admin to edit the settings.",
-    //       type: "error"
-    //     });
+    this.state.isAdmin
+      ? this.setState({ locked: false })
+      : Swal({
+          title: "User not an admin",
+          text: "Please login as the admin to edit the settings.",
+          type: "error"
+        });
     this.setState({ locked: false });
   }
   handleLock() {
     this.setState({ locked: true });
+    this.state.changingEmail || this.state.newApiKey || this.state.newPassword
+      ? this.setState({ openSnack: true })
+      : true;
     this.state.changingEmail ? this.updateEmail() : true;
     this.updateAdminPassword();
     this.state.newApiKey ? this.updateApiKey() : true;
+    this.state.newApiKey ? this.props.acquireKey(true) : true;
   }
   handleApiKey(val) {
     this.setState({ newApiKey: val });
@@ -291,6 +309,14 @@ class Settings extends Component {
       })
       .then(response => this.handleUpdate());
     this.setState({ newApiKey: "" });
+  }
+  handleSnackClose() {
+    this.setState({
+      openSnack: false
+    });
+  }
+  openTheSnack() {
+    this.setState({ openSnack: true });
   }
   render() {
     // console.log(this.state.isAdmin ? "Admin!" : "Not Admin", this.state.locked);
@@ -305,10 +331,16 @@ class Settings extends Component {
           <div className="locked-container">
             <RaisedButton
               disabled={this.state.locked}
-              fullWidth={true}
               label="UPDATE LOCATIONS"
               primary={true}
               onClick={() => this.handleUpdate()}
+            />
+            <RaisedButton
+              disabled={this.state.locked}
+              label="FENCER.IO"
+              secondary={true}
+              onClick={() => window.open("https://fencer.io/", "_blank")}
+              style={{ width: "162px" }}
             />
           </div>
           <div className="options-container">
@@ -416,7 +448,7 @@ class Settings extends Component {
             />
             <TextField
               disabled={this.state.locked}
-              floatingLabelText="Update Fencer API key"
+              floatingLabelText="Link API key"
               hintText={"paste the API key here"}
               onChange={e => this.handleApiKey(e.target.value)}
               value={this.state.newApiKey}
@@ -441,11 +473,19 @@ class Settings extends Component {
               : "Click the lock to prevent further changes."}
           </div>
         </div>
+        <SnackBar
+          open={this.state.openSnack}
+          message={"Settings up to date."}
+          autoHideDuration={3000}
+          onRequestClose={this.handleSnackClose}
+        />
       </div>
     );
   }
 }
 const mapStateToProps = state => state;
-export default connect(mapStateToProps, { toggleOutsideTracking, getUser })(
-  Settings
-);
+export default connect(mapStateToProps, {
+  toggleOutsideTracking,
+  getUser,
+  acquireKey
+})(Settings);
