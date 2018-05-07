@@ -79,6 +79,12 @@ class Settings extends Component {
   handleChange(val) {
     this.setState({ changingEmail: val });
   }
+  componentDidUpdate() {
+    //gets updated state
+    if (!this.props.geolocationsReducer.isInBounds) {
+      this.props.history.push("/alert");
+    }
+  }
   componentDidMount() {
     if (
       this.props.location.pathname !== "/" &&
@@ -375,11 +381,6 @@ class Settings extends Component {
                       this.setState({
                         outFenceToggled: !this.state.outFenceToggled
                       });
-                      swal("Out-fence tracking enabled!", {
-                        icon: "success"
-                      });
-                    } else {
-                      swal("unchanged");
                     }
                   });
                 } else {

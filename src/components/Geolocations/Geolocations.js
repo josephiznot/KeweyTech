@@ -87,7 +87,7 @@ class Geolocations extends Component {
         icon: "info"
       });
     } else {
-      // this.props.toggleSearch(this.props.geolocationsReducer.searchToggle);
+      this.props.toggleSearch(this.props.geolocationsReducer.searchToggle);
       //the flag allows the user to enable/disable the setInterval
       var { trackFlag, isEnabled } = this.state;
       isEnabled
@@ -261,16 +261,20 @@ class Geolocations extends Component {
     }
   }
   componentWillUnmount() {
-    clearInterval(this.start);
+    this.props.history.location.pathname === "/"
+      ? clearInterval(this.start)
+      : true;
   }
   //^^^^^^^^^^^^^^^^^CLEARS INTERVAL WHEN USER LEAVES COMPONENT^^^^^^^^^^^^^^^
   render() {
+    console.log(this.props.history.location.pathname);
     return (
       <div>
         {!this.state.tracker ? <div className="back-drop" /> : true}
         <div className="geolocations-body-container">
           <RaisedButton
             className="tracking-button"
+            primary={true}
             label={
               this.state.isEnabled ? "Disable Tracking" : "Enable Tracking"
             }

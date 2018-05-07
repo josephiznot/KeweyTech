@@ -6,4 +6,5 @@
 
 .blink-me {
   animation: blinker 1.5s infinite;
+  font-size: 8px;
 }

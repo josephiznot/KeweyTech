@@ -19,6 +19,12 @@ class History extends React.Component {
     this.handleSave = this.handleSave.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
   }
+  componentDidUpdate() {
+    //gets updated state
+    if (!this.props.geolocationsReducer.isInBounds) {
+      this.props.history.push("/alert");
+    }
+  }
   componentDidMount() {
     this.props
       .getUser()

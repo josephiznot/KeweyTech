@@ -141,7 +141,9 @@ app.post("/api/textalert", (req, res) =>
     .create({
       to: process.env.PERSONAL_CELL,
       from: process.env.TWILIO_PHONE_NUMBER,
-      body: `USER #${req.body.user_id} out of bounds!`
+      body: `${
+        req.body.user_id
+      } out of bounds! Check email for updates on their location.`
     })
     .then(() => console.log(client.httpClient.lastResponse.statusCode))
     .catch(err => console.log(err))
