@@ -33,11 +33,11 @@ class Alert extends Component {
       });
       //^^^^^^^^^^GETS USERS ID^^^^^^^^^^^^^^
       //----------This is going to make the TWILIO get request-----------------
-      axios
-        .post(`/api/textalert`, { user_id: response.value.data.display_name })
-        .then(res => {
-          console.log(res.data);
-        });
+      // axios
+      //   .post(`/api/textalert`, { user_id: response.value.data.display_name })
+      //   .then(res => {
+      //     console.log(res.data);
+      //   });
       //-----------------------------------------------------------------------------
       axios
         .get(`/api/geofence/${this.props.geolocationsReducer.toggledKey}`)
