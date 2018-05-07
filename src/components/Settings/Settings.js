@@ -46,7 +46,8 @@ class Settings extends Component {
       locked: true,
       newPassword: "",
       newApiKey: "",
-      openSnack: false
+      openSnack: false,
+      hasApiKey: false
     };
     this.handleChange = this.handleChange.bind(this);
     this.updateEmail = this.updateEmail.bind(this);
@@ -102,18 +103,20 @@ class Settings extends Component {
           axios
             .get(`/api/get_api_key/${response.value.data.user_id}`)
             .then(apiKey => {
-              console.log(response.value.data);
+              console.log(apiKey);
               this.setState({ apiKey: apiKey.data[0].api_key });
+              !apiKey.data[0].api_key
+                ? Swal({
+                    imageUrl: "https://image.ibb.co/mYnkM7/instructions.png",
+                    title: "Get your API key",
+                    text:
+                      "In order to create your Kewey fences, you must first head to Fencer's website and create an account. Then you will click the 'Settings' tab and copy and paste your API key below in order to link your Kewey fences. Have fun tracking:)",
+                    confirmButtonText: "Take me to Fencer's website"
+                  }).then(clicked =>
+                    window.open("https://fencer.io/", "_blank")
+                  )
+                : null;
             });
-          response.value.data.api_key === null && response.value.data.is_admin
-            ? Swal({
-                imageUrl: "https://image.ibb.co/mYnkM7/instructions.png",
-                title: "Get your API key",
-                text:
-                  "In order to create your Kewey fences, you must first head to Fencer's website and create an account. Then you will click the 'Settings' tab and copy and paste your API key below in order to link your Kewey fences. Have fun tracking:)",
-                confirmButtonText: "Take me to Fencer's website"
-              }).then(clicked => window.open("https://fencer.io/", "_blank"))
-            : true;
         })
         .catch(err => {
           if (err) {
@@ -323,9 +326,18 @@ class Settings extends Component {
   openTheSnack() {
     this.setState({ openSnack: true });
   }
+  // componentWillUnmount() {
+  // this.props.getUser().then(response => {
+  //   response.value.data.api_key !== null
+  //     ? this.setState({ hasApiKey: true })
+  //     : true;
+  // });
+  // this.setState({ hasApiKey: true });
+  //will check if user entered an api key.
+  // }
   render() {
     // console.log(this.state.isAdmin ? "Admin!" : "Not Admin", this.state.locked);
-    console.log(this.state.newPassword);
+    console.log(this.state.hasApiKey);
     return (
       <div>
         <div className="appbar-imitator" />
