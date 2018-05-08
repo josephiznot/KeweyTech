@@ -41,7 +41,7 @@ class HamburgerMenu extends React.Component {
         this.setState({ isLoggedIn: true });
       })
       .catch(err => {
-        err ? this.setState({ isLoggedIn: false }) : err;
+        err && this.setState({ isLoggedIn: false });
       });
   }
   render() {
@@ -50,7 +50,6 @@ class HamburgerMenu extends React.Component {
       signOut,
       settings,
       history,
-      geolocations,
       open,
       anchorEl,
       isLoggedIn,

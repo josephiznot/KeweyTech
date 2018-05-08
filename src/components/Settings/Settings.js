@@ -7,23 +7,14 @@ MUST DELETE FENCE AND RECREATE IF YOU WANT TO CHANGE TO POINTS ON FENCER.IO
 import React, { Component } from "react";
 import RaisedButton from "material-ui/RaisedButton";
 import axios from "axios";
-import Toggle from "material-ui/Toggle";
 import { connect } from "react-redux";
-import { toggleOutsideTracking } from "./../../redux/obReducer";
 import swal from "sweetalert";
 import _ from "lodash";
-import Authorized from "./../Authorized/Authorized";
-import { getUser } from "./../../redux/userReducer";
 import "./Settings.css";
 import Setting from "material-ui/svg-icons/action/settings";
-import TrackChanges from "material-ui/svg-icons/action/track-changes";
 import Email from "material-ui/svg-icons/communication/email";
 import TextField from "material-ui/TextField";
 import validator from "email-validator";
-import Timer from "material-ui/svg-icons/av/av-timer";
-import DropDownMenu from "material-ui/DropDownMenu";
-import MenuItem from "material-ui/Menu";
-import Menu from "material-ui/Menu/Menu";
 import Security from "material-ui/svg-icons/hardware/security";
 import Key from "material-ui/svg-icons/communication/vpn-key";
 import Locked from "material-ui/svg-icons/action/lock";
@@ -31,7 +22,13 @@ import Unlocked from "material-ui/svg-icons/action/lock-open";
 import IconButton from "material-ui/IconButton";
 import Swal from "sweetalert2";
 import SnackBar from "material-ui/Snackbar";
+//used for outfence tracking
+// import Toggle from "material-ui/Toggle";
+// import TrackChanges from "material-ui/svg-icons/action/track-changes";
+
 import { acquireKey } from "./../../redux/geolocationsReducer";
+import { toggleOutsideTracking } from "./../../redux/obReducer";
+import { getUser } from "./../../redux/userReducer";
 class Settings extends Component {
   constructor() {
     super();
@@ -105,17 +102,17 @@ class Settings extends Component {
             .then(apiKey => {
               console.log(apiKey);
               this.setState({ apiKey: apiKey.data[0].api_key });
-              !apiKey.data[0].api_key && this.state.isAdmin
-                ? Swal({
-                    imageUrl: "https://image.ibb.co/mYnkM7/instructions.png",
-                    title: "Get your API key",
-                    text:
-                      "In order to create your Kewey fences, you must first head to Fencer's website and create an account. Then you will click the 'Settings' tab and copy and paste your API key below in order to link your Kewey fences. Have fun tracking:)",
-                    confirmButtonText: "Take me to Fencer's website"
-                  }).then(clicked =>
-                    window.open("https://fencer.io/", "_blank")
-                  )
-                : null;
+
+              !apiKey.data[0].api_key &&
+                this.state.isAdmin &&
+                Swal({
+                  imageUrl: "https://image.ibb.co/mYnkM7/instructions.png",
+                  title: "Get your API key",
+                  text:
+                    "In order to create your Kewey fences, you must first head to Fencer's website and create an account. Then you will click the 'Settings' tab and copy and paste your API key below in order to link your Kewey fences. Have fun tracking:)",
+                  confirmButtonText: "Take me to Fencer's website"
+                }).then(clicked => window.open("https://fencer.io/", "_blank"));
+              //will display a sweet alert if the user is an admin and does not have an api key
             });
         })
         .catch(err => {
@@ -299,13 +296,15 @@ class Settings extends Component {
   }
   handleLock() {
     this.setState({ locked: true });
-    this.state.changingEmail || this.state.newApiKey || this.state.newPassword
-      ? this.setState({ openSnack: true })
-      : true;
-    this.state.changingEmail ? this.updateEmail() : true;
+    (this.state.changingEmail ||
+      this.state.newApiKey ||
+      this.state.newPassword) &&
+      this.setState({ openSnack: true });
+    //only show the snackbar based on these requirements
+    this.state.changingEmail && this.updateEmail();
     this.updateAdminPassword();
-    this.state.newApiKey ? this.updateApiKey() : true;
-    this.state.newApiKey ? this.props.acquireKey(true) : true;
+    this.state.newApiKey && this.updateApiKey();
+    this.state.newApiKey && this.props.acquireKey(true);
   }
   handleApiKey(val) {
     this.setState({ newApiKey: val });

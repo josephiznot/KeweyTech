@@ -8,7 +8,7 @@ import Stats from "./Stats";
 class About extends Component {
   render() {
     return (
-      <div className="about-container">
+      <div className="about-container" onScroll={() => alert("you scrolled")}>
         <Description />
         <Stats />
         <Bottom />

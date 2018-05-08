@@ -24,7 +24,7 @@ class NavBarLinks extends Component {
         this.setState({ isLoggedIn: true });
       })
       .catch(err => {
-        err ? this.setState({ isLoggedIn: false }) : err;
+        err && this.setState({ isLoggedIn: false });
       });
   }
   render() {

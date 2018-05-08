@@ -4,7 +4,6 @@ import axios from "axios";
 import swal from "sweetalert";
 import CardHolder from "./../CardHolder/CardHolder";
 import "./History.css";
-import Authorized from "./../Authorized/Authorized";
 import { getUser } from "./../../redux/userReducer";
 
 class History extends React.Component {

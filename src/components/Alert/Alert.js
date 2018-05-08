@@ -71,7 +71,7 @@ class Alert extends Component {
         this.updateHit(this.state.o_b_id);
       }
     }, 5000);
-    const { value: password } = await Swal({
+    await Swal({
       title: "OUT OF BOUNDS! RETURN TO SAFETY!",
       input: "password",
       type: "info",

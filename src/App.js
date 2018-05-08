@@ -16,9 +16,23 @@ import Location from "material-ui/svg-icons/device/location-searching";
 import "./App.css";
 
 class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      transparent: false
+    };
+    this.handleScroll = this.handleScroll.bind(this);
+  }
+  handleScroll() {
+    if (window.pageYOffset > 68) {
+      this.setState({ transparent: true });
+    }
+  }
   render() {
+    // window.onscroll = console.log(window.pageYOffset);
     return (
       //I am conditionally rendering a different appbar based on route location
+
       <div>
         <nav className="geolocations-nav">
           {this.props.history.location.pathname === "/" ? (
@@ -37,7 +51,7 @@ class App extends Component {
                   <HamburgerMenu /> <NavBarLinks />
                 </div>
               }
-              style={{ background: "#3c8dbc" }}
+              style={{ background: "rgba(60, 141, 188)" }}
               zDepth={1}
             />
           ) : this.props.history.location.pathname === "/about" ? (
@@ -51,13 +65,30 @@ class App extends Component {
                   <Home />
                 </IconButton>
               }
-              title="Kewey"
-              titleStyle={{ height: 68 }}
+              title="What is Kewey?"
+              titleStyle={{
+                height: 68,
+                color: "white",
+                fontSize: "25px",
+                fontWeight: "400",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center"
+              }}
               iconElementRight={
                 <div>
                   <FlatButton
-                    label="SIGNUP"
-                    style={{ width: 60, height: 60, padding: 6 }}
+                    label="LOGIN/SIGNUP"
+                    labelStyle={{
+                      color: "white",
+                      fontSize: "15px",
+                      fontWeight: "300"
+                    }}
+                    style={{
+                      width: 150,
+                      height: 60,
+                      padding: 6
+                    }}
                     href={process.env.REACT_APP_LOGIN} //not sure why the button is pushed up when i add the anchor tag to this...
                   />
                 </div>
@@ -65,7 +96,7 @@ class App extends Component {
               style={{
                 position: "fixed",
                 paddingTop: 0,
-                background: "#3c8dbc"
+                background: "rgba(60, 141, 188)"
               }}
             />
           ) : this.props.history.location.pathname === "/alert" ? (

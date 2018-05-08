@@ -148,15 +148,12 @@ class Geolocations extends Component {
             tracker: response.value.data.tracker,
             is_admin: response.value.data.is_admin
           });
-          response.value.data.tracker
-            ? this.setState({ goGoogle: true })
-            : true;
+          response.value.data.tracker && this.setState({ goGoogle: true });
           //ONLY DISPLAYS GOOGLE MAPS IF USER HAS SUCCESSFULLY CREATE ACCOUNT
           response.value.data.is_admin &&
-          !this.props.geolocationsReducer.hasKey &&
-          response.value.data.api_key === null
-            ? this.props.history.push("/settings")
-            : true;
+            !this.props.geolocationsReducer.hasKey &&
+            response.value.data.api_key === null &&
+            this.props.history.push("/settings");
           //after admin has created account and resigned in, it will redirect them to settings in order to enter the api key
           return response.value.data.is_admin === null
             ? (Swal.setDefaults({
@@ -191,52 +188,49 @@ class Geolocations extends Component {
                       });
                     });
                   } else {
-                    console.log("creating a kewey user");
                     Swal.setDefaults({
                       showCancelButton: false,
                       allowOutsideClick: false,
                       confirmButtonText: "Next &rarr;",
                       animation: false,
                       progressSteps: ["1", "2", "3"]
-                    }),
-                      Swal.queue(this.state.userSetup).then(newUser => {
-                        Swal.resetDefaults();
-                        console.log(newUser);
-                        axios
-                          .put(
-                            `/api/create_new_user/${
-                              response.value.data.user_id
-                            }`,
-                            {
-                              password: newUser.value[2],
-                              isAdmin: false,
-                              adminEmail: newUser.value[1]
-                            }
-                          )
-                          .then(putResponse => {
-                            Swal({
-                              title: `Please sign in with your new account.`,
-                              animation: false
-                            }).then(again => {
-                              window.location.replace(
-                                process.env.REACT_APP_LOGIN
-                              );
-                            });
-                          })
-                          .catch(err => {
-                            if (err) {
-                              //want to say "Admin email does not exist"
-                              Swal({
-                                title: "Incorrect email or password.",
-                                text: "Please try again.",
-                                type: "error",
-                                confirmButtonText: "Restart"
-                              }).then(tryAgain => {
-                                window.location.reload();
-                              });
-                            }
+                    });
+                    Swal.queue(this.state.userSetup).then(newUser => {
+                      Swal.resetDefaults();
+                      console.log(newUser);
+                      axios
+                        .put(
+                          `/api/create_new_user/${response.value.data.user_id}`,
+                          {
+                            password: newUser.value[2],
+                            isAdmin: false,
+                            adminEmail: newUser.value[1]
+                          }
+                        )
+                        .then(putResponse => {
+                          Swal({
+                            title: `Please sign in with your new account.`,
+                            animation: false
+                          }).then(again => {
+                            window.location.replace(
+                              process.env.REACT_APP_LOGIN
+                            );
                           });
-                      });
+                        })
+                        .catch(err => {
+                          if (err) {
+                            //want to say "Admin email does not exist"
+                            Swal({
+                              title: "Incorrect email or password.",
+                              text: "Please try again.",
+                              type: "error",
+                              confirmButtonText: "Restart"
+                            }).then(tryAgain => {
+                              window.location.reload();
+                            });
+                          }
+                        });
+                    });
                   }
                 },
                 () => Swal.resetDefaults()
@@ -261,9 +255,8 @@ class Geolocations extends Component {
     }
   }
   componentWillUnmount() {
-    this.props.history.location.pathname === "/"
-      ? clearInterval(this.start)
-      : true;
+    this.props.history.location.pathname === "/" && clearInterval(this.start);
+    //only unmounts if the user is at the landing page
   }
   //^^^^^^^^^^^^^^^^^CLEARS INTERVAL WHEN USER LEAVES COMPONENT^^^^^^^^^^^^^^^
   render() {

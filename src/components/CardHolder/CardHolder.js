@@ -22,12 +22,12 @@ class CardHolder extends Component {
     this.setState({ newResolution: val });
   }
   personalSave(id, res) {
-    this.props.handleSave(id, res),
-      this.setState({
-        expanded: false,
-        canEdit: false,
-        newResolution: ""
-      });
+    this.props.handleSave(id, res);
+    this.setState({
+      expanded: false,
+      canEdit: false,
+      newResolution: ""
+    });
   }
   render() {
     return (

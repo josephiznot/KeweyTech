@@ -1,9 +1,9 @@
 import swal from "sweetalert";
-import React from "react";
+// import React from "react";
 import { connect } from "react-redux";
 import { getUser } from "./../../redux/userReducer";
 
-function Authorized(next) {
+function Authorized() {
   if (
     this.props.location.pathname !== "/" &&
     this.props.location.pathname !== "/about"
@@ -26,8 +26,6 @@ function Authorized(next) {
           });
         }
       });
-  } else {
-    next;
   }
 }
 const mapStateToProps = state => state;
