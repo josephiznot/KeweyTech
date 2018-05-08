@@ -8,6 +8,7 @@ import Location from "material-ui/svg-icons/communication/location-on";
 import SignIn from "material-ui/svg-icons/action/fingerprint";
 import Logout from "material-ui/svg-icons/action/power-settings-new";
 import { getUser } from "./../../redux/userReducer";
+import Bug from "material-ui/svg-icons/action/bug-report";
 
 class NavBarLinks extends Component {
   constructor() {
@@ -42,6 +43,10 @@ class NavBarLinks extends Component {
             </a>
           )}
         </div>|
+        <Link to="/geolocations">
+          <Location />
+          <h2> KEWEY FENCES</h2>
+        </Link>|
         <Link to="/history">
           <History />
           <h2> HISTORY</h2>
@@ -50,10 +55,15 @@ class NavBarLinks extends Component {
           <Setting />
           <h2> ADMIN SETTINGS</h2>
         </Link>|
-        <Link to="/geolocations">
-          <Location />
-          <h2> KEWEY FENCES</h2>
-        </Link>
+        <a
+          className="report-bug"
+          href={`mailto:${
+            process.env.REACT_APP_REPORT_BUG
+          }?subject=Bug%20report&body=Please%20report%20the%20issue%20bellow.`}
+        >
+          <Bug />
+          REPORT A BUG
+        </a>
       </div>
     );
   }

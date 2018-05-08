@@ -8,6 +8,7 @@ import Setting from "material-ui/svg-icons/action/settings";
 import Location from "material-ui/svg-icons/communication/location-on";
 import SignIn from "material-ui/svg-icons/action/fingerprint";
 import Logout from "material-ui/svg-icons/action/power-settings-new";
+import Bug from "material-ui/svg-icons/action/bug-report";
 
 function DropDown(props) {
   var {
@@ -17,7 +18,8 @@ function DropDown(props) {
     history,
     geolocations,
     open,
-    anchorEl
+    anchorEl,
+    bug
   } = props;
   var itemStyle = {
     paddingRight: "20px"
@@ -64,14 +66,6 @@ function DropDown(props) {
             onClick={props.handleRequestClose}
           />
         </Link>
-        <Link to="/settings">
-          <MenuItem
-            rightIcon={<Setting />}
-            style={itemStyle}
-            primaryText={settings}
-            onClick={props.handleRequestClose}
-          />
-        </Link>
         <Link to="/history">
           <MenuItem
             rightIcon={<History />}
@@ -80,6 +74,26 @@ function DropDown(props) {
             onClick={props.handleRequestClose}
           />
         </Link>
+        <Link to="/settings">
+          <MenuItem
+            rightIcon={<Setting />}
+            style={itemStyle}
+            primaryText={settings}
+            onClick={props.handleRequestClose}
+          />
+        </Link>
+        <a
+          href={`mailto:${
+            process.env.REACT_APP_REPORT_BUG
+          }?subject=Bug%20report&body=Please%20report%20the%20issue%20bellow.`}
+        >
+          <MenuItem
+            rightIcon={<Bug />}
+            style={itemStyle}
+            primaryText={bug}
+            onClick={props.handleRequestClose}
+          />
+        </a>
       </Menu>
     </Popover>
   );

@@ -17,8 +17,6 @@ import "./App.css";
 
 class App extends Component {
   render() {
-    console.log(this.props.geolocationsReducer.searchToggle);
-
     return (
       //I am conditionally rendering a different appbar based on route location
       <div>
@@ -80,7 +78,9 @@ class App extends Component {
                     <Avatar src={this.props.userReducer.user.profile_pic} />
                   }
                 >
-                  {this.props.userReducer.user.display_name}
+                  <h4 className="user-name-container">
+                    {this.props.userReducer.user.display_name}
+                  </h4>
                 </ListItem>
               }
               iconElementRight={

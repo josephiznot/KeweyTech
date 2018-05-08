@@ -8,3 +8,7 @@
   animation: blinker 1.5s infinite;
   font-size: 8px;
 }
+.user-name-container {
+  color: white;
+  font-weight: 400;
+}

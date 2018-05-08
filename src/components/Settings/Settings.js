@@ -105,7 +105,7 @@ class Settings extends Component {
             .then(apiKey => {
               console.log(apiKey);
               this.setState({ apiKey: apiKey.data[0].api_key });
-              !apiKey.data[0].api_key
+              !apiKey.data[0].api_key && this.state.isAdmin
                 ? Swal({
                     imageUrl: "https://image.ibb.co/mYnkM7/instructions.png",
                     title: "Get your API key",
@@ -360,7 +360,9 @@ class Settings extends Component {
               style={{ width: "162px" }}
             />
           </div>
-          <div className="options-container">
+
+          {/* -------------------------OUT-FENCE TRACKING------------------------- */}
+          {/* <div className="options-container">
             <TrackChanges
               style={
                 this.state.locked
@@ -405,7 +407,8 @@ class Settings extends Component {
               }}
               toggled={this.props.obReducer.outsideTracking}
             />
-          </div>
+          </div> */}
+          {/* -------------------------OUT-FENCE TRACKING------------------------- */}
           <div>
             <Email
               style={

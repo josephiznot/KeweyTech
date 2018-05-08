@@ -20,7 +20,8 @@ class HamburgerMenu extends React.Component {
       keweyFence: "KEWEY FENCES",
       about: "ABOUT",
       history: "HISTORY",
-      geolocations: "GEOLOCATIONS"
+      geolocations: "GEOLOCATIONS",
+      bug: "REPORT A BUG"
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleRequestClose = this.handleRequestClose.bind(this);
@@ -53,7 +54,8 @@ class HamburgerMenu extends React.Component {
       open,
       anchorEl,
       isLoggedIn,
-      keweyFence
+      keweyFence,
+      bug
     } = this.state;
     return (
       <div className="burger-container">
@@ -72,6 +74,7 @@ class HamburgerMenu extends React.Component {
           anchorEl={anchorEl}
           open={open}
           isLoggedIn={isLoggedIn}
+          bug={bug}
         />
       </div>
     );
