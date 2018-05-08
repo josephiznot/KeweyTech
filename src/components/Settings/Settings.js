@@ -423,7 +423,9 @@ class Settings extends Component {
             <TextField
               disabled={this.state.locked}
               floatingLabelText="Update Contact Email"
-              hintText={this.state.contact_email || "Enter contact email"}
+              hintText={
+                this.state.contact_email || "Enter your most active email."
+              }
               onChange={e => this.handleChange(e.target.value)}
               value={this.state.changingEmail}
             />

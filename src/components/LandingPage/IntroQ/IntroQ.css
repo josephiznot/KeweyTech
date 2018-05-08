@@ -33,3 +33,26 @@
   left: 16%;
   box-shadow: 10px -10px 0px -4px #3c8dbc inset;
 }
+.pulsing {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  /* background: rgba(51, 51, 51, 0.4); */
+  animation: pulsating 1.8s infinite;
+  box-shadow: 0px 0px 0px 0px rgba(51, 51, 51, 0.4);
+  position: relative;
+  left: 16.5px;
+  bottom: 5px;
+}
+
+@keyframes pulsating {
+  0% {
+    box-shadow: 0 0 0 0 rgba(51, 51, 51, 0.4);
+  }
+  70% {
+    box-shadow: 0px 0px 0px 15px rgba(51, 51, 51, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(51, 51, 51, 0);
+  }
+}

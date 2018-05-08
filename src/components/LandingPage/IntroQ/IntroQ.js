@@ -10,6 +10,7 @@ const IntroQ = () => {
         <p>What is Kewey?</p>
         <div className="message-wing" />
       </div>
+      <div className="pulsing" />
       <TouchApp />
     </div>
   );
