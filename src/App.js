@@ -65,7 +65,7 @@ class App extends Component {
                   <Home />
                 </IconButton>
               }
-              title="What is Kewey?"
+              title={<div className="about-title">What is Kewey</div>}
               titleStyle={{
                 height: 68,
                 color: "white",

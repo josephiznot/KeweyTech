@@ -100,7 +100,11 @@ class Geolocations extends Component {
       if (!this.state.trackFlag) {
         this.start = setInterval(() => {
           //updates current location in the reducer
-          this.props.updateCurrentLocation();
+          this.props
+            .updateCurrentLocation()
+            .then(location =>
+              console.log(`Current location: ${location.value.data.location}`)
+            );
           /*
       takes the updated state and passes in the coordinates as props.
       You will receive a 400 err when server is restarted because
@@ -122,7 +126,7 @@ class Geolocations extends Component {
                 apiKey.data[0].api_key
               );
             });
-        }, 5000);
+        }, 120000);
       } else {
         clearInterval(this.start);
       }

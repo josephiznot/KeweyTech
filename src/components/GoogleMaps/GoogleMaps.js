@@ -44,6 +44,7 @@ class GoogleMaps extends Component {
           .get(`/api/get_api_key/${user.value.data.user_id}`)
           .then(apiKey => {
             console.log(apiKey.data[0].api_key);
+            console.log(`current location: ${res.data}`);
             //if its an admin, the req.params.id cannot be null
             axios
               .get(

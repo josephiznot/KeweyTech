@@ -12,3 +12,11 @@
   color: white;
   font-weight: 400;
 }
+.about-title {
+  display: none;
+}
+@media (min-width: 425px) {
+  .about-title {
+    display: block;
+  }
+}
