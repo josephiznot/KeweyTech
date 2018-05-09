@@ -126,7 +126,7 @@ class Geolocations extends Component {
                 apiKey.data[0].api_key
               );
             });
-        }, 120000);
+        }, 60000);
       } else {
         clearInterval(this.start);
       }
