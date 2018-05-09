@@ -20,7 +20,6 @@ class Geolocations extends Component {
   constructor() {
     super();
     this.state = {
-      intervalId: 0,
       trackFlag: false,
       isEnabled: false,
       goGoogle: false,
@@ -103,11 +102,8 @@ class Geolocations extends Component {
       // });
       // if (!this.state.trackFlag) {
       if (!this.props.geolocationsReducer.searchToggle) {
-        let intervalId = setInterval(
+        this.start = setInterval(
           function() {
-            console.log("tracking...");
-            // console.log(this.start);
-
             //updates current location in the reducer
             this.props
               .updateCurrentLocation()
@@ -135,14 +131,10 @@ class Geolocations extends Component {
           }.bind(this),
           5000
         );
-        console.log("interval stuff ");
-        this.setState({ intervalId });
       } else {
         console.log("tracking STOPPED.");
 
-        clearInterval(this.state.intervalId);
-        this.props.toggleSearch(this.props.geolocationsReducer.searchToggle);
-        // console.log(start);
+        clearInterval(this.start);
       }
     }
   }
@@ -273,11 +265,10 @@ class Geolocations extends Component {
     }
   }
   componentWillUnmount() {
-    //   this.props.history.location.pathname === "/"
-    //     ? clearInterval(this.start)
-    //     : console.log("INTERVAL NOT CLEARED");
-    //   //only unmounts if the user is at the landing page
-    // clearInterval(this.start)
+    this.props.history.location.pathname === "/"
+      ? clearInterval(this.start)
+      : console.log("INTERVAL NOT CLEARED");
+    //only unmounts if the user is at the landing page
   }
   //^^^^^^^^^^^^^^^^^CLEARS INTERVAL WHEN USER LEAVES COMPONENT^^^^^^^^^^^^^^^
   render() {
