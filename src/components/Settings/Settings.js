@@ -194,9 +194,9 @@ class Settings extends Component {
                       //e is each current geofence key
                       headers: {
                         Authorization: `${
-                          // this.state.apiKey
+                          this.state.apiKey
                           // process.env.REACT_APP_FENCER_API_KEY
-                          process.env.REACT_APP_TESTER
+                          // process.env.REACT_APP_TESTER
                         }`
                       }
                     })
