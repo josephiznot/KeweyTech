@@ -70,7 +70,7 @@ class Alert extends Component {
       if (this.state.mounted) {
         this.updateHit(this.state.o_b_id);
       }
-    }, 60000);
+    }, 5000);
     await Swal({
       title: "OUT OF BOUNDS! RETURN TO SAFETY!",
       input: "password",

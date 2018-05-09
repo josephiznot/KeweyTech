@@ -31,7 +31,6 @@ export function getPoints(key) {
   };
 }
 export function getPosition(lat, lng, user_id, apiKey, is_admin) {
-  console.log(apiKey);
   return {
     type: GET_POSITION,
     payload: axios.get("https://api.fencer.io/v1.0/position", {
@@ -80,7 +79,6 @@ export default function fencerReducer(state = initialState, action) {
         })
       };
     case `${GET_POSITION}_FULFILLED`:
-      console.log(action.payload);
       return action.payload.data.error
         ? { ...state, message: "USER NOT IN BOUNDS" }
         : {

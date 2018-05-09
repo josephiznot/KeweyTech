@@ -20,6 +20,7 @@ class Geolocations extends Component {
   constructor() {
     super();
     this.state = {
+      intervalId: 0,
       trackFlag: false,
       isEnabled: false,
       goGoogle: false,
@@ -73,7 +74,7 @@ class Geolocations extends Component {
           input: "password"
         }
       ],
-      changeState: false
+      start: 0
     };
     this.enableTracking = this.enableTracking.bind(this);
   }
@@ -89,46 +90,59 @@ class Geolocations extends Component {
     } else {
       this.props.toggleSearch(this.props.geolocationsReducer.searchToggle);
       //the flag allows the user to enable/disable the setInterval
-      var { trackFlag, isEnabled } = this.state;
-      isEnabled
+      //*****DEPRACATED STATE************
+      // var { trackFlag, isEnabled } = this.state;
+      // isEnabled
+      this.props.geolocationsReducer.searchToggle
         ? swal("Good job!", "Tracking Disabled", "success")
         : swal("Good job!", "Tracking Enabled", "success");
-      this.setState({
-        trackFlag: !trackFlag,
-        isEnabled: !isEnabled
-      });
-      if (!this.state.trackFlag) {
-        this.start = setInterval(() => {
-          //updates current location in the reducer
-          this.props
-            .updateCurrentLocation()
-            .then(location =>
-              console.log(`Current location: ${location.value.data.location}`)
-            );
-          /*
+      //*****DEPRACATED STATE************
+      // this.setState({
+      //   trackFlag: !trackFlag,
+      //   isEnabled: !isEnabled
+      // });
+      // if (!this.state.trackFlag) {
+      if (!this.props.geolocationsReducer.searchToggle) {
+        let intervalId = setInterval(
+          function() {
+            console.log("tracking...");
+            // console.log(this.start);
+
+            //updates current location in the reducer
+            this.props
+              .updateCurrentLocation()
+              .then(location => console.log(location.value.data.location));
+            /*
       takes the updated state and passes in the coordinates as props.
       You will receive a 400 err when server is restarted because
       the props have not been updated yet. 
       */
 
-          axios
-            .get(
-              `/api/get_api_key/${
-                this.state.is_admin ? this.state.user_id : this.state.tracker
-              }`
-            )
-            .then(apiKey => {
-              console.log(apiKey);
-              this.props.isInBounds(
-                this.props.geolocationsReducer.currLat,
-                this.props.geolocationsReducer.currLng,
-                this.props.geolocationsReducer.toggledKey,
-                apiKey.data[0].api_key
-              );
-            });
-        }, 60000);
+            axios
+              .get(
+                `/api/get_api_key/${
+                  this.state.is_admin ? this.state.user_id : this.state.tracker
+                }`
+              )
+              .then(apiKey => {
+                this.props.isInBounds(
+                  this.props.geolocationsReducer.currLat,
+                  this.props.geolocationsReducer.currLng,
+                  this.props.geolocationsReducer.toggledKey,
+                  apiKey.data[0].api_key
+                );
+              });
+          }.bind(this),
+          5000
+        );
+        console.log("interval stuff ");
+        this.setState({ intervalId });
       } else {
-        clearInterval(this.start);
+        console.log("tracking STOPPED.");
+
+        clearInterval(this.state.intervalId);
+        this.props.toggleSearch(this.props.geolocationsReducer.searchToggle);
+        // console.log(start);
       }
     }
   }
@@ -259,12 +273,15 @@ class Geolocations extends Component {
     }
   }
   componentWillUnmount() {
-    this.props.history.location.pathname === "/" && clearInterval(this.start);
-    //only unmounts if the user is at the landing page
+    //   this.props.history.location.pathname === "/"
+    //     ? clearInterval(this.start)
+    //     : console.log("INTERVAL NOT CLEARED");
+    //   //only unmounts if the user is at the landing page
+    // clearInterval(this.start)
   }
   //^^^^^^^^^^^^^^^^^CLEARS INTERVAL WHEN USER LEAVES COMPONENT^^^^^^^^^^^^^^^
   render() {
-    console.log(this.props.history.location.pathname);
+    console.log(this.props.geolocationsReducer.searchToggle);
     return (
       <div>
         {!this.state.tracker ? <div className="back-drop" /> : true}
@@ -273,7 +290,11 @@ class Geolocations extends Component {
             className="tracking-button"
             primary={true}
             label={
-              this.state.isEnabled ? "Disable Tracking" : "Enable Tracking"
+              //**************DEPRACATED STATE**************
+              //this.state.isEnabled
+              this.props.geolocationsReducer.searchToggle
+                ? "Disable Tracking"
+                : "Enable Tracking"
             }
             onClick={() => this.enableTracking()}
           />

@@ -48,7 +48,6 @@ export function updateCurrentLocation() {
   };
 }
 export function isInBounds(lat, lng, key, apiKey) {
-  console.log(apiKey);
   return {
     type: IS_IN_BOUNDS,
     payload: axios.get(
