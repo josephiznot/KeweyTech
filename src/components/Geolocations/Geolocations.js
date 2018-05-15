@@ -102,6 +102,7 @@ class Geolocations extends Component {
       // });
       // if (!this.state.trackFlag) {
       if (!this.props.geolocationsReducer.searchToggle) {
+        //----------------------SERVER SIDE RENDER THIS!!!!------------------------
         this.start = setInterval(
           function() {
             //updates current location in the reducer
@@ -131,9 +132,9 @@ class Geolocations extends Component {
           }.bind(this),
           5000
         );
+        //-------------------------------------------------------------------
       } else {
         console.log("tracking STOPPED.");
-
         clearInterval(this.start);
       }
     }
