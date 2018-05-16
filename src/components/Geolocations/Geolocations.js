@@ -104,28 +104,38 @@ class Geolocations extends Component {
       // if (!this.state.trackFlag) {
       if (!this.props.geolocationsReducer.searchToggle) {
         //----------------------SERVER SIDE RENDER THIS!!!!------------------------
-        console.log(this.state.start);
+        axios.post("/api/set_timer", { start: true });
         this.start = setInterval(
           function() {
-            this.props
-              .updateCurrentLocation()
-              .then(location => console.log(location.value.data.location));
+            axios.get("/api/get_timer").then(response => {
+              console.log(response.data);
+              if (response.data) {
+                this.props
+                  .updateCurrentLocation()
+                  .then(location => console.log(location.value.data.location));
 
-            axios
-              .get(
-                `/api/get_api_key/${
-                  this.state.is_admin ? this.state.user_id : this.state.tracker
-                }`
-              )
-              .then(apiKey => {
-                this.props.isInBounds(
-                  this.props.geolocationsReducer.currLat,
-                  this.props.geolocationsReducer.currLng,
-                  this.props.geolocationsReducer.toggledKey,
-                  apiKey.data[0].api_key
-                );
-              });
-          }.bind(this),
+                axios
+                  .get(
+                    `/api/get_api_key/${
+                      this.state.is_admin
+                        ? this.state.user_id
+                        : this.state.tracker
+                    }`
+                  )
+                  .then(apiKey => {
+                    this.props.isInBounds(
+                      this.props.geolocationsReducer.currLat,
+                      this.props.geolocationsReducer.currLng,
+                      this.props.geolocationsReducer.toggledKey,
+                      apiKey.data[0].api_key
+                    );
+                  });
+              } else {
+                clearInterval(this.start);
+              }
+            });
+          },
+          // }.bind(this),
           5000
         );
         //-------------------------------------------------------------------
