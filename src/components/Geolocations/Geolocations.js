@@ -20,6 +20,7 @@ class Geolocations extends Component {
   constructor() {
     super();
     this.state = {
+      start: 76,
       trackFlag: false,
       isEnabled: false,
       goGoogle: false,
@@ -103,17 +104,12 @@ class Geolocations extends Component {
       // if (!this.state.trackFlag) {
       if (!this.props.geolocationsReducer.searchToggle) {
         //----------------------SERVER SIDE RENDER THIS!!!!------------------------
+        console.log(this.state.start);
         this.start = setInterval(
           function() {
-            //updates current location in the reducer
             this.props
               .updateCurrentLocation()
               .then(location => console.log(location.value.data.location));
-            /*
-      takes the updated state and passes in the coordinates as props.
-      You will receive a 400 err when server is restarted because
-      the props have not been updated yet. 
-      */
 
             axios
               .get(
@@ -134,7 +130,7 @@ class Geolocations extends Component {
         );
         //-------------------------------------------------------------------
       } else {
-        console.log("tracking STOPPED.");
+        console.log(this.start);
         clearInterval(this.start);
       }
     }

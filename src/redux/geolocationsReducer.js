@@ -50,22 +50,13 @@ export function updateCurrentLocation() {
 export function isInBounds(lat, lng, key, apiKey) {
   return {
     type: IS_IN_BOUNDS,
-    payload: axios.get(
-      `https://api.fencer.io/v1.0/position/inside/${
-        key //!!!!!ONLY CHECKS MOST RECENT TOGGLED FENCE!!!!!!!//////
-      }`,
-      {
-        headers: {
-          Authorization: `${
-            apiKey
-            // process.env.REACT_APP_FENCER_API_KEY
-            // process.env.REACT_APP_TESTER
-          }`,
-          "Lat-Pos": lat,
-          "Lng-Pos": lng
-        }
+    payload: axios.get(`https://api.fencer.io/v1.0/position/inside/${key}`, {
+      headers: {
+        Authorization: `${apiKey}`,
+        "Lat-Pos": lat,
+        "Lng-Pos": lng
       }
-    )
+    })
   };
 }
 

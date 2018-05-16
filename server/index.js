@@ -54,10 +54,7 @@ const {
   getApiKey,
   confirmPassword
 } = require("./controllers/bcryptCtrl");
-const {
-  setTimer,
-  clearTimer
-} = require(`${__dirname}/controllers/setInterval`);
+const { setTimer } = require(`${__dirname}/controllers/setInterval`);
 
 massive(process.env.CONNECTION_STRING)
   .then(db => {
@@ -192,7 +189,6 @@ app.post("/api/confirm_password/:password", confirmPassword);
 
 //-----------------------setInterval / clearInterval-------------------------
 app.post("/api/set_timer", setTimer);
-app.post("/api/clear_timer", clearTimer);
 //---------------------------------------------------------------------------
 const path = require("path");
 app.get("*", (req, res, next) => {
