@@ -19,7 +19,8 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      transparent: false
+      transparent: false,
+      hasError: false
     };
     this.handleScroll = this.handleScroll.bind(this);
   }
@@ -28,8 +29,13 @@ class App extends Component {
       this.setState({ transparent: true });
     }
   }
+  componentDidCatch(err, info) {
+    this.setState({ hasError: true });
+  }
   render() {
-    // window.onscroll = console.log(window.pageYOffset);
+    if (this.state.hasError) {
+      return <div className="error-catch">Something went wrong :,(</div>;
+    }
     return (
       //I am conditionally rendering a different appbar based on route location
 

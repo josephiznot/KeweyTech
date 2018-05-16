@@ -20,3 +20,15 @@
     display: block;
   }
 }
+.error-catch {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 50px;
+  box-sizing: border-box;
+  padding: 0 20px;
+  text-align: center;
+  font-weight: 900;
+}
