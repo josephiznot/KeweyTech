@@ -107,44 +107,48 @@ class Geolocations extends Component {
         //----------------------SERVER SIDE RENDER THIS!!!!------------------------
         axios.post("/api/set_timer", { start: true });
         var start = setInterval(
-          function() {
+          () => {
             axios.get("/api/get_timer").then(response => {
-              var timerStarted = response.data;
-            });
-            if (timerStarted) {
-              console.log(this.state);
-              this.props
-                .updateCurrentLocation()
-                .then(location => console.log(location));
+              this.setState({
+                timerStarted: response.data,
+                start: start
+              });
+              // });
+              console.log(response.data);
+              if (this.state.timerStarted) {
+                console.log(this.state);
+                this.props
+                  .updateCurrentLocation()
+                  .then(location => console.log(location));
 
-              axios
-                .get(
-                  `/api/get_api_key/${
-                    this.state.is_admin
-                      ? this.state.user_id
-                      : this.state.tracker
-                  }`
-                )
-                .then(apiKey => {
-                  this.props.isInBounds(
-                    this.props.geolocationsReducer.currLat,
-                    this.props.geolocationsReducer.currLng,
-                    this.props.geolocationsReducer.toggledKey,
-                    apiKey.data[0].api_key
-                  );
-                });
-            } else {
-              clearInterval(start);
-            }
-            // });
+                axios
+                  .get(
+                    `/api/get_api_key/${
+                      this.state.is_admin
+                        ? this.state.user_id
+                        : this.state.tracker
+                    }`
+                  )
+                  .then(apiKey => {
+                    this.props.isInBounds(
+                      this.props.geolocationsReducer.currLat,
+                      this.props.geolocationsReducer.currLng,
+                      this.props.geolocationsReducer.toggledKey,
+                      apiKey.data[0].api_key
+                    );
+                  });
+              } else {
+                clearInterval(start);
+              }
+            });
           },
           // }.bind(this),
           5000
         );
         //-------------------------------------------------------------------
       } else {
-        console.log(start);
-        clearInterval(start);
+        console.log(this.state.start);
+        clearInterval(this.state.start);
       }
     }
   }
