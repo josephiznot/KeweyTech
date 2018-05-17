@@ -106,7 +106,7 @@ class Geolocations extends Component {
       if (!this.props.geolocationsReducer.searchToggle) {
         //----------------------SERVER SIDE RENDER THIS!!!!------------------------
         axios.post("/api/set_timer", { start: true });
-        var start = setInterval(
+        var start = window.setInterval(
           () => {
             axios.get("/api/get_timer").then(response => {
               this.setState({
@@ -138,7 +138,7 @@ class Geolocations extends Component {
                     );
                   });
               } else {
-                clearInterval(start);
+                window.clearInterval(this.state.start);
               }
             });
           },
@@ -148,7 +148,7 @@ class Geolocations extends Component {
         //-------------------------------------------------------------------
       } else {
         console.log(this.state.start);
-        clearInterval(this.state.start);
+        window.clearInterval(this.state.start);
       }
     }
   }
@@ -280,7 +280,7 @@ class Geolocations extends Component {
   }
   componentWillUnmount() {
     this.props.history.location.pathname === "/"
-      ? clearInterval(this.start)
+      ? window.clearInterval(this.start)
       : console.log("INTERVAL NOT CLEARED");
     //only unmounts if the user is at the landing page
   }
