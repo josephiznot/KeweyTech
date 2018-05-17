@@ -1,3 +1,4 @@
+"use strict";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import {
@@ -17,9 +18,10 @@ import axios from "axios";
 import validator from "email-validator";
 
 class Geolocations extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
+      timerStarted: false,
       start: 76,
       trackFlag: false,
       isEnabled: false,
@@ -73,8 +75,7 @@ class Geolocations extends Component {
           title: "Confirm the admin's password.",
           input: "password"
         }
-      ],
-      start: 0
+      ]
     };
     this.enableTracking = this.enableTracking.bind(this);
   }
@@ -105,43 +106,45 @@ class Geolocations extends Component {
       if (!this.props.geolocationsReducer.searchToggle) {
         //----------------------SERVER SIDE RENDER THIS!!!!------------------------
         axios.post("/api/set_timer", { start: true });
-        this.start = setInterval(
+        var start = setInterval(
           function() {
             axios.get("/api/get_timer").then(response => {
-              console.log(response.data);
-              if (response.data) {
-                this.props
-                  .updateCurrentLocation()
-                  .then(location => console.log(location.value.data.location));
-
-                axios
-                  .get(
-                    `/api/get_api_key/${
-                      this.state.is_admin
-                        ? this.state.user_id
-                        : this.state.tracker
-                    }`
-                  )
-                  .then(apiKey => {
-                    this.props.isInBounds(
-                      this.props.geolocationsReducer.currLat,
-                      this.props.geolocationsReducer.currLng,
-                      this.props.geolocationsReducer.toggledKey,
-                      apiKey.data[0].api_key
-                    );
-                  });
-              } else {
-                clearInterval(this.start);
-              }
+              var timerStarted = response.data;
             });
+            if (timerStarted) {
+              console.log(this.state);
+              this.props
+                .updateCurrentLocation()
+                .then(location => console.log(location));
+
+              axios
+                .get(
+                  `/api/get_api_key/${
+                    this.state.is_admin
+                      ? this.state.user_id
+                      : this.state.tracker
+                  }`
+                )
+                .then(apiKey => {
+                  this.props.isInBounds(
+                    this.props.geolocationsReducer.currLat,
+                    this.props.geolocationsReducer.currLng,
+                    this.props.geolocationsReducer.toggledKey,
+                    apiKey.data[0].api_key
+                  );
+                });
+            } else {
+              clearInterval(start);
+            }
+            // });
           },
           // }.bind(this),
           5000
         );
         //-------------------------------------------------------------------
       } else {
-        console.log(this.start);
-        clearInterval(this.start);
+        console.log(start);
+        clearInterval(start);
       }
     }
   }
@@ -279,7 +282,6 @@ class Geolocations extends Component {
   }
   //^^^^^^^^^^^^^^^^^CLEARS INTERVAL WHEN USER LEAVES COMPONENT^^^^^^^^^^^^^^^
   render() {
-    console.log(this.props.geolocationsReducer.searchToggle);
     return (
       <div>
         {!this.state.tracker ? <div className="back-drop" /> : true}
