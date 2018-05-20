@@ -43,14 +43,6 @@ class App extends Component {
         <nav className="geolocations-nav">
           {this.props.history.location.pathname === "/" ? (
             <AppBar
-              title={
-                this.props.geolocationsReducer.searchToggle && (
-                  <div className="blink-me">
-                    <Location />
-                    <div>TRACKING</div>
-                  </div>
-                )
-              }
               showMenuIconButton={false}
               iconElementRight={
                 <div className="icon-right-container">
@@ -131,7 +123,6 @@ class App extends Component {
                 this.props.geolocationsReducer.searchToggle ? (
                   <div className="blink-me">
                     <Location />
-                    TRACKING...
                   </div>
                 ) : null
               }

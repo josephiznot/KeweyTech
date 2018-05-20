@@ -33,7 +33,6 @@ class GoogleMaps extends Component {
     this.handleToggle = this.handleToggle.bind(this);
   }
   componentDidMount() {
-    console.log("rendered in maps");
     this.props.getUser().then(user => {
       console.log(user.value.data);
       // if (user.value.data.is_admin !== null) {
@@ -102,6 +101,7 @@ class GoogleMaps extends Component {
   }
 
   render() {
+    console.log("rendered googlemaps");
     const mapped = this.state.geofences
       .map((e, i, a) => {
         return withGoogleMap(() => (

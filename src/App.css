@@ -7,6 +7,10 @@
 .blink-me {
   animation: blinker 1.5s infinite;
   font-size: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 64px;
 }
 .user-name-container {
   color: white;

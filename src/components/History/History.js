@@ -51,7 +51,7 @@ class History extends React.Component {
   handleDelete(id) {
     swal({
       title: "Are you sure?",
-      text: "Deleting this history cannot be udone.",
+      text: "Deleting this history cannot be undone.",
       icon: "warning",
       buttons: true,
       dangerMode: true

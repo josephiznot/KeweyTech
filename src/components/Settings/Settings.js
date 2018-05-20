@@ -23,8 +23,8 @@ import IconButton from "material-ui/IconButton";
 import Swal from "sweetalert2";
 import SnackBar from "material-ui/Snackbar";
 //used for outfence tracking
-// import Toggle from "material-ui/Toggle";
-// import TrackChanges from "material-ui/svg-icons/action/track-changes";
+import Toggle from "material-ui/Toggle";
+import TrackChanges from "material-ui/svg-icons/action/track-changes";
 
 import { acquireKey } from "./../../redux/geolocationsReducer";
 import { toggleOutsideTracking } from "./../../redux/obReducer";
@@ -149,31 +149,27 @@ class Settings extends Component {
             .get("https://api.fencer.io/v1.0/geofence", {
               //^^^^^^^GRABS CURRENT FENCES FROM FENCER.IO^^^^^^^^^
               headers: {
-                Authorization: `${
-                  apiKey.data[0].api_key
-                  // process.env.REACT_APP_FENCER_API_KEY
-                  // process.env.REACT_APP_TESTER
-                }`
+                Authorization: `${apiKey.data[0].api_key}`
               }
             })
             .then(response => {
-              console.log(response);
-              console.log(response);
               response.data.data.map((fence, i) => {
                 return this.setState({
                   newKeys: this.state.newKeys.concat(fence.id)
                 });
               });
               //---------ARRAY OF CURRENT KEYS
-              // this.state.newKeys.map((e, i) => {////moved downwards
+              // this.state.newKeys.map((e, i) => {
+              ////moved downwards
               var { oldKeys, newKeys } = this.state;
               if (_.difference(oldKeys, newKeys)[0]) {
                 console.log("trying to delete an old key...");
                 //^^^^CHECKS TO SEE IF A FENCE WAS DELETED FROM FENCER.IO BY COMPARING THE KEY^^^^^
                 _.difference(oldKeys, newKeys).map(element => {
+                  console.log(element);
                   //the element is the deleted fence_key---------
                   //------NODEMAILER HERE----------
-                  // axios.get(`/api/get_hits_before_deleted/${element}`);
+                  // axios.get(`/api/get_hits_before_deleted/${e}`);
                   return (
                     axios
                       .delete(`/api/delete_history_hits/${element}`)
@@ -187,17 +183,14 @@ class Settings extends Component {
               }
 
               this.state.newKeys.map((e, i) => {
+                console.log(e);
                 console.log(this.state.apiKey, this.state.api_key);
                 return (
                   axios
                     .get(`https://api.fencer.io/v1.0/geofence/${e}`, {
                       //e is each current geofence key
                       headers: {
-                        Authorization: `${
-                          this.state.apiKey
-                          // process.env.REACT_APP_FENCER_API_KEY
-                          // process.env.REACT_APP_TESTER
-                        }`
+                        Authorization: `${this.state.apiKey}`
                       }
                     })
 
@@ -325,17 +318,7 @@ class Settings extends Component {
   openTheSnack() {
     this.setState({ openSnack: true });
   }
-  // componentWillUnmount() {
-  // this.props.getUser().then(response => {
-  //   response.value.data.api_key !== null
-  //     ? this.setState({ hasApiKey: true })
-  //     : true;
-  // });
-  // this.setState({ hasApiKey: true });
-  //will check if user entered an api key.
-  // }
   render() {
-    // console.log(this.state.isAdmin ? "Admin!" : "Not Admin", this.state.locked);
     console.log(this.state.hasApiKey);
     return (
       <div>
@@ -361,7 +344,7 @@ class Settings extends Component {
           </div>
 
           {/* -------------------------OUT-FENCE TRACKING------------------------- */}
-          {/* <div className="options-container">
+          <div className="options-container">
             <TrackChanges
               style={
                 this.state.locked
@@ -406,7 +389,7 @@ class Settings extends Component {
               }}
               toggled={this.props.obReducer.outsideTracking}
             />
-          </div> */}
+          </div>
           {/* -------------------------OUT-FENCE TRACKING------------------------- */}
           <div>
             <Email

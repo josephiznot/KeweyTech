@@ -21,10 +21,6 @@ class Geolocations extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      timerStarted: false,
-      start: 76,
-      trackFlag: false,
-      isEnabled: false,
       goGoogle: false,
       steps: [
         {
@@ -91,66 +87,63 @@ class Geolocations extends Component {
     } else {
       this.props.toggleSearch(this.props.geolocationsReducer.searchToggle);
       //the flag allows the user to enable/disable the setInterval
-      //*****DEPRACATED STATE************
-      // var { trackFlag, isEnabled } = this.state;
-      // isEnabled
+
       this.props.geolocationsReducer.searchToggle
-        ? swal("Good job!", "Tracking Disabled", "success")
+        ? swal("Disabling...")
         : swal("Good job!", "Tracking Enabled", "success");
-      //*****DEPRACATED STATE************
-      // this.setState({
-      //   trackFlag: !trackFlag,
-      //   isEnabled: !isEnabled
-      // });
-      // if (!this.state.trackFlag) {
       if (!this.props.geolocationsReducer.searchToggle) {
         //----------------------SERVER SIDE RENDER THIS!!!!------------------------
-        axios.post("/api/set_timer", { start: true });
-        var start = window.setInterval(
-          () => {
-            axios.get("/api/get_timer").then(response => {
-              this.setState({
-                timerStarted: response.data,
-                start: start
-              });
-              // });
-              console.log(response.data);
-              if (this.state.timerStarted) {
-                console.log(this.state);
-                this.props
-                  .updateCurrentLocation()
-                  .then(location => console.log(location));
 
-                axios
-                  .get(
-                    `/api/get_api_key/${
-                      this.state.is_admin
-                        ? this.state.user_id
-                        : this.state.tracker
-                    }`
-                  )
-                  .then(apiKey => {
-                    this.props.isInBounds(
-                      this.props.geolocationsReducer.currLat,
-                      this.props.geolocationsReducer.currLng,
-                      this.props.geolocationsReducer.toggledKey,
-                      apiKey.data[0].api_key
-                    );
-                  });
-              } else {
-                window.clearInterval(this.state.start);
-              }
-            });
+        // axios.post("/api/set_timer", { start: true });
+        this.start = setInterval(
+          () => {
+            // axios.get("/api/get_timer").then(response => {
+            // console.log(response.data);
+            if (this.start) {
+              this.props.updateCurrentLocation().then(location =>
+                this.setState({
+                  geolocation: JSON.stringify(location.value.data.location)
+                })
+              );
+
+              axios
+                .get(
+                  `/api/get_api_key/${
+                    this.state.is_admin
+                      ? this.state.user_id
+                      : this.state.tracker
+                  }`
+                )
+                .then(apiKey => {
+                  this.props.isInBounds(
+                    this.props.geolocationsReducer.currLat,
+                    this.props.geolocationsReducer.currLng,
+                    this.props.geolocationsReducer.toggledKey,
+                    apiKey.data[0].api_key
+                  );
+                });
+            } else {
+              console.log(this.start);
+              clearInterval(this.start);
+            }
+            // });
           },
           // }.bind(this),
           5000
         );
         //-------------------------------------------------------------------
       } else {
-        console.log(this.state.start);
-        window.clearInterval(this.state.start);
+        window.location.reload();
       }
     }
+  }
+  componentWillUnmount() {
+    console.log(this.props.history.location.pathname);
+    if (this.props.history.location.pathname === "/") {
+      clearInterval(this.start);
+      this.props.toggleSearch(this.props.geolocationsReducer.searchToggle);
+    }
+    //only unmounts if the user is at the landing page
   }
 
   componentDidUpdate() {
@@ -221,7 +214,6 @@ class Geolocations extends Component {
                     });
                     Swal.queue(this.state.userSetup).then(newUser => {
                       Swal.resetDefaults();
-                      console.log(newUser);
                       axios
                         .put(
                           `/api/create_new_user/${response.value.data.user_id}`,
@@ -278,12 +270,6 @@ class Geolocations extends Component {
         });
     }
   }
-  componentWillUnmount() {
-    this.props.history.location.pathname === "/"
-      ? window.clearInterval(this.start)
-      : console.log("INTERVAL NOT CLEARED");
-    //only unmounts if the user is at the landing page
-  }
   //^^^^^^^^^^^^^^^^^CLEARS INTERVAL WHEN USER LEAVES COMPONENT^^^^^^^^^^^^^^^
   render() {
     return (
@@ -294,14 +280,13 @@ class Geolocations extends Component {
             className="tracking-button"
             primary={true}
             label={
-              //**************DEPRACATED STATE**************
-              //this.state.isEnabled
               this.props.geolocationsReducer.searchToggle
                 ? "Disable Tracking"
                 : "Enable Tracking"
             }
             onClick={() => this.enableTracking()}
           />
+          <div>Geolocation: {this.state.geolocation}</div>
           {this.state.goGoogle ? <GoogleMaps /> : true}
         </div>
       </div>
