@@ -38,6 +38,7 @@ class GoogleMaps extends Component {
       // if (user.value.data.is_admin !== null) {
       //The page will not bother getting any data from a user that does not exist yet.
       this.props.updateCurrentLocation().then(res => {
+        console.log(res);
         //if its a user...this request returns null
         axios
           .get(`/api/get_api_key/${user.value.data.user_id}`)

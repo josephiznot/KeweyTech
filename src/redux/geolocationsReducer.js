@@ -38,13 +38,39 @@ export function getGeolocations() {
   };
 }
 export function updateCurrentLocation() {
+  var options = {
+    enableHighAccuracy: true,
+    timeout: 5000,
+    maximumAge: 0
+  };
+
+  function success(pos) {
+    var crd = pos.coords;
+
+    console.log("Your current position is:");
+    console.log(`Latitude : ${crd.latitude}`);
+    console.log(`Longitude: ${crd.longitude}`);
+    console.log(`More or less ${crd.accuracy} meters.`);
+    return crd;
+  }
+
+  function error(err) {
+    alert(`ERROR(${err.code}): ${err.message}`);
+  }
+
+  function aPromise() {
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(success, error, options);
+    });
+  }
   return {
     type: UPDATE_CURRENT_LOCATION,
-    payload: axios.post(
-      `https://www.googleapis.com/geolocation/v1/geolocate?key=${
-        process.env.REACT_APP_GEOLOCATION_API_KEY
-      }`
-    )
+    payload: aPromise
+    // axios.post(
+    //   `https://www.googleapis.com/geolocation/v1/geolocate?key=${
+    //     process.env.REACT_APP_GEOLOCATION_API_KEY
+    //   }`
+    // )
   };
 }
 export function isInBounds(lat, lng, key, apiKey) {
@@ -89,6 +115,8 @@ export default function geolocationsReducer(state = initialState, action) {
     case `${FIND_DEPENDENT}_FULFILLED`:
       return { ...state, dependentLocation: action.payload.data };
     case `${UPDATE_CURRENT_LOCATION}_FULFILLED`:
+      console.log(action.payload);
+      console.log("yello");
       return {
         ...state,
         currLocation: action.payload.data.location,
