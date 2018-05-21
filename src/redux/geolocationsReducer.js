@@ -58,14 +58,14 @@ export function updateCurrentLocation() {
     alert(`ERROR(${err.code}): ${err.message}`);
   }
 
-  function aPromise() {
+  function aPromise(resolve, reject) {
     return new Promise((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(success, error, options);
+      navigator.geolocation.getCurrentPosition(resolve, reject, options);
     });
   }
   return {
     type: UPDATE_CURRENT_LOCATION,
-    payload: aPromise
+    payload: aPromise(success, error)
     // axios.post(
     //   `https://www.googleapis.com/geolocation/v1/geolocate?key=${
     //     process.env.REACT_APP_GEOLOCATION_API_KEY
@@ -115,13 +115,15 @@ export default function geolocationsReducer(state = initialState, action) {
     case `${FIND_DEPENDENT}_FULFILLED`:
       return { ...state, dependentLocation: action.payload.data };
     case `${UPDATE_CURRENT_LOCATION}_FULFILLED`:
-      console.log(action.payload);
+      console.log(action.payload.coords);
       console.log("yello");
       return {
-        ...state,
-        currLocation: action.payload.data.location,
-        currLat: action.payload.data.location.lat,
-        currLng: action.payload.data.location.lng
+        // ...state,
+        // currLocation: action.payload.data.location,
+        // currLat: action.payload.data.location.lat,
+        // currLng: action.payload.data.location.lng
+        currLat: action.payload.coords.latitude,
+        currLng: action.payload.coords.longitude
       };
     case `${IS_IN_BOUNDS}_FULFILLED`:
       return { ...state, isInBounds: action.payload.data.data.inside };
