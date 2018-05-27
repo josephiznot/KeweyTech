@@ -38,39 +38,13 @@ export function getGeolocations() {
   };
 }
 export function updateCurrentLocation() {
-  var options = {
-    enableHighAccuracy: true,
-    timeout: 5000,
-    maximumAge: 0
-  };
-
-  function success(pos) {
-    var crd = pos.coords;
-
-    console.log("Your current position is:");
-    console.log(`Latitude : ${crd.latitude}`);
-    console.log(`Longitude: ${crd.longitude}`);
-    console.log(`More or less ${crd.accuracy} meters.`);
-    return crd;
-  }
-
-  function error(err) {
-    alert(`ERROR(${err.code}): ${err.message}`);
-  }
-
-  function aPromise(resolve, reject) {
-    return new Promise((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(resolve, reject, options);
-    });
-  }
   return {
     type: UPDATE_CURRENT_LOCATION,
-    payload: aPromise(success, error)
-    // axios.post(
-    //   `https://www.googleapis.com/geolocation/v1/geolocate?key=${
-    //     process.env.REACT_APP_GEOLOCATION_API_KEY
-    //   }`
-    // )
+    payload: axios.post(
+      `https://www.googleapis.com/geolocation/v1/geolocate?key=${
+        process.env.REACT_APP_GEOLOCATION_API_KEY
+      }`
+    )
   };
 }
 export function isInBounds(lat, lng, key, apiKey) {
@@ -118,12 +92,12 @@ export default function geolocationsReducer(state = initialState, action) {
       console.log(action.payload.coords);
       console.log("yello");
       return {
-        // ...state,
-        // currLocation: action.payload.data.location,
-        // currLat: action.payload.data.location.lat,
-        // currLng: action.payload.data.location.lng
-        currLat: action.payload.coords.latitude,
-        currLng: action.payload.coords.longitude
+        ...state,
+        currLocation: action.payload.data.location,
+        currLat: action.payload.data.location.lat,
+        currLng: action.payload.data.location.lng
+        // currLat: action.payload.coords.latitude,
+        // currLng: action.payload.coords.longitude
       };
     case `${IS_IN_BOUNDS}_FULFILLED`:
       return { ...state, isInBounds: action.payload.data.data.inside };

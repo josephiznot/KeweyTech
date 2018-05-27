@@ -16,6 +16,7 @@ import swal from "sweetalert";
 import Swal from "sweetalert2";
 import axios from "axios";
 import validator from "email-validator";
+import KeyboardArrowDown from "material-ui/svg-icons/hardware/keyboard-arrow-down";
 
 class Geolocations extends Component {
   constructor(props) {
@@ -92,46 +93,30 @@ class Geolocations extends Component {
         ? swal("Disabling...")
         : swal("Good job!", "Tracking Enabled", "success");
       if (!this.props.geolocationsReducer.searchToggle) {
-        //----------------------SERVER SIDE RENDER THIS!!!!------------------------
+        this.start = setInterval(() => {
+          if (this.start) {
+            this.props
+              .updateCurrentLocation()
+              .then(location => console.log(location));
 
-        // axios.post("/api/set_timer", { start: true });
-        this.start = setInterval(
-          () => {
-            // axios.get("/api/get_timer").then(response => {
-            // console.log(response.data);
-            if (this.start) {
-              this.props.updateCurrentLocation().then(location =>
-                // this.setState({
-                //   geolocation: JSON.stringify(location.value.data.location)
-                // })
-                console.log(location)
-              );
-
-              axios
-                .get(
-                  `/api/get_api_key/${
-                    this.state.is_admin
-                      ? this.state.user_id
-                      : this.state.tracker
-                  }`
-                )
-                .then(apiKey => {
-                  this.props.isInBounds(
-                    this.props.geolocationsReducer.currLat,
-                    this.props.geolocationsReducer.currLng,
-                    this.props.geolocationsReducer.toggledKey,
-                    apiKey.data[0].api_key
-                  );
-                });
-            } else {
-              console.log(this.start);
-              clearInterval(this.start);
-            }
-            // });
-          },
-          // }.bind(this),
-          5000
-        );
+            axios
+              .get(
+                `/api/get_api_key/${
+                  this.state.is_admin ? this.state.user_id : this.state.tracker
+                }`
+              )
+              .then(apiKey => {
+                this.props.isInBounds(
+                  this.props.geolocationsReducer.currLat,
+                  this.props.geolocationsReducer.currLng,
+                  this.props.geolocationsReducer.toggledKey,
+                  apiKey.data[0].api_key
+                );
+              });
+          } else {
+            clearInterval(this.start);
+          }
+        }, 5000);
         //-------------------------------------------------------------------
       } else {
         window.location.reload();
@@ -154,26 +139,6 @@ class Geolocations extends Component {
     }
   }
   componentDidMount() {
-    var options = {
-      enableHighAccuracy: true,
-      timeout: 5000,
-      maximumAge: 0
-    };
-
-    function success(pos) {
-      var crd = pos.coords;
-
-      console.log("Your current position is:");
-      console.log(`Latitude : ${crd.latitude}`);
-      console.log(`Longitude: ${crd.longitude}`);
-      console.log(`More or less ${crd.accuracy} meters.`);
-    }
-
-    function error(err) {
-      console.warn(`ERROR(${err.code}): ${err.message}`);
-    }
-
-    navigator.geolocation.getCurrentPosition(success, error, options);
     //-----------------------
     if (
       this.props.location.pathname !== "/" &&
@@ -298,17 +263,27 @@ class Geolocations extends Component {
       <div>
         {!this.state.tracker ? <div className="back-drop" /> : true}
         <div className="geolocations-body-container">
-          <RaisedButton
-            className="tracking-button"
-            primary={true}
-            label={
-              this.props.geolocationsReducer.searchToggle
-                ? "Disable Tracking"
-                : "Enable Tracking"
-            }
-            onClick={() => this.enableTracking()}
-          />
-          <div>Geolocation: {this.state.geolocation}</div>
+          {this.props.geolocationsReducer.toggledKey ? (
+            <RaisedButton
+              className="tracking-button"
+              primary={true}
+              label={
+                this.props.geolocationsReducer.searchToggle
+                  ? "Disable Tracking"
+                  : "Enable Tracking"
+              }
+              onClick={() => this.enableTracking()}
+            />
+          ) : (
+            <div className="tracking-button">
+              <p>Toggle a fence below.</p>{" "}
+              <KeyboardArrowDown
+                style={{ width: 55, height: 55 }}
+                className="bounce"
+              />
+            </div>
+          )}
+
           {this.state.goGoogle ? <GoogleMaps /> : true}
         </div>
       </div>

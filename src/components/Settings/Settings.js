@@ -46,17 +46,8 @@ class Settings extends Component {
       openSnack: false,
       hasApiKey: false
     };
-    this.handleChange = this.handleChange.bind(this);
-    this.updateEmail = this.updateEmail.bind(this);
-    this.handleUnlock = this.handleUnlock.bind(this);
-    this.handleLock = this.handleLock.bind(this);
-    this.updateAdminPassword = this.updateAdminPassword.bind(this);
-    this.handleAdminChange = this.handleAdminChange.bind(this);
-    this.updateApiKey = this.updateApiKey.bind(this);
-    this.handleSnackClose = this.handleSnackClose.bind(this);
-    this.openTheSnack = this.openTheSnack.bind(this);
   }
-  updateEmail() {
+  updateEmail = () => {
     if (this.state.changingEmail) {
       validator.validate(this.state.changingEmail)
         ? axios
@@ -73,10 +64,10 @@ class Settings extends Component {
             this.setState({ changingEmail: "" })
           );
     }
-  }
-  handleChange(val) {
+  };
+  handleChange = val => {
     this.setState({ changingEmail: val });
-  }
+  };
   componentDidUpdate() {
     //gets updated state
     if (!this.props.geolocationsReducer.isInBounds) {
@@ -132,7 +123,7 @@ class Settings extends Component {
         });
     }
   }
-  handleUpdate() {
+  handleUpdate = () => {
     axios
       .get("/api/get_fence_keys")
       //^^^^^^GRABS FENCE KEYS FROM DB^^^^^^^^^^^
@@ -266,19 +257,19 @@ class Settings extends Component {
       .catch(console.log);
     this.openTheSnack();
     this.setState({ newKeys: [], newCenter: [] });
-  }
-  updateAdminPassword() {
+  };
+  updateAdminPassword = () => {
     if (this.state.newPassword) {
       axios.put(`/api/update_admin_password/${this.state.user_id}`, {
         newPassword: this.state.newPassword
       });
       this.setState({ newPassword: "" });
     }
-  }
-  handleAdminChange(val) {
+  };
+  handleAdminChange = val => {
     this.setState({ newPassword: val });
-  }
-  handleUnlock() {
+  };
+  handleUnlock = () => {
     this.state.isAdmin
       ? this.setState({ locked: false })
       : Swal({
@@ -286,8 +277,8 @@ class Settings extends Component {
           text: "Please login as the admin to edit the settings.",
           type: "error"
         });
-  }
-  handleLock() {
+  };
+  handleLock = () => {
     this.setState({ locked: true });
     (this.state.changingEmail ||
       this.state.newApiKey ||
@@ -298,26 +289,26 @@ class Settings extends Component {
     this.updateAdminPassword();
     this.state.newApiKey && this.updateApiKey();
     this.state.newApiKey && this.props.acquireKey(true);
-  }
-  handleApiKey(val) {
+  };
+  handleApiKey = val => {
     this.setState({ newApiKey: val });
-  }
-  updateApiKey() {
+  };
+  updateApiKey = () => {
     axios
       .put(`/api/update_api_key/${this.state.user_id}`, {
         newApiKey: this.state.newApiKey
       })
       .then(response => this.handleUpdate());
     this.setState({ newApiKey: "" });
-  }
-  handleSnackClose() {
+  };
+  handleSnackClose = () => {
     this.setState({
       openSnack: false
     });
-  }
-  openTheSnack() {
+  };
+  openTheSnack = () => {
     this.setState({ openSnack: true });
-  }
+  };
   render() {
     console.log(this.state.hasApiKey);
     return (

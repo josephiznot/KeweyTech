@@ -117,6 +117,7 @@ class GoogleMaps extends Component {
                   label="TRACKING ENABLED"
                   disabled={
                     !e.is_active_2 && !this.props.obReducer.outsideTracking
+                    //if in fence.....
                   }
                   toggled={
                     this.props.obReducer.outsideTracking

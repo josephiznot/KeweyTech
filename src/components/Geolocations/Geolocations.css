@@ -5,14 +5,16 @@ nav.geolocations-nav {
   /* top: 0; */
   /* left: 0; */
 }
-.geolocations-body-container {
-  padding-top: 64px;
-  width: 100vw;
-  /* height: calc(100vh - 64px); */
+.geolocations-body-container,
+.tracking-button {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
+}
+.geolocations-body-container {
+  padding-top: 64px;
+  width: 100vw;
 }
 .tracking-button {
   margin-top: 25px;

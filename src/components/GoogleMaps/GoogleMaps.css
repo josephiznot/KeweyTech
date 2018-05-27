@@ -23,7 +23,12 @@
   text-align: center;
   margin-top: 5px;
 }
-@media (min-width: 680px) {
+@media (min-width: 375px) {
+  .map-container {
+    width: 350px;
+  }
+}
+@media (min-width: 425px) {
   .map-container {
     width: 400px;
   }
