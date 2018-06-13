@@ -16,7 +16,6 @@ const {
   updateContactEmail
 } = require(`${__dirname}/controllers/authCtrl`);
 const geolocationsCtrl = require("./controllers/geolocationsCtrl");
-const userCtrl = require("./controllers/userCtrl");
 const authCtrl = require("./controllers/authCtrl");
 const client = require("twilio")(
   process.env.TWILIO_SID,
@@ -54,7 +53,6 @@ const {
   getApiKey,
   confirmPassword
 } = require("./controllers/bcryptCtrl");
-const { setTimer, getTimer } = require(`${__dirname}/controllers/timerCtrl`);
 
 massive(process.env.CONNECTION_STRING)
   .then(db => {
@@ -130,8 +128,6 @@ app.post("/api/addlocation", geolocationsCtrl.addLocation);
 
 app.post("/api/addcurrentlocation", geolocationsCtrl.addCurrentLocation);
 
-app.get("/api/profilepic", userCtrl.getProfilePic);
-
 app.get("/api/getuser", getUser);
 
 //-----------------TWILIO TEXT ALERT----------------------
@@ -187,10 +183,6 @@ app.get("/api/get_api_key/:id", getApiKey);
 app.post("/api/confirm_password/:password", confirmPassword);
 //-----------------------------------------------
 
-//-----------------------setInterval / clearInterval-------------------------
-app.post("/api/set_timer", setTimer);
-app.get("/api/get_timer", getTimer);
-//---------------------------------------------------------------------------
 const path = require("path");
 app.get("*", (req, res, next) => {
   res.sendFile(path.join(__dirname, "/../build/index.html"));
