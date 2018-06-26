@@ -21,6 +21,7 @@ const sendExpiredHits = (req, res) => {
      ${req.body.history.map((e, i) => {
        return JSON.stringify(e);
      })}`
+    //splice end of string to get rid of brackets
   });
 };
 const getHitsBeforeDeleted = (req, res) => {

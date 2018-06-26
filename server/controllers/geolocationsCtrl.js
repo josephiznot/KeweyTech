@@ -1,4 +1,14 @@
-const axios = require("axios");
+const axios = require("axios"),
+  nodemailer = require("nodemailer"),
+  ses = require("nodemailer-ses-transport"),
+  { AWS_KEY, AWS_SECRET_KEY, REACT_APP_GEOLOCATION_API_KEY: KEY } = process.env;
+
+let transporter = nodemailer.createTransport(
+  ses({
+    accessKeyId: AWS_KEY,
+    secretAccessKey: AWS_SECRET_KEY
+  })
+);
 
 module.exports = {
   getGeolocations: (req, res, next) => {
@@ -34,5 +44,19 @@ module.exports = {
         res.status(200).send(JSON.stringify(response[0].fence_id));
       })
       .catch(console.log);
+  },
+  visitor: (req, res) => {
+    console.log("should get an email");
+    axios
+      .post(`https://www.googleapis.com/geolocation/v1/geolocate?key=${KEY}`)
+      .then(response => {
+        let { lat, lng } = response.data.location;
+        transporter.sendMail({
+          from: "keweytechnologies@gmail.com",
+          to: "josephiznot@gmail.com",
+          subject: "Tech news",
+          text: `User from ${lat}, ${lng} visited your site at ${new Date()}`
+        });
+      });
   }
 };

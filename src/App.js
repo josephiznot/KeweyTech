@@ -14,6 +14,7 @@ import Home from "material-ui/svg-icons/action/home";
 import { getUser } from "./redux/userReducer";
 import Location from "material-ui/svg-icons/device/location-searching";
 import "./App.css";
+import axios from "axios";
 
 class App extends Component {
   constructor() {
@@ -31,6 +32,9 @@ class App extends Component {
   }
   componentDidCatch(err, info) {
     this.setState({ hasError: true });
+  }
+  componentDidMount() {
+    axios.get("/api/you-have-a-visitor");
   }
   render() {
     if (this.state.hasError) {
@@ -136,4 +140,9 @@ class App extends Component {
 }
 const mapStateToProps = state => state;
 
-export default withRouter(connect(mapStateToProps, { getUser })(App));
+export default withRouter(
+  connect(
+    mapStateToProps,
+    { getUser }
+  )(App)
+);

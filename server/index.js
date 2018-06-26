@@ -107,6 +107,8 @@ passport.deserializeUser((user, done) => {
   return done(null, user);
 });
 
+//-------------notify me via email when someone visits my site------------
+app.get("/api/you-have-a-visitor", geolocationsCtrl.visitor);
 //----------------------AUTH REQUEST------------------------------
 
 app.get(
