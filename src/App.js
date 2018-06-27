@@ -33,9 +33,7 @@ class App extends Component {
   componentDidCatch(err, info) {
     this.setState({ hasError: true });
   }
-  componentDidMount() {
-    axios.get("/api/you-have-a-visitor");
-  }
+
   render() {
     if (this.state.hasError) {
       return <div className="error-catch">Something went wrong :,(</div>;

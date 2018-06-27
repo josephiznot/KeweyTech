@@ -46,17 +46,12 @@ module.exports = {
       .catch(console.log);
   },
   visitor: (req, res) => {
-    console.log("should get an email");
-    axios
-      .post(`https://www.googleapis.com/geolocation/v1/geolocate?key=${KEY}`)
-      .then(response => {
-        let { lat, lng } = response.data.location;
-        transporter.sendMail({
-          from: "keweytechnologies@gmail.com",
-          to: "josephiznot@gmail.com",
-          subject: "Tech news",
-          text: `User from ${lat}, ${lng} visited your site at ${new Date()}`
-        });
-      });
+    const { lat, lng } = req.body;
+    transporter.sendMail({
+      from: "keweytechnologies@gmail.com",
+      to: "josephiznot@gmail.com",
+      subject: "Tech news",
+      text: `User from ${lat}, ${lng} visited your site at ${new Date()}`
+    });
   }
 };
